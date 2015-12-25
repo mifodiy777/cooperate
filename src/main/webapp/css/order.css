@@ -1,0 +1,28 @@
+.line-cut {
+    border-top: 2pt dashed black;
+    width: 100%;
+    height: 5px;
+    margin: 20px 0;
+    padding: 0;
+
+}
+
+table, th, td {
+    border-style: solid;
+    border-width: 1px;
+    border-collapse: collapse;
+    padding: 15px;
+    text-align: center;
+    overflow: hidden;
+}
+
+th {
+    height: 28px;
+    border-color: black;
+}
+
+.sign{
+    width:25%;
+text-align: left;
+}
+

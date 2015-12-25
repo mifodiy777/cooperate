@@ -1,0 +1,378 @@
+#loading-indicator{
+    margin-left:80px;
+}
+
+input.file {
+	position: relative;
+	text-align: right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+}
+
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}
+
+.input-group {
+    margin: 10px;
+    width: 100%;
+}
+
+.buttonCheck {
+    margin-top: 5px;
+}
+
+.login {
+    margin-right: 20px;
+    font-size: 18px;
+}
+
+.maxValueCont{
+   text-align:center;
+    background-color:#ffcccc;
+    border-style:solid;
+   border: 1px solid red;
+    border-radius:5px;
+    margin-top:15px;
+    display:block;
+}
+
+.center {
+    text-align: center;
+}
+
+.btnTable {
+    float: left;
+    margin: 2px;
+}
+
+td.actionBtn {
+    width: 200px;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+}
+
+td.actionBtn>a {
+
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.carousel {
+    height: 50%;
+}
+
+.item /*,
+.active */
+{
+    height: 100%;
+}
+
+.panel {
+    margin-top: 5px;
+
+}
+
+.carousel-inner {
+    height: 100%;
+}
+
+.buttonForm {
+    margin: 20px;
+    width: 150px;
+}
+
+/* Background images are set within the HTML using inline CSS, not here */
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+/*////////////*/
+.buttonDelete {
+    color: red;
+    font-size: 14pt;
+    margin-top: 20px;
+    cursor: pointer
+}
+
+#error_message {
+    text-align: center;
+    color: red;
+    /*font-size: 14pt;
+    text-align: center;
+    color: red;
+    padding: 10px;*/
+}
+
+.error {
+    color: red;
+}
+
+#success_message {
+    text-align: center;
+    color: black;
+    /*font-size: 14pt;
+    text-align: center;
+
+    padding: 10px;*/
+}
+
+#messages {
+    text-align: center;
+    display: block;
+    position: fixed;
+    filter: alpha(opacity = 75);
+    z-index: 1100;
+}
+
+#logout {
+    position: absolute;
+    top: 12;
+    right: 30;
+}
+
+/*for bootstrap*/
+.navbar-custom {
+    background-color: #5cb85c;
+    border-color: #4aa94a;
+}
+
+.navbar-custom .navbar-brand {
+    color: #ffffff;
+}
+
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+    color: #e6e6e6;
+    background-color: transparent;
+}
+
+.navbar-custom .navbar-text {
+    color: #ffffff;
+}
+
+.navbar-custom .navbar-nav > li:last-child > a {
+    border-right: 1px solid #4aa94a;
+}
+
+.navbar-custom .navbar-nav > li > a {
+    color: #ffffff;
+    border-left: 1px solid #4aa94a;
+}
+
+.navbar-custom .navbar-nav > li > a:hover,
+.navbar-custom .navbar-nav > li > a:focus {
+    color: #1f2542;
+    background-color: transparent;
+}
+
+.navbar-custom .navbar-nav > .active > a,
+.navbar-custom .navbar-nav > .active > a:hover,
+.navbar-custom .navbar-nav > .active > a:focus {
+    color: #1f2542;
+    background-color: #4aa94a;
+}
+
+.navbar-custom .navbar-nav > .disabled > a,
+.navbar-custom .navbar-nav > .disabled > a:hover,
+.navbar-custom .navbar-nav > .disabled > a:focus {
+    color: #cccccc;
+    background-color: transparent;
+}
+
+.navbar-custom .navbar-toggle {
+    border-color: #dddddd;
+}
+
+.navbar-custom .navbar-toggle:hover,
+.navbar-custom .navbar-toggle:focus {
+    background-color: #dddddd;
+}
+
+.navbar-custom .navbar-toggle .icon-bar {
+    background-color: #cccccc;
+}
+
+.navbar-custom .navbar-collapse,
+.navbar-custom .navbar-form {
+    border-color: #49a749;
+}
+
+.navbar-custom .navbar-nav > .dropdown > a:hover .caret,
+.navbar-custom .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #1f2542;
+    border-bottom-color: #1f2542;
+}
+
+.navbar-custom .navbar-nav > .open > a,
+.navbar-custom .navbar-nav > .open > a:hover,
+.navbar-custom .navbar-nav > .open > a:focus {
+    background-color: #4aa94a;
+    color: #1f2542;
+}
+
+.navbar-custom .navbar-nav > .open > a .caret,
+.navbar-custom .navbar-nav > .open > a:hover .caret,
+.navbar-custom .navbar-nav > .open > a:focus .caret {
+    border-top-color: #1f2542;
+    border-bottom-color: #1f2542;
+}
+
+.navbar-custom .navbar-nav > .dropdown > a .caret {
+    border-top-color: #ffffff;
+    border-bottom-color: #ffffff;
+}
+
+@media
+
+(
+max-width:
+
+767
+)
+{
+.navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+}
+
+.navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+.navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #1f2542;
+    background-color: transparent;
+}
+
+.navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
+.navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
+.navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #1f2542;
+    background-color: #4aa94a;
+}
+
+.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
+.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #cccccc;
+    background-color: transparent;
+}
+
+}
+.navbar-custom .navbar-link {
+    color: #ffffff;
+}
+
+.navbar-custom .navbar-link:hover {
+    color: #1f2542;
+}
+
+.fileUploadLink {
+    cursor: pointer;
+    clear: left;
+}
+
+.typeahead {
+    display: block;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    width: 396px;
+    height: 30px;
+    padding: 8px 12px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999
+}
+
+.tt-menu {
+    width: 422px;
+    margin: 12px 0;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.form-group input[type="checkbox"] {
+    display: none;
+}
+
+.form-group input[type="checkbox"] ~ .btn-group > label span {
+    width: 20px;
+    height: 20px;
+}
+
+.form-group input[type="checkbox"] ~ .btn-group > label span:first-child {
+    display: none;
+}
+
+.form-group input[type="checkbox"] ~ .btn-group > label span:last-child {
+    display: inline-block;
+}
+
+.form-group input[type="checkbox"]:checked ~ .btn-group > label span:first-child {
+    display: inline-block;
+}
+
+.form-group input[type="checkbox"]:checked ~ .btn-group > label span:last-child {
+    display: none;
+}
+
