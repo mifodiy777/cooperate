@@ -132,25 +132,6 @@
         }
     }
 
-    function checkDublPerson() {
-        var pattern = $("#lastName").val() + " " + $("#name").val() + " " + $("#fatherName").val();
-        if (pattern.length > 3) {
-            $.post("searchPerson", {pattern: pattern.trim()}).done(function (html) {
-                $("#personResults").empty();
-                $("#personResults").html(html).hide();
-                if ($("li a.choosePerson").size() != 0) {
-                    $("#nameChecker").removeClass("btn-info btn-success");
-                    $("#nameChecker").addClass("btn-danger");
-                } else {
-                    $("#nameChecker").removeClass("btn-info btn-danger");
-                    $("#nameChecker").addClass("btn-success");
-                }
-            });
-        } else {
-            $("#nameChecker").addClass("btn-danger");
-        }
-    }
-
 
     function hideTooltip() {
         $('#searchPerson').tooltip('destroy');
@@ -217,10 +198,7 @@
                     <form:input path="person.fatherName" id="fatherName" cssClass="required form-control person"/>
                 </div>
             </div>
-        </div>
-        <div class="row" style="text-align:center;">
-            <button id="nameChecker" type="button" class="btn btn-info" onclick="checkDublPerson()">Проверить</button>
-        </div>
+        </div>      
         <div class="input-group">
             <label for="additionalInformation" class="input-group-addon">Дополнительная информация</label>
             <form:input path="person.additionalInformation" id="additionalInformation" cssClass="form-control person"/>

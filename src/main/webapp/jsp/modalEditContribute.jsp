@@ -86,7 +86,8 @@
             $("#contLand").val(${maxContLand});
         }
         $("#finesLastUpdate").val("01.07.${contribution.year}");
-        $("#finesOn").attr("checked", "checked");
+        $("#finesOn").prop("checked", true);
+
     }
 
 </script>
@@ -201,7 +202,7 @@
                                         <span class="[ glyphicon glyphicon-ok ]"></span>
                                         <span> </span>
                                     </label>
-                                    <label for="finesOn" class="[ btn btn-default active ]">
+                                    <label for="finesOn" class="[ btn btn-default ]">
                                         Включить пени
                                     </label>
                                 </div>
@@ -219,7 +220,7 @@
                                         <span class="[ glyphicon glyphicon-ok ]"></span>
                                         <span> </span>
                                     </label>
-                                    <label for="benefitsOn" class="[ btn btn-default active ]">
+                                    <label for="benefitsOn" class="[ btn btn-default ]">
                                         Льготный период
                                     </label>
                                 </div>
