@@ -15,7 +15,8 @@
                     success: function (html) {
                         $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
                         if ($('#garagTable').length != 0) {
-                            $("#garagTable").DataTable().ajax.url("allGarag").load(null, false);
+                            var series = $("#seriesNumber").val();
+                            $("#garagTable").DataTable().ajax.url("allGarag/" + series).load(null, false);
                         }
                         showSuccessMessage(html);
                         $("#editPanel").hide();

@@ -3,6 +3,7 @@ package com.cooperate.controller;
 import com.cooperate.Utils;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Person;
+import com.cooperate.gson.PersonAdapter;
 import com.cooperate.service.*;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
@@ -44,14 +44,22 @@ public class GaragController {
     private RentService rentService;
 
     @RequestMapping(value = "garagPage", method = RequestMethod.GET)
-    public ModelAndView getGaragsPage() {
-        return new ModelAndView("garags");
+    public String getGaragsPage(@RequestParam(defaultValue = "", value = "series") String series, ModelMap map) {
+        if (!series.isEmpty()) {
+            map.addAttribute("setSeries", series);
+        } else {
+            map.addAttribute("setSeries", "1");
+        }
+        map.addAttribute("series", garagService.getSeries());
+        return "garags";
     }
 
-    @RequestMapping(value = "allGarag", method = RequestMethod.GET)
-    public ResponseEntity<String> getGarag() {
+    @RequestMapping(value = "allGarag/{setSeries}", method = RequestMethod.GET)
+    public ResponseEntity<String> getGarag(@PathVariable("setSeries") String series) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        return Utils.convertListToJson(gsonBuilder, garagService.getGaragsView());
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
+        return Utils.convertListToJson(gsonBuilder, garagService.findBySeries(series));
     }
 
     @RequestMapping(value = "garag", method = RequestMethod.GET)

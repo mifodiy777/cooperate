@@ -1,7 +1,6 @@
 package com.cooperate.service;
 
 import com.cooperate.entity.Garag;
-import com.cooperate.entity.GaragView;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.List;
@@ -17,7 +16,9 @@ public interface GaragService {
 
     List<Garag> getGarags();
 
-    List<GaragView> getGaragsView();
+    List<String> getSeries();
+
+    public List<Garag> findBySeries(String series);
 
     List<Garag> getGaragForPersonBenefits();
 

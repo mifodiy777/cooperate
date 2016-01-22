@@ -22,7 +22,8 @@
             submitHandler: function (form) {
                 $(form).ajaxSubmit({
                     success: function (html) {
-                        $("#garagTable").DataTable().ajax.url("allGarag").load(null, false);
+                        var series = $("#seriesNumber").val();
+                        $("#garagTable").DataTable().ajax.url("allGarag/"+series).load(null, false);
                         showSuccessMessage(html);
                         $("#editPanel").hide();
                         $("#garagDiv").empty();

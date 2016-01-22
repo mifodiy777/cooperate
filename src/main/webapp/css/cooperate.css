@@ -376,3 +376,8 @@ max-width:
     display: none;
 }
 
+td.series{
+    text-align:center;
+    font-weight:bold;
+}
+

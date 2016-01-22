@@ -11,7 +11,7 @@
             "order": [
                 [ 0, 'asc' ]
             ],
-            "ajax": "allGarag",
+            "ajax": "allGarag/${setSeries}",
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'my' + aData.id);
             },
@@ -28,27 +28,16 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"data": "number",'title': 'Гараж',type: 'natural'},
+                {"data": "number",'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editPersonId(' + full.personId + ')\">' + full.fio + "</a>"
-                }, 'title': 'ФИО'},
-                {"render": function (data, type, full) {
-                    return full.phone;
-                }, 'title': 'Телефон'},
-                {"render": function (data, type, full) {
-                    if (full.city == "") {
-                        return "";
-                    } else {
-                        if (full.appartment == "") {
-                            return "г." + full.city + " ул." + full.street + " д." + full.home;
-                        } else {
-                            return "г." + full.city + " ул." + full.street + " д." + full.home + " кв." + full.appartment;
-                        }
+                    if (full.person != null) {
+                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + "</a>"
                     }
-                }, 'title': 'Адрес'},
-                {"render": function (data, type, full) {
-                    return full.benefits;
-                }, 'title': 'Льготы'},
+                    return ""
+                }, 'title': 'ФИО'},
+                {"data":"person.phone","defaultContent": "", 'title': 'Телефон'},
+                {"data": "person.address","defaultContent": "",  'title': 'Адрес'},
+                {"data": "person.benefits","defaultContent": "",  'title': 'Льготы'},
                 {'title': 'Действия',className:"actionBtn","render": function (data, type, full) {
                     var del = "";
                     if ($("#role").val() == 1) {
@@ -130,7 +119,7 @@
 
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag").load(null, false);
+                    $("#garagTable").DataTable().ajax.url("allGarag/${setSeries}").load(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -155,7 +144,7 @@
                         $("#personDiv").empty();
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag").load(null, false);
+                    $("#garagTable").DataTable().ajax.url("allGarag/${setSeries}").load(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -169,11 +158,6 @@
 
 </script>
 <style type="text/css">
-    .container-full {
-        margin: 15px;
-        width: 98%;
-    }
-
     th, td {
         font-size: 15px
     }
@@ -191,15 +175,28 @@
             <div id="personDiv"></div>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3>Общий список</h3>
-            Общее количество: <span id="count" class="badge"></span></div>
-        <br>
-
+    <input type="hidden" id="seriesNumber" value="${setSeries}">
+    <div class="panel with-nav-tabs panel-primary">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <c:forEach items="${series}" var="number">
+                    <li role='presentation' <c:if test="${setSeries eq number}">class="active"</c:if>>
+                        <a class="seriesLink"
+                           href="<c:url value="/garagPage">
+                        <c:param name="series" value="${number}"/></c:url>">
+                            <c:out value="${number}"/>
+                        </a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
         <div class="panel-body">
+            <h3>Список гаражей ${setSeries}  ряда</h3>
+            Общее количество: <span id="count" class="badge"></span>
+            <br>
             <table id="garagTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
         </div>
-    </div>
 
-</div>
-<jsp:include page="footer.jsp"/>
+
+    </div>
+    <jsp:include page="footer.jsp"/>

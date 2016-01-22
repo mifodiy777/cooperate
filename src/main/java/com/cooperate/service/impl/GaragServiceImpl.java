@@ -47,44 +47,15 @@ public class GaragServiceImpl implements GaragService {
     }
 
     @Override
-    public List<GaragView> getGaragsView() {
-        List<GaragView> garagViews = new ArrayList<GaragView>();
-        for (Object[] o : garagDAO.getGaragsView()) {
-            GaragView view = new GaragView();
-            view.setId((Integer) o[0]);
-            view.setNumber((String) o[1]);
-            view.setPersonId((Integer) o[2]);
-            view.setFio((String) o[3]);
-            if (o[3] == null) {
-                view.setFio("Отсутствует");
-            }
-            view.setPhone((String) o[4]);
-            if (o[4] == null) {
-                view.setPhone("");
-            }
-            view.setCity((String) o[5]);
-            if (o[5] == null) {
-                view.setCity("");
-            }
-            view.setStreet((String) o[6]);
-            if (o[6] == null) {
-                view.setStreet("");
-            }
-            view.setHome((String) o[7]);
-            if (o[7] == null) {
-                view.setHome("");
-            }
-            view.setAppartment((String) o[8]);
-            if (o[8] == null) {
-                view.setAppartment("");
-            }
-            view.setBenefits((String) o[9]);
-            if (o[9] == null) {
-                view.setBenefits("");
-            }
-            garagViews.add(view);
-        }
-        return garagViews;
+    @Transactional
+    public List<String> getSeries() {
+        return garagDAO.getSeries();
+    }
+
+    @Override
+    @Transactional
+    public List<Garag> findBySeries(String series) {
+        return garagDAO.findBySeries(series);
     }
 
     @Override
