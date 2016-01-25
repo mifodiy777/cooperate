@@ -23,7 +23,7 @@
                 $(form).ajaxSubmit({
                     success: function (html) {
                         var series = $("#seriesNumber").val();
-                        $("#garagTable").DataTable().ajax.url("allGarag/"+series).load(null, false);
+                        $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
                         showSuccessMessage(html);
                         $("#editPanel").hide();
                         $("#garagDiv").empty();
@@ -85,7 +85,9 @@
     });
 
     function resetPerson() {
-        $(".person").clearInputs();
+        $(".person").each(function(){
+            $(this).val('');
+        });
     }
 
     function emptyGarag() {

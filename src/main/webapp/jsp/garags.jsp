@@ -11,7 +11,7 @@
             "order": [
                 [ 0, 'asc' ]
             ],
-            "ajax": "allGarag/${setSeries}",
+            "ajax": "allGarag?setSeries=${setSeries}",
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'my' + aData.id);
             },
@@ -28,10 +28,12 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"data": "number",'title': 'Гараж',type: 'natural',className: "series"},
+                {"render": function(data, type, full) {
+                  return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
+                },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
                     if (full.person != null) {
-                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + "</a>"
+                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + '</a>'
                     }
                     return ""
                 }, 'title': 'ФИО'},
@@ -46,8 +48,7 @@
                     }
                     return "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-primary btn-sm\" title='Редактировать' onclick=\"editGarag(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-pencil\"/></span></a><a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
+                            ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a><a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-trash\"/></span></a>" + del;
                 }}
             ]
@@ -119,7 +120,7 @@
 
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag/${setSeries}").load(null, false);
+                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=${setSeries}").load(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -144,7 +145,7 @@
                         $("#personDiv").empty();
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag/${setSeries}").load(null, false);
+                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=${setSeries}").load(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -176,6 +177,7 @@
         </div>
     </div>
     <input type="hidden" id="seriesNumber" value="${setSeries}">
+
     <div class="panel with-nav-tabs panel-primary">
         <div class="panel-heading">
             <ul class="nav nav-tabs">
@@ -191,7 +193,7 @@
             </ul>
         </div>
         <div class="panel-body">
-            <h3>Список гаражей ${setSeries}  ряда</h3>
+            <h3>Список гаражей ${setSeries} ряда</h3>
             Общее количество: <span id="count" class="badge"></span>
             <br>
             <table id="garagTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>

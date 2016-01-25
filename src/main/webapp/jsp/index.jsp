@@ -34,7 +34,7 @@
 
 <div class="container">
     <div id="rent"></div>
-    <div class="row">
+    <div class="row footerMenu">
         <div class="col-md-4">
             <h2>Гаражи</h2>
 

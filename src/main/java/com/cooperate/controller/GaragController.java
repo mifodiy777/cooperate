@@ -54,8 +54,8 @@ public class GaragController {
         return "garags";
     }
 
-    @RequestMapping(value = "allGarag/{setSeries}", method = RequestMethod.GET)
-    public ResponseEntity<String> getGarag(@PathVariable("setSeries") String series) {
+    @RequestMapping(value = "allGarag", method = RequestMethod.GET)
+    public ResponseEntity<String> getGarag(@RequestParam("setSeries") String series) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());

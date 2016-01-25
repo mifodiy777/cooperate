@@ -15,8 +15,7 @@
                     success: function (html) {
                         $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
                         if ($('#garagTable').length != 0) {
-                            var series = $("#seriesNumber").val();
-                            $("#garagTable").DataTable().ajax.url("allGarag/" + series).load(null, false);
+                            $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
                         }
                         showSuccessMessage(html);
                         $("#editPanel").hide();
@@ -49,7 +48,7 @@
                 $(garag).parent().remove();
                 $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
                 if ($('#garagTable').length != 0) {
-                    $("#garagTable").DataTable().ajax.url("allGarag").load(null, false);
+                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
                 }
                 showSuccessMessage(html);
             });
