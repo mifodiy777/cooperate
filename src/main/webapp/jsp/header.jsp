@@ -159,6 +159,10 @@
                             <a href="<c:url value="/historyPage"/>"><span class="glyphicon glyphicon-header"></span>
                                 История</a>
                         </li>
+                         <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
+                            <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
+                                Члены правления</a>
+                        </li>
                         <c:if test="${isAdmin}">
                             <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/fileUploadPage.jsp'}">active</c:if>">
                                 <a href="<c:url value="/fileUploadPage"/>"><span

@@ -17,6 +17,9 @@
                         if ($('#garagTable').length != 0) {
                             $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
                         }
+                        if ($('#membersTable').length != 0) {
+                            $("#membersTable").DataTable().ajax.url("members").load(null, false);
+                        }
                         showSuccessMessage(html);
                         $("#editPanel").hide();
                         $("#personDiv").empty();
@@ -61,43 +64,57 @@
 <form:form modelAttribute="person" id="personForm" method="post" action="savePerson">
     <form:hidden path="id"/>
     <div class="col-md-6">
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="lastName" class="input-group-addon">Фамилия*</label>
             <form:input path="lastName" id="lastName" cssClass="required form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="name" class="input-group-addon">Имя*</label>
             <form:input path="name" id="name" cssClass="required form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="fatherName" class="input-group-addon">Отчество*</label>
             <form:input path="fatherName" id="fatherName" cssClass="required form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="telephone" class="input-group-addon">Телефон*</label>
             <form:input path="telephone" id="telephone" cssClass="required form-control"/>
         </div>
-        <div class="input-group">
+        <div class=" form-group input-group">
             <label for="benefits" class="input-group-addon">Пенсионно удостоверение</label>
             <form:input path="benefits" id="benefits" cssClass="form-control"/>
+        </div>
+        <div class="form-group input-group">
+            <form:checkbox path="memberBoard" id="memberBoard"
+                           cssClass="form-control"
+                           name="fancy-checkbox-success" autocomplete="off"/>
+            <div class="[ btn-group ]">
+                <label for="memberBoard" class="[ btn btn-info ]">
+                    <span class="[ glyphicon glyphicon-ok ]"></span>
+                    <span> </span>
+                </label>
+                <label for="memberBoard" class="[ btn btn-default ]">
+                    Член правления
+                </label>
+            </div>
         </div>
     </div>
     <div class="col-md-6">
         <h4> Адрес </h4>
         <form:hidden path="address.id" id="address.id" cssClass="form-control"/>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="address.city" class="input-group-addon">Город</label>
             <form:input path="address.city" id="address.city" cssClass="form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="address.street" class="input-group-addon">Улица</label>
             <form:input path="address.street" id="address.street" cssClass="form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="address.home" class="input-group-addon">Дом</label>
             <form:input path="address.home" id="address.home" cssClass="form-control"/>
         </div>
-        <div class="input-group">
+        <div class="form-group input-group">
             <label for="address.apartment" class="input-group-addon">Квартира</label>
             <form:input path="address.apartment" id="address.apartment" cssClass="form-control"/>
         </div>

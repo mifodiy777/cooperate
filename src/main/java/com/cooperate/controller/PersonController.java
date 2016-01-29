@@ -36,16 +36,29 @@ public class PersonController {
     private JournalHistoryService historyService;
 
     @RequestMapping(value = "persons", method = RequestMethod.GET)
-    public ModelAndView getPavilionsPage() {
+    public ModelAndView getPersonsPage() {
         return new ModelAndView("persons");
     }
 
     @RequestMapping(value = "allPerson", method = RequestMethod.GET)
-    public ResponseEntity<String> getPavilion() {
+    public ResponseEntity<String> getPersons() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Garag.class, new GaragAdapter());
         gsonBuilder.registerTypeAdapter(Address.class, new AddressAdapter());
         return Utils.convertListToJson(gsonBuilder, personService.getPersons());
+    }
+
+     @RequestMapping(value = "membersPage", method = RequestMethod.GET)
+    public ModelAndView getPavilionsPage() {
+        return new ModelAndView("members");
+    }
+    
+     @RequestMapping(value = "members", method = RequestMethod.GET)
+    public ResponseEntity<String> getMembers() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation(); 
+        gsonBuilder.registerTypeAdapter(Address.class, new AddressAdapter());
+        return Utils.convertListToJson(gsonBuilder, personService.getMembers());
     }
 
     @RequestMapping(value = "person", method = RequestMethod.GET)

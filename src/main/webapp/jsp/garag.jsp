@@ -85,7 +85,7 @@
     });
 
     function resetPerson() {
-        $(".person").each(function(){
+        $(".person").each(function() {
             $(this).val('');
         });
     }
@@ -201,7 +201,7 @@
                     <form:input path="person.fatherName" id="fatherName" cssClass="required form-control person"/>
                 </div>
             </div>
-        </div>      
+        </div>
         <div class="input-group">
             <label for="additionalInformation" class="input-group-addon">Дополнительная информация</label>
             <form:input path="person.additionalInformation" id="additionalInformation" cssClass="form-control person"/>
@@ -240,11 +240,32 @@
                 </div>
             </div>
         </div>
-        <div class="input-group">
-            <label for="benefits" class="input-group-addon">Пенсионно удостоверение</label>
-            <form:input path="person.benefits" id="benefits"
-                        cssClass="form-control person"/>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <label for="benefits" class="input-group-addon">Пенсионно удостоверение</label>
+                    <form:input path="person.benefits" id="benefits"
+                                cssClass="form-control person"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group input-group">
+                    <form:checkbox path="person.memberBoard" id="memberBoard"
+                                   cssClass="form-control"
+                                   name="fancy-checkbox-success" autocomplete="off"/>
+                    <div class="[ btn-group ]">
+                        <label for="memberBoard" class="[ btn btn-info ]">
+                            <span class="[ glyphicon glyphicon-ok ]"></span>
+                            <span> </span>
+                        </label>
+                        <label for="memberBoard" class="[ btn btn-default ]">
+                            Член правления
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
     <div id="searchDivPerson">
 

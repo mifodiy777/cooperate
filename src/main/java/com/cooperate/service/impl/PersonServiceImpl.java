@@ -33,6 +33,12 @@ public class PersonServiceImpl implements PersonService {
         return personDAO.findAll();
     }
 
+    @Override
+    @Transactional
+    public List<Person> getMembers() {
+        return personDAO.findByMemberBoard(true);
+    }
+
     @Transactional
     public Person getPerson(Integer id) {
         return personDAO.findOne(id);

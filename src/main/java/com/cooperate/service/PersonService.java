@@ -15,6 +15,8 @@ public interface PersonService {
 
     List<Person> getPersons();
 
+    List<Person> getMembers();
+
     Person getPerson(Integer id);
 
     List<Person> findByfio(String pattern);

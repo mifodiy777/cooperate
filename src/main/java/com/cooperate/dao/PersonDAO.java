@@ -22,4 +22,6 @@ public interface PersonDAO extends JpaRepository<Person, Integer> {
     //Нахождение определенного владельца по ФИО
     Person findByLastNameAndNameAndFatherName(String lastName, String name, String fatherName);
 
+    List<Person> findByMemberBoard(Boolean memberBoard);
+
 }

@@ -60,7 +60,7 @@
                         </span>
                     </div>
                 </div>
-                <h4>${name}</h4>
+                <h4>${name} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
                 <h4>Долги</h4>
                 <table class="table table-striped">
                     <thead>
