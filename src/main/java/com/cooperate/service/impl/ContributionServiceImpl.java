@@ -86,28 +86,37 @@ public class ContributionServiceImpl implements ContributionService {
                     c.setFinesLastUpdate(calendar);
                 }
                 int newFines = c.getFines() + fines;
-                if (newFines <= sum) {
+                if (newFines < sum) {
                     c.setFines(newFines);
                     c.setFinesSum(c.getFines());
                     contributionDAO.save(c);
+                } else if (newFines == sum) {
+                    c.setFines(newFines);
+                    c.setFinesSum(c.getFines());
+                    c.setFinesOn(false);
+                    contributionDAO.save(c);
                 } else {
-                    for (Rent rent : rentList) {
-                        if (rent.getYearRent() == c.getYear()) {
-                            float sumRent;
-                            if (c.isBenefitsOn()) {
-                                sumRent = rent.getContributeMax() + (rent.getContLandMax()/2) + rent.getContTargetMax();
-
-                            } else {
-                                sumRent = rent.getContributeMax() + rent.getContLandMax() + rent.getContTargetMax();
-
-                            }
-                            if (sum == sumRent && newFines > sum) {
-                                c.setFinesOn(false);
-                                c.setFines(sum.intValue());
-                                c.setFinesSum(c.getFines());
-                                contributionDAO.save(c);
-                            }
+                    //Если новые пени больши суммы долго определяем сумму начислений этого года
+                    Rent rent = null;
+                    for (Rent r : rentList) {
+                        if (r.getYearRent() == c.getYear()) {
+                            rent = r;
                         }
+                    }
+                    float sumRent = 0f;
+                    if (c.isBenefitsOn() && rent != null) {
+                        sumRent = rent.getContributeMax() + (rent.getContLandMax() / 2) + rent.getContTargetMax();
+
+                    } else if (rent != null) {
+                        sumRent = rent.getContributeMax() + rent.getContLandMax() + rent.getContTargetMax();
+
+                    }
+                    //Мы определили сумму начисления и сумму долга, пени не должны превышать сумму долга
+                    if (sumRent != 0f && sum == sumRent && newFines > sum) {
+                        c.setFinesOn(false);
+                        c.setFines(sum.intValue());
+                        c.setFinesSum(c.getFines());
+                        contributionDAO.save(c);
                     }
                     if (c.isFinesOn()) {
                         c.setFinesOn(false);
@@ -115,9 +124,16 @@ public class ContributionServiceImpl implements ContributionService {
                             c.setFines(sum.intValue());
                             c.setFinesSum(c.getFines());
                         }
+                        if(newFines > sum){
+                            c.setFines(sum.intValue());
+                            c.setFinesSum(sum.intValue());
+                        }
                         contributionDAO.save(c);
                     }
                 }
+            } else {
+                c.setFinesOn(false);
+                contributionDAO.save(c);
             }
         }
     }

@@ -180,7 +180,7 @@
 
     <div class="panel with-nav-tabs panel-primary">
         <div class="panel-heading">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs nav-justified">
                 <c:forEach items="${series}" var="number">
                     <li role='presentation' <c:if test="${setSeries eq number}">class="active"</c:if>>
                         <a class="seriesLink"
