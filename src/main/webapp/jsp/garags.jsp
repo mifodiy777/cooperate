@@ -28,7 +28,7 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"render": function(data, type, full) {
+                {data:"number", "render": function(data, type, full) {
                   return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
@@ -49,7 +49,7 @@
                     return "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a><a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-trash\"/></span></a>" + del;
+                            ");\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>" + del;
                 }}
             ]
         });

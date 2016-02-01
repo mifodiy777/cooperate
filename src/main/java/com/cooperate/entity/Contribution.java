@@ -75,6 +75,10 @@ public class Contribution {
     @Column(name = "benefitsOn")
     private boolean benefitsOn;
 
+   //Член правления в этом периоде
+    @Column(name = "member_board_on")
+    private boolean memberBoardOn;
+
     public Integer getId() {
         return id;
     }
@@ -169,5 +173,13 @@ public class Contribution {
 
     public void setBenefitsOn(boolean benefitsOn) {
         this.benefitsOn = benefitsOn;
+    }
+
+    public boolean isMemberBoardOn() {
+        return memberBoardOn;
+    }
+
+    public void setMemberBoardOn(boolean memberBoardOn) {
+        this.memberBoardOn = memberBoardOn;
     }
 }

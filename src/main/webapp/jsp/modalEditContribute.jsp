@@ -227,6 +227,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group input-group">
+                                <form:checkbox path="memberBoardOn" id="memberBoardOn"
+                                               cssClass="form-control"
+                                               name="fancy-checkbox-success" autocomplete="off"/>
+                                <div class="[ btn-group ]">
+                                    <label for="memberBoardOn" class="[ btn btn-info ]">
+                                        <span class="[ glyphicon glyphicon-ok ]"></span>
+                                        <span> </span>
+                                    </label>
+                                    <label for="memberBoardOn" class="[ btn btn-default ]">
+                                       Член правления
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row" style="text-align:center;">
                         <button type="button" class="btn btn-danger" onclick="fullSetDebt()">Полностью</button>
                     </div>

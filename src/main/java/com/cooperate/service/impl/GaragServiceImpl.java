@@ -1,6 +1,6 @@
 package com.cooperate.service.impl;
 
-import com.cooperate.comparator.GaragNumberComparator;
+import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.entity.*;
 import com.cooperate.service.GaragService;
@@ -135,7 +135,7 @@ public class GaragServiceImpl implements GaragService {
         }
         int numberRow = 1;
         List<Garag> garagList = getGarags();
-        Collections.sort(garagList, new GaragNumberComparator());
+        Collections.sort(garagList, new GaragComparator());
         for (Garag garag : garagList) {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
@@ -203,7 +203,7 @@ public class GaragServiceImpl implements GaragService {
         }
         int numberRow = 1;
         List<Garag> garagList = getGaragForPersonBenefits();
-        Collections.sort(garagList, new GaragNumberComparator());
+        Collections.sort(garagList, new GaragComparator());
         for (Garag garag : garagList) {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
@@ -263,7 +263,7 @@ public class GaragServiceImpl implements GaragService {
         }
         int numberRow = 1;
         List<Garag> garagList = garagDAO.getGaragDebt();
-        Collections.sort(garagList, new GaragNumberComparator());
+        Collections.sort(garagList, new GaragComparator());
         for (Garag garag : garagList) {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
@@ -484,7 +484,7 @@ public class GaragServiceImpl implements GaragService {
             int lastRow;
             int number = 1;
             List<Garag> garagList = garagDAO.findBySeries(series);
-            Collections.sort(garagList, new GaragNumberComparator());
+            Collections.sort(garagList, new GaragComparator());
             for (Garag g : garagList) {
                 if (g.getPerson() == null) {
                     continue;

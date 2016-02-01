@@ -127,6 +127,7 @@
                         $("input[name='person.address.home']").val(person.address.home);
                         $("input[name='person.address.apartment']").val(person.address.apartment);
                         $("input[name='person.benefits']").val(person.benefits);
+                        $("#memberBoard").prop("checked",person.memberBoard==true);
                     });
                 });
             });
