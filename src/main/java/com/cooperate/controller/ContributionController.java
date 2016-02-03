@@ -49,18 +49,12 @@ public class ContributionController {
     @RequestMapping(value = "editContribute", method = RequestMethod.GET)
     public String editContributeForm(@RequestParam("idGarag") Integer id,
                                      @RequestParam("year") Integer year, ModelMap map) {
-        boolean notMemberContribute = true;
-        for (Contribution c : garagService.getGarag(id).getContributions()) {
-            if (c.getYear().equals(year)) {
-                notMemberContribute = false;
-                map.addAttribute("contribution", c);
-            }
-        }
-        if (notMemberContribute) {
-            Contribution contribution = new Contribution();
+        Contribution contribution = contributionService.getContributionByGaragAndYear(id, year);
+        if (contribution == null) {
+            contribution = new Contribution();
             contribution.setYear(year);
-            map.addAttribute("contribution", contribution);
         }
+        map.addAttribute("contribution", contribution);
         map.addAttribute("garagId", id);
         Rent rent = rentService.findByYear(year);
         map.addAttribute("maxContribute", rent.getContributeMax());
@@ -113,6 +107,7 @@ public class ContributionController {
         } else {
             payment.setNumber(paymentService.getMaxNumber() + 1);
         }
+        payment.setYear(Calendar.getInstance().get(Calendar.YEAR));
         payment.setFio(fio);
         payment.setAdditionallyPay(count);
         payment.setDatePayment(Calendar.getInstance());

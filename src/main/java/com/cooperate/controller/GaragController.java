@@ -44,12 +44,8 @@ public class GaragController {
     private RentService rentService;
 
     @RequestMapping(value = "garagPage", method = RequestMethod.GET)
-    public String getGaragsPage(@RequestParam(defaultValue = "", value = "series") String series, ModelMap map) {
-        if (!series.isEmpty()) {
-            map.addAttribute("setSeries", series);
-        } else {
-            map.addAttribute("setSeries", "1");
-        }
+    public String getGaragsPage(@RequestParam(defaultValue = "1", value = "series") String series, ModelMap map) {
+        map.addAttribute("setSeries", series);
         map.addAttribute("series", garagService.getSeries());
         return "garags";
     }
@@ -112,10 +108,8 @@ public class GaragController {
         if (garagService.existGarag(garag)) {
             //Если гараж новый и пустой
             if (garag.getId() == null && garag.getPerson() == null) {
-                garag.setContributions(contributionService.getContributionOnGarag(garag));
                 garagService.saveOrUpdate(garag);
                 journalService.event("Новый гараж " + garag.getSeries() + "-" + garag.getNumber() + " сохранен!");
-                contributionService.updateFines();
                 map.put("message", "Гараж сохранен!");
                 return "success";
             }
@@ -130,13 +124,8 @@ public class GaragController {
             }
             //Если гараж новый а владелец уже существует
             if (garag.getId() == null && garag.getPerson().getId() != 0) {
-                Person person = garag.getPerson();
-                garag.setPerson(null);
-                Garag garagNew = garagService.saveOrUpdate(garag);
-                garagNew.setPerson(person);
-                garagService.saveOrUpdate(garagNew);
-                garagNew.setContributions(contributionService.getContributionOnGarag(garag));
-                garagService.saveOrUpdate(garagNew);
+                garag.setContributions(contributionService.getContributionOnGarag(garag));
+                garagService.saveOrUpdate(garag);
                 journalService.event("Новый гараж " + garag.getSeries() + "-" + garag.getNumber() + " сохранен!");
                 contributionService.updateFines();
                 map.put("message", "Гараж сохранен!");

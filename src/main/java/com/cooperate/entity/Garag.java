@@ -18,18 +18,19 @@ public class Garag implements Serializable {
 
     //Ряд
     @Expose
-    @Column(name = "series")
+    @Column(name = "series", nullable = false)
     private String series;
 
     //Номер
     @Expose
-    @Column(name = "number")
+    @Column(name = "number", nullable = false)
     @OrderBy("number")
     private String number;
 
     //Владелец
     @Expose
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
+    @JoinColumn()
     private Person person;
 
 
@@ -90,5 +91,34 @@ public class Garag implements Serializable {
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Garag)) return false;
+
+        Garag garag = (Garag) o;
+
+        if (contributions != null ? !contributions.equals(garag.contributions) : garag.contributions != null)
+            return false;
+        if (id != null ? !id.equals(garag.id) : garag.id != null) return false;
+        if (number != null ? !number.equals(garag.number) : garag.number != null) return false;
+        if (payments != null ? !payments.equals(garag.payments) : garag.payments != null) return false;
+        if (person != null ? !person.equals(garag.person) : garag.person != null) return false;
+        if (series != null ? !series.equals(garag.series) : garag.series != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (series != null ? series.hashCode() : 0);
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (person != null ? person.hashCode() : 0);
+        result = 31 * result + (contributions != null ? contributions.hashCode() : 0);
+        result = 31 * result + (payments != null ? payments.hashCode() : 0);
+        return result;
     }
 }

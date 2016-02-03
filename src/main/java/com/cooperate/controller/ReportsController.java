@@ -2,6 +2,7 @@ package com.cooperate.controller;
 
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
+import com.cooperate.service.PaymentService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ public class ReportsController {
 
     @Autowired
     private GaragService garagService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Autowired
     private JournalHistoryService journalService;
@@ -145,6 +149,37 @@ public class ReportsController {
             os.flush();
             os.close();
             journalService.event("Сформирован отчет  - ДОХОДЫ ");
+        } catch (IOException e) {
+            map.addAttribute("errMessage", "Ошибка отправки отчета");
+            return "error";
+        }
+        return null;
+    }
+
+    //Отчет по платежам
+    @RequestMapping(method = RequestMethod.GET, value = "reportPayments/{year}")
+    public String reportPayments(@PathVariable("year") Integer year, HttpServletResponse response, ModelMap map) throws IOException {
+        HSSFWorkbook workBook = paymentService.reportPayments(year) ;
+        String filename = "Отчет по платежам за" + year;
+        String URLEncodedFileName;
+        try {
+            URLEncodedFileName = URLEncoder.encode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        dateFormat.setLenient(false);
+        String strDate = dateFormat.format(new Date().getTime());
+        String resultFileName = URLEncodedFileName.replace('+', ' ');
+        resultFileName += "(" + strDate + ").xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + resultFileName + "\"");
+        try {
+            ServletOutputStream os = response.getOutputStream();
+            workBook.write(os);
+            os.flush();
+            os.close();
+            journalService.event("Сформирован отчет  - ПЛАТЕЖИ ");
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";

@@ -54,7 +54,7 @@
 
             <p>Прием платежей членов ГК</p>
 
-            <p><a class="btn btn-primary" href="payments" role="button">Перейти »</a></p>
+            <p><a class="btn btn-primary" href="paymentsPage" role="button">Перейти »</a></p>
         </div>
     </div>
 </div>

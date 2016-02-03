@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.*;
 
 @Repository
 public interface PaymentDAO extends JpaRepository<Payment, Integer> {
@@ -15,5 +16,10 @@ public interface PaymentDAO extends JpaRepository<Payment, Integer> {
 
     @Query("select max(p.number) from Payment p")
     Integer getMaxValueNumber();
+
+    @Query("select distinct p.year from Payment p")
+    List<Integer> findYears();
+
+    List<Payment> findByYear(Integer year);
 
 }

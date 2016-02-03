@@ -38,18 +38,23 @@ public class PaymentController {
     @Autowired
     private JournalHistoryService historyService;
 
-    @RequestMapping(value = "payments", method = RequestMethod.GET)
-    public String getPaymentsPage(ModelMap map) {
+    @RequestMapping(value = "paymentsPage", method = RequestMethod.GET)
+    public String getPaymentsPage(@RequestParam(required = false,value = "year") Integer year, ModelMap map) {
+        if(year==null){
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+        map.addAttribute("setYear", year);
+        map.addAttribute("years", paymentService.findYears());
         map.addAttribute("rents", rentService.getRents());
         return "payments";
     }
 
-    @RequestMapping(value = "allPayment", method = RequestMethod.GET)
-    public ResponseEntity<String> getPavilion() {
+    @RequestMapping(value = "payments", method = RequestMethod.GET)
+    public ResponseEntity<String> getPayments(@RequestParam("setYear") Integer year) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.setDateFormat("dd.MM.yyyy");
-        return Utils.convertListToJson(gsonBuilder, paymentService.getPayments());
+        return Utils.convertListToJson(gsonBuilder, paymentService.findByYear(year));
     }
 
     //Модальное окно платежа
@@ -98,7 +103,7 @@ public class PaymentController {
         return "order";
     }
 
-    //Удаление гаража
+    //Удаление платежа
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deletePayment/{id}", method = RequestMethod.POST)
     public String deletePayment(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {

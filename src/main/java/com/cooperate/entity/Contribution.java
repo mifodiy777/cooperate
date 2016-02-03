@@ -1,10 +1,11 @@
 package com.cooperate.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 
 @Entity
-public class Contribution {
+public class Contribution implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,7 +14,7 @@ public class Contribution {
 
     //Год платежного периода
     @OrderBy
-    @Column(name = "year")
+    @Column(name = "year", nullable = false)
     private Integer year;
 
 
@@ -26,13 +27,13 @@ public class Contribution {
     //Аренда земли - долг
     /* При появлении нового начисления и периода данное значения
            становиться равным значением арендой земли класса Rent */
-    @Column(name = "contLand")
+    @Column(name = "cont_land")
     private float contLand;
 
     //Целевой взнос - долг
     /* При появлении нового начисления и периода данное значения
            становиться равным значением целевого взноса класса Rent */
-    @Column(name = "contTarget")
+    @Column(name = "cont_target")
     private float contTarget;
 
     //Пени - долг
@@ -72,7 +73,7 @@ public class Contribution {
 
 
     //Льготный ли период
-    @Column(name = "benefitsOn")
+    @Column(name = "benefits_on")
     private boolean benefitsOn;
 
    //Член правления в этом периоде
@@ -181,5 +182,48 @@ public class Contribution {
 
     public void setMemberBoardOn(boolean memberBoardOn) {
         this.memberBoardOn = memberBoardOn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contribution)) return false;
+
+        Contribution that = (Contribution) o;
+
+        if (Float.compare(that.additionallyCont, additionallyCont) != 0) return false;
+        if (Float.compare(that.balance, balance) != 0) return false;
+        if (benefitsOn != that.benefitsOn) return false;
+        if (Float.compare(that.contLand, contLand) != 0) return false;
+        if (Float.compare(that.contTarget, contTarget) != 0) return false;
+        if (Float.compare(that.contribute, contribute) != 0) return false;
+        if (fines != that.fines) return false;
+        if (finesOn != that.finesOn) return false;
+        if (finesSum != that.finesSum) return false;
+        if (memberBoardOn != that.memberBoardOn) return false;
+        if (finesLastUpdate != null ? !finesLastUpdate.equals(that.finesLastUpdate) : that.finesLastUpdate != null)
+            return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (year != null ? !year.equals(that.year) : that.year != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        result = 31 * result + (contribute != +0.0f ? Float.floatToIntBits(contribute) : 0);
+        result = 31 * result + (contLand != +0.0f ? Float.floatToIntBits(contLand) : 0);
+        result = 31 * result + (contTarget != +0.0f ? Float.floatToIntBits(contTarget) : 0);
+        result = 31 * result + fines;
+        result = 31 * result + finesSum;
+        result = 31 * result + (finesOn ? 1 : 0);
+        result = 31 * result + (finesLastUpdate != null ? finesLastUpdate.hashCode() : 0);
+        result = 31 * result + (balance != +0.0f ? Float.floatToIntBits(balance) : 0);
+        result = 31 * result + (additionallyCont != +0.0f ? Float.floatToIntBits(additionallyCont) : 0);
+        result = 31 * result + (benefitsOn ? 1 : 0);
+        result = 31 * result + (memberBoardOn ? 1 : 0);
+        return result;
     }
 }

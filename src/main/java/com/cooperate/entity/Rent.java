@@ -12,7 +12,7 @@ public class Rent {
     private Integer id;
 
     //Год начисления
-    @Column(name = "year_rent", unique = true)
+    @Column(name = "year_rent", nullable = false, unique = true)
     private int yearRent;
 
     //Начисление членского взноса

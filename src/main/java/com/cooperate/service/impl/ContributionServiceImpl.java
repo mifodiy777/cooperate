@@ -1,18 +1,20 @@
 package com.cooperate.service.impl;
 
+import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.ContributionDAO;
-import com.cooperate.entity.Contribution;
-import com.cooperate.entity.Garag;
-import com.cooperate.entity.Payment;
-import com.cooperate.entity.Rent;
+import com.cooperate.entity.*;
 import com.cooperate.service.ContributionService;
 import com.cooperate.service.RentService;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -62,6 +64,11 @@ public class ContributionServiceImpl implements ContributionService {
             }
         }
         return contributionList;
+    }
+
+    @Override
+    public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
+        return contributionDAO.getContributionByGaragAndYear(garagId, year);
     }
 
     //Вычисление пени
@@ -124,7 +131,7 @@ public class ContributionServiceImpl implements ContributionService {
                             c.setFines(sum.intValue());
                             c.setFinesSum(c.getFines());
                         }
-                        if(newFines > sum){
+                        if (newFines > sum) {
                             c.setFines(sum.intValue());
                             c.setFinesSum(sum.intValue());
                         }
@@ -184,5 +191,5 @@ public class ContributionServiceImpl implements ContributionService {
                 }
             }
         }
-    }
+    }   
 }

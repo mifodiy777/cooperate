@@ -131,8 +131,8 @@
                 <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/persons.jsp'}">active</c:if>">
                     <a href="<c:url value="/persons"/>"><span class="glyphicon glyphicon-user"></span> Владельцы</a>
                 </li>
-                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/order.jsp'}">active</c:if>">
-                    <a href="<c:url value="/payments"/>"><span class="glyphicon glyphicon-credit-card"></span>
+                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/payments.jsp'}">active</c:if>">
+                    <a href="<c:url value="/paymentsPage"/>"><span class="glyphicon glyphicon-credit-card"></span>
                         Оплата</a>
                 </li>
                 <li class="dropdown">

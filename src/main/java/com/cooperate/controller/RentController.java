@@ -3,7 +3,6 @@ package com.cooperate.controller;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Rent;
-import com.cooperate.service.ContributionService;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.RentService;
@@ -26,9 +25,6 @@ public class RentController {
 
     @Autowired
     private GaragService garagService;
-
-    @Autowired
-    private ContributionService contributionService;
 
     @Autowired
     private JournalHistoryService historyService;

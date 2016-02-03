@@ -42,10 +42,4 @@ public interface GaragDAO extends JpaRepository<Garag, Integer> {
     List<Garag> findBySeries(String series);
 
 
-    @Query("select distinct g.id, CONCAT(g.series,'-',g.number),p.id,CONCAT(p.lastName,' ',p.name,' ',p.fatherName), p.telephone, " +
-            "ad.city, ad.street,ad.home, ad.apartment, p.benefits " +
-            "from Garag as g LEFT JOIN g.person as p LEFT JOIN p.address as ad order by g.series, g.number")
-    List<Object[]> getGaragsView();
-
-
 }

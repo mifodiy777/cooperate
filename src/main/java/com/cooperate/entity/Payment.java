@@ -3,11 +3,12 @@ package com.cooperate.entity;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 
 /*Класс платежа*/
 @Entity
-public class Payment {
+public class Payment implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,10 +21,14 @@ public class Payment {
     @Column(name = "number_payment", nullable = false, unique = true)
     private Integer number;
 
+    @Expose
+    @Column(name = "year", nullable = false)
+    private Integer year;
+
 
     /*Дата платежа*/
     @Expose
-    @Column(name = "date_payment")
+    @Column(name = "date_payment", nullable = false)
     private Calendar datePayment;
 
     //К какому гаражу прикреплен платеж
@@ -33,7 +38,7 @@ public class Payment {
 
     //ФИО платильщика
     @Expose
-    @Column(name = "person_fio")
+    @Column(name = "person_fio", nullable = false)
     private String fio;
 
 
@@ -87,6 +92,14 @@ public class Payment {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Calendar getDatePayment() {
@@ -167,5 +180,47 @@ public class Payment {
 
     public void setDebtPastPay(float debtPastPay) {
         this.debtPastPay = debtPastPay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Payment)) return false;
+
+        Payment payment = (Payment) o;
+
+        if (Float.compare(payment.additionallyPay, additionallyPay) != 0) return false;
+        if (Float.compare(payment.contLandPay, contLandPay) != 0) return false;
+        if (Float.compare(payment.contTargetPay, contTargetPay) != 0) return false;
+        if (Float.compare(payment.contributePay, contributePay) != 0) return false;
+        if (Float.compare(payment.debtPastPay, debtPastPay) != 0) return false;
+        if (finesPay != payment.finesPay) return false;
+        if (Float.compare(payment.pay, pay) != 0) return false;
+        if (datePayment != null ? !datePayment.equals(payment.datePayment) : payment.datePayment != null) return false;
+        if (fio != null ? !fio.equals(payment.fio) : payment.fio != null) return false;
+        if (garag != null ? !garag.equals(payment.garag) : payment.garag != null) return false;
+        if (id != null ? !id.equals(payment.id) : payment.id != null) return false;
+        if (number != null ? !number.equals(payment.number) : payment.number != null) return false;
+        if (year != null ? !year.equals(payment.year) : payment.year != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        result = 31 * result + (datePayment != null ? datePayment.hashCode() : 0);
+        result = 31 * result + (garag != null ? garag.hashCode() : 0);
+        result = 31 * result + (fio != null ? fio.hashCode() : 0);
+        result = 31 * result + (pay != +0.0f ? Float.floatToIntBits(pay) : 0);
+        result = 31 * result + (contributePay != +0.0f ? Float.floatToIntBits(contributePay) : 0);
+        result = 31 * result + (contLandPay != +0.0f ? Float.floatToIntBits(contLandPay) : 0);
+        result = 31 * result + (contTargetPay != +0.0f ? Float.floatToIntBits(contTargetPay) : 0);
+        result = 31 * result + finesPay;
+        result = 31 * result + (additionallyPay != +0.0f ? Float.floatToIntBits(additionallyPay) : 0);
+        result = 31 * result + (debtPastPay != +0.0f ? Float.floatToIntBits(debtPastPay) : 0);
+        return result;
     }
 }

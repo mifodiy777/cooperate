@@ -21,7 +21,7 @@
             "order": [
                 [ 0, 'desc' ]
             ],
-            "ajax": "allPayment",
+            "ajax": "payments?setYear=${setYear}",
             "fnDrawCallback": function () {
                 $('a.deleteButton').popConfirm({
                     title: "Удалить?",
@@ -42,9 +42,9 @@
 
                 }, 'title': 'Дата'},
                 {"render": function(data, type, full) {
-                    return  full.garag.series+"-"+full.garag.number;
+                    return  full.garag.series + "-" + full.garag.number;
 
-                }, 'title': 'Гараж'},               
+                }, 'title': 'Гараж'},
                 {"data": "fio", 'title': 'ФИО'},
                 {"render": function(data, type, full) {
                     return  (full.contributePay + full.contLandPay + full.contTargetPay +
@@ -75,7 +75,7 @@
                 type: "post",
                 success: function (html) {
                     showSuccessMessage(html);
-                    $("#paymentTable").DataTable().ajax.url("allPayment").load(null, false);
+                    $("#paymentTable").DataTable().ajax.url("payments?setYear=${setYear}").load(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -93,12 +93,26 @@
 
 </script>
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <input type="hidden" id="setYear" value="${setYear}">
 
+    <div class="panel with-nav-tabs panel-primary">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs nav-justified">
+                <c:forEach items="${years}" var="year">
+                    <li role='presentation' <c:if test="${setYear eq year}">class="active"</c:if>>
+                        <a class="seriesLink"
+                           href="<c:url value="/paymentsPage">
+                        <c:param name="year" value="${year}"/></c:url>">
+                            <c:out value="${year}"/>
+                        </a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
+        <div class="panel-body">
             <div class="row">
                 <div class="col-md-3">
-                    <h3>Платежи</h3>
+                    <h3>Платежи ${setYear} года</h3>
                     Общее количество: <span id="count" class="badge"></span>
                 </div>
 
@@ -122,10 +136,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-body">
             <table id="paymentTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
         </div>
-
     </div>
     <jsp:include page="footer.jsp"/>

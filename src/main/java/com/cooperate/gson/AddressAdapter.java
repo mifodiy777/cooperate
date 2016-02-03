@@ -12,20 +12,16 @@ public class AddressAdapter implements JsonSerializer<Address> {
 
     public JsonElement serialize(Address src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonObject = new JsonObject();
-        if (src.getCity() == null || src.getStreet()==null) {
+        if (src.getCity().isEmpty() || src.getStreet().isEmpty()) {
             jsonObject.addProperty("address", "");
-            return jsonObject;
-        }
-        if (!(src.getCity().equals("") && src.getStreet().equals(""))) {
-            if (src.getApartment().equals("")) {
+        } else {
+            if (src.getApartment().isEmpty()) {
                 jsonObject.addProperty("address", "г." + src.getCity() + " ул." + src.getStreet() +
                         " д." + src.getHome());
             } else {
                 jsonObject.addProperty("address", "г." + src.getCity() + " ул." + src.getStreet() +
                         " д." + src.getHome() + " кв." + src.getApartment());
             }
-        } else {
-            jsonObject.addProperty("address", "");
         }
         return jsonObject;
     }
