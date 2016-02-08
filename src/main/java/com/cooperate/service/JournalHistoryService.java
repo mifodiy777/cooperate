@@ -8,8 +8,6 @@ public interface JournalHistoryService {
 
     List<JournalHistory> getJournalHistorys();
 
-    JournalHistory getJournalHistory(Integer id);
-
     void delete(Integer id);
 
     void event(String event);

@@ -36,21 +36,10 @@
             },
             "columns": [
                 {"data": "number", 'title': 'Платеж'},
-                {"render": function(data, type, full) {
-                    return  full.datePayment.dayOfMonth + " /" + (full.datePayment.month + 1) + "/" +
-                            full.datePayment.year;
-
-                }, 'title': 'Дата'},
-                {"render": function(data, type, full) {
-                    return  full.garag.series + "-" + full.garag.number;
-
-                }, 'title': 'Гараж'},
+                {"data": "datePay", 'title': 'Дата'},
+                {"data":"garag.name", 'title': 'Гараж'},
                 {"data": "fio", 'title': 'ФИО'},
-                {"render": function(data, type, full) {
-                    return  (full.contributePay + full.contLandPay + full.contTargetPay +
-                            full.finesPay + full.additionallyPay + full.pay).toFixed(2) + " руб.";
-
-                }, 'title': 'Сумма'},
+                {"data":"sumPay", 'title': 'Сумма'},
                 { 'title': 'Действия', "render": function (data, type, full) {
                     var del = "";
                     if ($("#role").val() == 1) {

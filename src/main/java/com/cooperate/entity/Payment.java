@@ -4,11 +4,12 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /*Класс платежа*/
 @Entity
-public class Payment implements Serializable{
+public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -110,6 +111,11 @@ public class Payment implements Serializable{
         this.datePayment = datePayment;
     }
 
+    public String getDatePay() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd.MM.yyyy");
+        return fmt.format(this.datePayment);
+    }
+
     public Garag getGarag() {
         return garag;
     }
@@ -132,6 +138,10 @@ public class Payment implements Serializable{
 
     public void setPay(float pay) {
         this.pay = pay;
+    }
+
+    public Float getSumPay(){
+        return this.pay+this.contributePay+this.contLandPay+this.contTargetPay+this.additionallyPay+this.finesPay;
     }
 
     public float getContributePay() {

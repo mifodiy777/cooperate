@@ -133,7 +133,7 @@
     <c:forEach items="${person.garagList}" var="garag" varStatus="index">
         <div class="input-group garagRow">
             <input type="hidden" name="garagList[${index.index}].id" value="<c:out value="${garag.id}"/>"/>
-            <h4><b>Гараж: </b><c:out value="Ряд: ${garag.series} Номер: ${garag.number}"/>
+            <h4><b>Гараж: </b><c:out value="${garag.fullName}"/>
                 <span id="${garag.id}" title="Удалить" class="glyphicon glyphicon-remove buttonDelete"></span>
             </h4>
 

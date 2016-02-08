@@ -9,8 +9,6 @@ public interface ContributionService {
 
     void saveOrUpdate(Contribution contribution);
 
-    void delete(Integer id);
-
     Contribution getContributionByGaragAndYear(Integer garagId, Integer year);
 
     List<Contribution> getContributionOnGarag(Garag garag);

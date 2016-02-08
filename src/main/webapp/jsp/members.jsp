@@ -15,12 +15,10 @@
             },
             "columns": [
                 {"render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editPerson(' + full.id + ')\">' +
-                            full.lastName + " " + full.name + " " + full.fatherName + '</a>'
-
+                    return '<a href=\"#\" onclick=\"editPerson(' + full.id + ')\">' +  full.fio + '</a>'
                 }, 'title': 'ФИО'},
                 {"data":"telephone", 'title': 'Телефон'},
-                {"data": "address.address",  'title': 'Адрес'},
+                {"data": "address.addr",  'title': 'Адрес'},
                 {"data": "benefits",  'title': 'Льготы'}
             ]
         });

@@ -30,7 +30,6 @@ public class Garag implements Serializable {
     //Владелец
     @Expose
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn()
     private Person person;
 
 
@@ -91,6 +90,14 @@ public class Garag implements Serializable {
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+    }
+
+    public String getName(){
+        return  this.series+"-"+this.number;
+    }
+
+    public String getFullName(){
+        return " Ряд: " + this.series + " Номер: " + this.number;
     }
 
     @Override

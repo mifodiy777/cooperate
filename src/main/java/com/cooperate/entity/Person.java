@@ -132,6 +132,10 @@ public class Person implements Serializable {
         this.memberBoard = memberBoard;
     }
 
+    public String getFIO() {
+        return this.lastName + " " + this.name + " " + this.fatherName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

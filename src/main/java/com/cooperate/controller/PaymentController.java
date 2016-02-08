@@ -39,8 +39,8 @@ public class PaymentController {
     private JournalHistoryService historyService;
 
     @RequestMapping(value = "paymentsPage", method = RequestMethod.GET)
-    public String getPaymentsPage(@RequestParam(required = false,value = "year") Integer year, ModelMap map) {
-        if(year==null){
+    public String getPaymentsPage(@RequestParam(required = false, value = "year") Integer year, ModelMap map) {
+        if (year == null) {
             year = Calendar.getInstance().get(Calendar.YEAR);
         }
         map.addAttribute("setYear", year);
@@ -69,20 +69,8 @@ public class PaymentController {
     //Сохранение платежа
     @RequestMapping(value = "savePayment", method = RequestMethod.POST)
     public String savePayment(Payment payment, ModelMap map) {
-        payment.setDatePayment(Calendar.getInstance());
-        Integer number = paymentService.getMaxNumber();
-        if (number == null) {
-            payment.setNumber(1);
-        } else {
-            payment.setNumber(paymentService.getMaxNumber() + 1);
-        }
-        Payment paymentNew = paymentService.saveOrUpdate(payment);
-        paymentService.pay(paymentNew);
-        payment.setDebtPastPay(garagService.sumContribution(paymentNew.getGarag()));
-        paymentService.saveOrUpdate(paymentNew);
-        Garag garag = garagService.getGarag(paymentNew.getGarag().getId());
-        historyService.event("Оплата по гаражу:" + garag.getSeries() + "-" +
-                garag.getNumber() + " произведена");
+        payment = paymentService.pay(payment);
+        historyService.event("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
         map.put("message", "Оплата произведена");
         return "success";
     }
@@ -108,10 +96,8 @@ public class PaymentController {
     @RequestMapping(value = "deletePayment/{id}", method = RequestMethod.POST)
     public String deletePayment(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {
-            Payment payment = paymentService.getPayment(id);
-            Garag garag = payment.getGarag();
             paymentService.delete(id);
-            historyService.event("Платеж к гаражу " + garag.getSeries() + "-" + garag.getNumber() + " удален!");
+            historyService.event("Платеж к гаражу " + paymentService.getPayment(id).getGarag().getName() + " удален!");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить платеж");
             response.setStatus(409);

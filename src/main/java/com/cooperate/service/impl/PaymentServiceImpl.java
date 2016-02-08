@@ -1,7 +1,6 @@
 package com.cooperate.service.impl;
 
 import com.cooperate.dao.PaymentDAO;
-import com.cooperate.entity.Address;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
@@ -44,11 +43,6 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentDAO.save(rent);
     }
 
-    @Override
-    @Transactional
-    public List<Payment> getPayments() {
-        return paymentDAO.findAll();
-    }
 
     @Override
     public List<Payment> findByYear(Integer year) {
@@ -56,7 +50,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
     public Payment getPayment(Integer id) {
         return paymentDAO.getOne(id);
     }
@@ -81,283 +74,74 @@ public class PaymentServiceImpl implements PaymentService {
     //Метод платежа
     @Override
     @Transactional
-    public void pay(Payment payment) {
-        Garag garag = garagService.getGarag(payment.getGarag().getId());
+    public Payment pay(Payment payment) {
+        //Назначили время
         Calendar now = Calendar.getInstance();
-        String fio = garag.getPerson().getLastName() + " " + garag.getPerson().getName() +
-                " " + garag.getPerson().getFatherName();
-        payment.setFio(fio);
-        //Находим длинну коллекции
+        payment.setDatePayment(now);
+        Integer number = getMaxNumber();
+        number = (number == null) ? 1 : getMaxNumber() + 1;
+        //Назначили номер
+        payment.setNumber(number);
+        //Получаем гараж
+        Garag garag = garagService.getGarag(payment.getGarag().getId());
+        payment.setFio(garag.getPerson().getFIO());
         int size = garag.getContributions().size();
-        //Инициализируем счетчик
-        int i = 0;
-        //Достаем все начисления за все года отсортированные по году ASC
+        int i = 1;
         for (Contribution c : garag.getContributions()) {
-            i++;
-            // Есть ли долг по членскому взносу
-            if (c.getContribute() != 0f) {
-                //Если он меньше платежа идем дальше
-                if (c.getContribute() < payment.getPay()) {
-                    //Вносим значения суммы за членский взнос в платеж(чек)
-                    payment.setContributePay(payment.getContributePay() + c.getContribute());
-                    // Вычитаем потраченные деньги из платежа
-                    payment.setPay(payment.getPay() - c.getContribute());
-                    //Обнуляем долг членского взноса за текущий год
-                    c.setContribute(0f);
-                    //Проверяем  долг за землю меньше оставшихся средств платежа
-                    if (c.getContLand() < payment.getPay()) {
-                        //Вносим значения суммы за аренду в платеж(чек)
-                        payment.setContLandPay(payment.getContLandPay() + c.getContLand());
-                        //Вычитаем
-                        payment.setPay(payment.getPay() - c.getContLand());
-                        //Обнуляем
-                        c.setContLand(0f);
-                        if (c.getContTarget() < payment.getPay()) {
-                            payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                            payment.setPay(payment.getPay() - c.getContTarget());
-                            c.setContTarget(0f);
-                            c.setFinesOn(false);
-                            if (c.getFines() < payment.getPay()) {
-                                payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                                payment.setPay(payment.getPay() - c.getFines());
-                                c.setFines(0);
-                                if (size == i) {
-                                    c.setBalance(payment.getPay());
-                                    paymentDAO.save(payment);
-                                    contributionService.saveOrUpdate(c);
-                                }
-                            }
-                            if (c.getFines() == payment.getPay()) {
-                                payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                                payment.setPay(payment.getPay() - c.getFines());
-                                c.setFines(0);
-                                paymentDAO.save(payment);
-                                contributionService.saveOrUpdate(c);
-                                break;
-                            }
-                            if (c.getFines() > payment.getPay()) {
-                                payment.setFinesPay(payment.getFinesPay() + (int) payment.getPay());
-                                c.setFines(c.getFines() - (int) payment.getPay());
-                                payment.setPay(0f);
-                                paymentDAO.save(payment);
-                                contributionService.saveOrUpdate(c);
-                                break;
-                            }
-                        }
-                        if (c.getContTarget() == payment.getPay()) {
-                            payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                            c.setContTarget(c.getContTarget() - payment.getPay());
-                            payment.setPay(0f);
-                            c.setFinesOn(false);
-                            paymentDAO.save(payment);
-                            contributionService.saveOrUpdate(c);
-                            break;
-                        }
-                        if (c.getContTarget() > payment.getPay()) {
-                            payment.setContTargetPay(payment.getContTargetPay() + payment.getPay());
-                            c.setContTarget(c.getContTarget() - payment.getPay());
-                            payment.setPay(0f);
-                            paymentDAO.save(payment);
-                            contributionService.saveOrUpdate(c);
-                            break;
-                        }
+            Float reminder = c.getSumFixed() - payment.getPay();
+            //Если после платежа текущего периода остались деньги
+            if (reminder >= 0) {
+                payment.setContributePay(payment.getContributePay() + c.getContribute());
+                c.setContribute(0f);
+                payment.setContLandPay(payment.getContLandPay() + c.getContLand());
+                c.setContLand(0f);
+                payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
+                c.setContTarget(0f);
+                c.setFinesOn(false);
+                reminder -= c.getFines();
+                //Если взнос уплачен проверяем оплату по пеням.
+                if (reminder >= 0) {
+                    payment.setFinesPay(payment.getFinesPay() + c.getFines());
+                    c.setFines(0);
+                    if (i == size) {
+                        c.setBalance(reminder);
                     }
-                    if (c.getContLand() == payment.getPay()) {
-                        payment.setContLandPay(payment.getContLandPay() + c.getContLand());
-                        c.setContLand(c.getContLand() - payment.getPay());
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-                    if (c.getContLand() > payment.getPay()) {
-                        payment.setContLandPay(payment.getContLandPay() + payment.getPay());
-                        c.setContLand(c.getContLand() - payment.getPay());
-                        payment.setPay(0f);
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-
+                    payment.setPay(reminder);
+                } else {
+                    payment.setFinesPay(reminder.intValue());
+                    c.setFines(c.getFines() + reminder.intValue());
+                    payment.setPay(0);
                 }
-                if (c.getContribute() == payment.getPay()) {
-                    payment.setContributePay(payment.getContributePay() + c.getContribute());
-                    c.setContribute(c.getContribute() - payment.getPay());
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
-                }
+            } else {
                 if (c.getContribute() > payment.getPay()) {
-                    payment.setContributePay(payment.getContributePay() + payment.getPay());
+                    payment.setContributePay(payment.getPay());
                     c.setContribute(c.getContribute() - payment.getPay());
-                    payment.setPay(0f);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
-                }
-            }
-            if (c.getContLand() != 0) {
-                if (c.getContLand() < payment.getPay()) {
-                    //Вносим значения суммы за аренду в платеж(чек)
-                    payment.setContLandPay(payment.getContLandPay() + c.getContLand());
-                    //Вычитаем
-                    payment.setPay(payment.getPay() - c.getContLand());
-                    //Обнуляем
-                    c.setContLand(0f);
-                    if (c.getContTarget() < payment.getPay()) {
-                        payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                        payment.setPay(payment.getPay() - c.getContTarget());
-                        c.setContTarget(0f);
-                        c.setFinesOn(false);
-                        if (c.getFines() < payment.getPay()) {
-                            payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                            payment.setPay(payment.getPay() - c.getFines());
-                            c.setFines(0);
-                            if (size == i) {
-                                c.setBalance(payment.getPay());
-                                paymentDAO.save(payment);
-                                contributionService.saveOrUpdate(c);
-                            }
-
-                        }
-                        if (c.getFines() == payment.getPay()) {
-                            payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                            payment.setPay(payment.getPay() - c.getFines());
-                            c.setFines(0);
-                            paymentDAO.save(payment);
-                            contributionService.saveOrUpdate(c);
-                            break;
-                        }
-                        if (c.getFines() > payment.getPay()) {
-                            payment.setFinesPay(payment.getFinesPay() + (int) payment.getPay());
-                            c.setFines(c.getFines() - (int) payment.getPay());
-                            payment.setPay(0f);
-                            paymentDAO.save(payment);
-                            contributionService.saveOrUpdate(c);
-                            break;
-                        }
-                    }
-                    if (c.getContTarget() == payment.getPay()) {
-                        payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                        c.setContTarget(c.getContTarget() - payment.getPay());
-                        payment.setPay(0f);
-                        c.setFinesOn(false);
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-                    if (c.getContTarget() > payment.getPay()) {
-                        payment.setContTargetPay(payment.getContTargetPay() + payment.getPay());
-                        c.setContTarget(c.getContTarget() - payment.getPay());
-                        payment.setPay(0f);
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-                }
-                if (c.getContLand() == payment.getPay()) {
-                    payment.setContLandPay(payment.getContLandPay() + c.getContLand());
-                    c.setContLand(c.getContLand() - payment.getPay());
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
+                    payment.setPay(0);
+                } else {
+                    payment.setContributePay(c.getContribute());
+                    c.setContribute(0f);
+                    payment.setPay(payment.getPay() - payment.getContributePay());
                 }
                 if (c.getContLand() > payment.getPay()) {
-                    payment.setContLandPay(payment.getContLandPay() + payment.getPay());
+                    payment.setContLandPay(payment.getPay());
                     c.setContLand(c.getContLand() - payment.getPay());
-                    payment.setPay(0f);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
-                }
-            }
-            if (c.getContTarget() != 0) {
-                if (c.getContTarget() < payment.getPay()) {
-                    payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                    payment.setPay(payment.getPay() - c.getContTarget());
-                    c.setContTarget(0f);
-                    c.setFinesOn(false);
-                    if (c.getFines() < payment.getPay()) {
-                        payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                        payment.setPay(payment.getPay() - c.getFines());
-                        c.setFines(0);
-                        if (size == i) {
-                            c.setBalance(payment.getPay());
-                            paymentDAO.save(payment);
-                            contributionService.saveOrUpdate(c);
-                        }
-
-                    }
-                    if (c.getFines() == payment.getPay()) {
-                        payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                        payment.setPay(payment.getPay() - c.getFines());
-                        c.setFines(0);
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-                    if (c.getFines() > payment.getPay()) {
-                        payment.setFinesPay(payment.getFinesPay() + (int) payment.getPay());
-                        c.setFines(c.getFines() - (int) payment.getPay());
-                        payment.setPay(0f);
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                        break;
-                    }
-                }
-                if (c.getContTarget() == payment.getPay()) {
-                    payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
-                    c.setContTarget(c.getContTarget() - payment.getPay());
-                    payment.setPay(0f);
-                    c.setFinesOn(false);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
+                    payment.setPay(0);
+                } else {
+                    payment.setContLandPay(c.getContLand());
+                    c.setContLand(0f);
+                    payment.setPay(payment.getPay() - payment.getContLandPay());
                 }
                 if (c.getContTarget() > payment.getPay()) {
-                    payment.setContTargetPay(payment.getContTargetPay() + payment.getPay());
+                    payment.setContTargetPay(payment.getPay());
                     c.setContTarget(c.getContTarget() - payment.getPay());
-                    payment.setPay(0f);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
-                }
-
-            }
-            if (c.getFines() != 0) {
-                if (c.getFines() < payment.getPay()) {
-                    payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                    payment.setPay(payment.getPay() - c.getFines());
-                    c.setFines(0);
-                    if (size == i) {
-                        c.setBalance(payment.getPay());
-                        paymentDAO.save(payment);
-                        contributionService.saveOrUpdate(c);
-                    }
-
-                }
-                if (c.getFines() == payment.getPay()) {
-                    payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                    payment.setPay(payment.getPay() - c.getFines());
-                    c.setFines(0);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
-                }
-                if (c.getFines() > payment.getPay()) {
-                    payment.setFinesPay(payment.getFinesPay() + (int) payment.getPay());
-                    c.setFines(c.getFines() - (int) payment.getPay());
-                    payment.setPay(0f);
-                    paymentDAO.save(payment);
-                    contributionService.saveOrUpdate(c);
-                    break;
+                    payment.setPay(0);
                 }
             }
-            if (size == i) {
-                c.setBalance(payment.getPay());
-                paymentDAO.save(payment);
-                contributionService.saveOrUpdate(c);
-            }
+            contributionService.saveOrUpdate(c);
+            i++;
         }
+        payment.setDebtPastPay(garagService.sumContribution(payment.getGarag()));
+        return saveOrUpdate(payment);
     }
 
     @Override
@@ -411,7 +195,7 @@ public class PaymentServiceImpl implements PaymentService {
             HSSFCell datePay = row.createCell(2);
             datePay.setCellValue(dateFull);
             HSSFCell garagCell = row.createCell(3);
-            garagCell.setCellValue(p.getGarag().getSeries() + "-" + p.getGarag().getNumber());
+            garagCell.setCellValue(p.getGarag().getName());
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());
             Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +

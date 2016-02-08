@@ -63,46 +63,31 @@
 <div id="formModalPay" class="modal fade" role="dialog">
     <div class="modal-dialog  modal-sm">
 
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <c:if test="${garag.person.id==null}">
-                    <div class="modal-body">
-                        <h4>Гаражу не назначен владелец</h4>
-                    </div>
-                </c:if>
-                <c:if test="${garag.person.id!=null}">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Введите сумму платежа</h4>
-                </c:if>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Введите сумму платежа</h4>
             </div>
             <form:form modelAttribute="payment" id="paymentForm" method="post" action="savePayment">
-                <c:if test="${garag.person.id!=null}">
-                    <div class="modal-body">
-                        <form:hidden path="garag.id" id="garagId"/>
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-1">
-                                <div class="input-group">
-                                    <label for="pay" class="input-group-addon">Cумма*</label>
-                                    <form:input path="pay" id="pay"
-                                                cssClass="form-control"/>
-                                    <span class="input-group-addon"> руб.</span>
-                                </div>
+                <div class="modal-body">
+                    <form:hidden path="garag.id" id="garagId"/>
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="input-group">
+                                <label for="pay" class="input-group-addon">Cумма*</label>
+                                <form:input path="pay" id="pay"
+                                            cssClass="form-control"/>
+                                <span class="input-group-addon"> руб.</span>
                             </div>
                         </div>
-
                     </div>
-                </c:if>
-                <div class="modal-footer" align="center">
-                    <c:if test="${garag.person.id!=null}">
-                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
-                            Оплатить
-                        </button>
-                    </c:if>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-
                 </div>
-
+                <div class="modal-footer" align="center">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                        Оплатить
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
             </form:form>
         </div>
 

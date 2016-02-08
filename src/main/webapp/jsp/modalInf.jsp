@@ -43,7 +43,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <input id="idGarag" type="hidden" value="${garag.id}">
-                <h4 class="modal-title">Гараж ${garag.series}-${garag.number}</h4>
+                <h4 class="modal-title">Гараж ${garag.name}</h4>
             </div>
             <div class="modal-body">
                 <div id="setAddingDiv" style="display:none">
@@ -60,7 +60,7 @@
                         </span>
                     </div>
                 </div>
-                <h4>${name} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
+                <h4>${garag.person.fio} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
                 <h4>Долги</h4>
                 <table class="table table-striped">
                     <thead>
@@ -76,10 +76,10 @@
                     </thead>
                     <c:forEach items="${garag.contributions}" var="c">
                         <%--  Проверить--%>
-                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
+                        <c:if test="${(c.fixedSum+c.fines) !=0}">
                             <tr>
                                 <td>${c.year}</td>
-                                <td>${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
+                                <td>${c.fixedSum+c.fines} руб.</td>
                                 <td>${c.contribute} руб.</td>
                                 <td>${c.contLand} руб.
                                     <c:if test="${c.benefitsOn}"> <span

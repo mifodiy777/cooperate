@@ -29,7 +29,7 @@
             },
             "columns": [
                 {data:"number", "render": function(data, type, full) {
-                  return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
+                    return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
                     if (full.person != null) {
@@ -46,10 +46,16 @@
                         del = "<a href=\"#\" class=\"btnTable deleteButton  btn btn-danger btn-sm\" title=\"Удалить гараж\" data-placement=\"top\" id=\"deleteGarag_" + full.id +
                                 "\" onclick=\"deleteGarag('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
                     }
-                    return "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a><a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>" + del;
+                    var actionsBtn = "";
+                    if (full.person != null) {
+                        actionsBtn = "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
+                                ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +
+                                ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a>" +
+                                "<a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
+                                ");\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>";
+                    }
+
+                    return actionsBtn + del;
                 }}
             ]
         });

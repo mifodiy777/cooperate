@@ -76,7 +76,7 @@ public class Contribution implements Serializable {
     @Column(name = "benefits_on")
     private boolean benefitsOn;
 
-   //Член правления в этом периоде
+    //Член правления в этом периоде
     @Column(name = "member_board_on")
     private boolean memberBoardOn;
 
@@ -182,6 +182,10 @@ public class Contribution implements Serializable {
 
     public void setMemberBoardOn(boolean memberBoardOn) {
         this.memberBoardOn = memberBoardOn;
+    }
+
+    public Float getSumFixed() {
+        return this.contribute + this.contLand + this.contTarget;
     }
 
     @Override

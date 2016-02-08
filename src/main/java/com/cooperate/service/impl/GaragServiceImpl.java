@@ -41,48 +41,41 @@ public class GaragServiceImpl implements GaragService {
         garagDAO.delete(id);
     }
 
-    @Transactional
     public List<Garag> getGarags() {
         return garagDAO.findAll();
     }
 
     @Override
-    @Transactional
     public List<String> getSeries() {
         return garagDAO.getSeries();
     }
 
     @Override
-    @Transactional
     public List<Garag> findBySeries(String series) {
         return garagDAO.findBySeries(series);
     }
 
     @Override
-    @Transactional
     public List<Garag> getGaragForPersonBenefits() {
         return garagDAO.getGaragForPersonBenefits();
     }
 
-    @Transactional
+    @Override
     public Garag getGarag(Integer id) {
         return garagDAO.findOne(id);
     }
 
     @Override
-    @Transactional
     //Общая сумма долга
     public Float sumContribution(Garag garag) {
-        Garag garagNew = garagDAO.getOne(garag.getId());
         Float sum = 0f;
-        for (Contribution c : garagNew.getContributions()) {
-            sum += c.getContLand() + c.getContribute() + c.getContTarget() +
-                    c.getFines();
+        for (Contribution c : garagDAO.getOne(garag.getId()).getContributions()) {
+            sum += c.getSumFixed() + c.getFines();
         }
         return sum;
     }
 
-    @Transactional
+    @Override
     //Существует ли гараж
     public Boolean existGarag(Garag garag) {
         if (garag.getId() == null) {
@@ -141,22 +134,14 @@ public class GaragServiceImpl implements GaragService {
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
             HSSFCell garagCell = nextRow.createCell(1);
-            garagCell.setCellValue(garag.getSeries() + "-" + garag.getNumber());
+            garagCell.setCellValue(garag.getName());
             if (garag.getPerson() != null) {
                 HSSFCell fioCell = nextRow.createCell(2);
-                fioCell.setCellValue(garag.getPerson().getLastName() + " " +
-                        garag.getPerson().getName() + " " + garag.getPerson().getFatherName());
+                fioCell.setCellValue(garag.getPerson().getFIO());
                 HSSFCell phoneCell = nextRow.createCell(3);
                 phoneCell.setCellValue(garag.getPerson().getTelephone());
                 HSSFCell addressCell = nextRow.createCell(4);
-                Address address = garag.getPerson().getAddress();
-                if (address.getApartment().equals("")) {
-                    addressCell.setCellValue("г. " + address.getCity() + " ул. " + address.getStreet() + " " +
-                            address.getHome());
-                } else {
-                    addressCell.setCellValue("г. " + address.getCity() + " ул. " + address.getStreet() + " " +
-                            address.getHome() + " - " + address.getApartment());
-                }
+                addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
                 HSSFCell additionlaCell = nextRow.createCell(5);
                 additionlaCell.setCellValue(garag.getPerson().getAdditionalInformation());
                 HSSFCell benefitsCell = nextRow.createCell(6);
@@ -209,8 +194,7 @@ public class GaragServiceImpl implements GaragService {
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
             HSSFCell fioCell = nextRow.createCell(1);
-            fioCell.setCellValue(garag.getPerson().getLastName() + " " +
-                    garag.getPerson().getName() + " " + garag.getPerson().getFatherName());
+            fioCell.setCellValue(garag.getPerson().getFIO());
             HSSFCell garagCell = nextRow.createCell(2);
             garagCell.setCellValue("Членская книжка ГК №23 " + garag.getSeries() + " ряд-" + garag.getNumber() + " место");
             HSSFCell benefitsCell = nextRow.createCell(3);
@@ -269,21 +253,13 @@ public class GaragServiceImpl implements GaragService {
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
             HSSFCell garagCell = nextRow.createCell(1);
-            garagCell.setCellValue(garag.getSeries() + "-" + garag.getNumber());
+            garagCell.setCellValue(garag.getName());
             HSSFCell fioCell = nextRow.createCell(2);
-            fioCell.setCellValue(garag.getPerson().getLastName() + " " +
-                    garag.getPerson().getName() + " " + garag.getPerson().getFatherName());
+            fioCell.setCellValue(garag.getPerson().getFIO());
             HSSFCell phoneCell = nextRow.createCell(3);
             phoneCell.setCellValue(garag.getPerson().getTelephone());
             HSSFCell addressCell = nextRow.createCell(4);
-            Address address = garag.getPerson().getAddress();
-            if (address.getApartment().equals("")) {
-                addressCell.setCellValue("г. " + address.getCity() + " ул. " + address.getStreet() + " " +
-                        address.getHome());
-            } else {
-                addressCell.setCellValue("г. " + address.getCity() + " ул. " + address.getStreet() + " " +
-                        address.getHome() + " - " + address.getApartment());
-            }
+            addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
             Float cont = 0f;
             Float land = 0f;
             Float target = 0f;
@@ -343,6 +319,7 @@ public class GaragServiceImpl implements GaragService {
         return workBook;
     }
 
+    //todo check method
     @Override
     public HSSFWorkbook reportProfit(Integer year) {
         HSSFWorkbook workBook = new HSSFWorkbook();

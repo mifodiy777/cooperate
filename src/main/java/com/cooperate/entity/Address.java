@@ -75,6 +75,21 @@ public class Address implements Serializable {
         this.apartment = apartment;
     }
 
+    public String getAddr() {
+        StringBuilder addr = new StringBuilder();
+        addr.append("г.");
+        addr.append(this.city);
+        addr.append(" ул.");
+        addr.append(this.street);
+        addr.append(" д.");
+        addr.append(this.home);
+        if (!this.apartment.isEmpty()) {
+            addr.append(" кв.");
+            addr.append(this.apartment);
+        }
+        return addr.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

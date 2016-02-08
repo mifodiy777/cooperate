@@ -25,10 +25,10 @@
             },
             rules:{
                 contribute:{
-                    max: ${maxContribute}
+                    max: ${max.contribute}
                 },
                 contTarget:{
-                    max: ${maxContTarget}
+                    max: ${max.contTarget}
                 }
 
             },
@@ -44,12 +44,12 @@
 
         $("#benefitsOn").on("click", function() {
             if ($("#benefitsOn:checked").val()) {
-                $("#benefitsOnHide").val(${maxContLand/2});
-                $(".maxLand").html("MAX ${maxContLand/2} руб.");
+                $("#benefitsOnHide").val(${max.contLand/2});
+                $(".maxLand").html("MAX ${max.contLand/2} руб.");
 
             } else {
-                $("#benefitsOnHide").val(${maxContLand});
-                $(".maxLand").html("MAX ${maxContLand} руб.");
+                $("#benefitsOnHide").val(${max.contLand});
+                $(".maxLand").html("MAX ${max.contLand} руб.");
 
             }
         });
@@ -78,12 +78,12 @@
     });
 
     function fullSetDebt() {
-        $("#contribute").val(${maxContribute});
-        $("#contTarget").val(${maxContTarget});
+        $("#contribute").val(${max.contribute});
+        $("#contTarget").val(${max.contTarget});
         if ($("#benefitsOn:checked").val()) {
-            $("#contLand").val(${maxContLand/2});
+            $("#contLand").val(${max.contLand/2});
         } else {
-            $("#contLand").val(${maxContLand});
+            $("#contLand").val(${max.contLand});
         }
         $("#finesLastUpdate").val("01.07.${contribution.year}");
         $("#finesOn").prop("checked", true);
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <span class="maxValueCont">MAX ${maxContribute} руб.</span>
+                            <span class="maxValueCont">MAX ${max.contribute} руб.</span>
                         </div>
                     </div>
                     <div class="row">
@@ -132,12 +132,12 @@
                         </div>
                         <div class="col-md-4">
                             <span class="maxValueCont maxLand">MAX <c:if
-                                    test="${contribution.benefitsOn}">${maxContLand/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${maxContLand}</c:if> руб.</span>
+                                    test="${contribution.benefitsOn}">${max.contLand/2}</c:if><c:if
+                                    test="${!contribution.benefitsOn}">${max.contLand}</c:if> руб.</span>
                         </div>
                         <input type="hidden" id="benefitsOnHide" value="<c:if
-                                    test="${contribution.benefitsOn}">${maxContLand/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${maxContLand}</c:if>">
+                                    test="${contribution.benefitsOn}">${max.contLand/2}</c:if><c:if
+                                    test="${!contribution.benefitsOn}">${max.contLand}</c:if>">
                     </div>
                     <div class="row">
                         <div class="col-md-8">
@@ -149,7 +149,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <span class="maxValueCont">MAX ${maxContTarget} руб.</span>
+                            <span class="maxValueCont">MAX ${max.contTarget} руб.</span>
                         </div>
                     </div>
                     <div class="row">

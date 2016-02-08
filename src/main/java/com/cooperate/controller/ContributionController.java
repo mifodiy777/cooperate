@@ -4,7 +4,6 @@ import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
-import com.cooperate.entity.Rent;
 import com.cooperate.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -56,10 +55,7 @@ public class ContributionController {
         }
         map.addAttribute("contribution", contribution);
         map.addAttribute("garagId", id);
-        Rent rent = rentService.findByYear(year);
-        map.addAttribute("maxContribute", rent.getContributeMax());
-        map.addAttribute("maxContLand", rent.getContLandMax());
-        map.addAttribute("maxContTarget", rent.getContTargetMax());
+        map.addAttribute("max", rentService.findByYear(year));
         return "modalEditContribute";
     }
 
@@ -98,8 +94,7 @@ public class ContributionController {
         Contribution c = garag.getContributions().get(cSize - 1);
         c.setAdditionallyCont(count + c.getAdditionallyCont());
         contributionService.saveOrUpdate(c);
-        String fio = garag.getPerson().getLastName() + " " +
-                garag.getPerson().getName() + " " + garag.getPerson().getFatherName();
+        String fio = garag.getPerson().getFIO();
         Payment payment = new Payment();
         Integer number = paymentService.getMaxNumber();
         if (number == null) {
@@ -114,7 +109,7 @@ public class ContributionController {
         payment.setGarag(garag);
         payment.setDebtPastPay(garagService.sumContribution(garag));
         paymentService.saveOrUpdate(payment);
-        journalService.event("Дополнительный взнос  для гаража " + garag.getSeries() + "-" + garag.getNumber() + " за " + c.getYear() + " год уплачен");
+        journalService.event("Дополнительный взнос  для гаража " + garag.getName() + " за " + c.getYear() + " год уплачен");
         map.put("message", "Дополнительный взнос за " + c.getYear() + " год уплачен успешно");
         return "success";
     }

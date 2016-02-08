@@ -18,15 +18,8 @@ public class JournalHistoryServiceImpl implements JournalHistoryService {
     JournalHistoryDAO historyDAO;
 
     @Override
-    @Transactional
     public List<JournalHistory> getJournalHistorys() {
         return historyDAO.findAll();
-    }
-
-    @Override
-    @Transactional
-    public JournalHistory getJournalHistory(Integer id) {
-        return historyDAO.getOne(id);
     }
 
     @Override

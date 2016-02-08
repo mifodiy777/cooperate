@@ -1,41 +1,32 @@
 package com.cooperate.service.impl;
 
-import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.ContributionDAO;
-import com.cooperate.entity.*;
+import com.cooperate.entity.Contribution;
+import com.cooperate.entity.Garag;
+import com.cooperate.entity.Rent;
 import com.cooperate.service.ContributionService;
 import com.cooperate.service.RentService;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class ContributionServiceImpl implements ContributionService {
 
     @Autowired
-    ContributionDAO contributionDAO;
+    private ContributionDAO contributionDAO;
 
     @Autowired
-    RentService rentService;
+    private RentService rentService;
 
     @Override
     @Transactional
     public void saveOrUpdate(Contribution contribution) {
         contributionDAO.save(contribution);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Integer id) {
-        contributionDAO.delete(id);
     }
 
     //Метод начисления долгов новосозданного гаража
@@ -50,17 +41,22 @@ public class ContributionServiceImpl implements ContributionService {
                 if (garag.getPerson() == null) {
                     contributionList.add(contribution);
                     return contributionList;
-                }
-                contribution.setContribute(rent.getContributeMax());
-                if (!garag.getPerson().getBenefits().equals("")) {
-                    contribution.setContLand(rent.getContLandMax() / 2);
-                    //Назначение льготного периода
-                    contribution.setBenefitsOn(true);
                 } else {
-                    contribution.setContLand(rent.getContLandMax());
+                    if (garag.getPerson().getMemberBoard()) {
+                        contribution.setMemberBoardOn(true);
+                    } else {
+                        contribution.setContribute(rent.getContributeMax());
+                    }
+                    if (garag.getPerson().getBenefits().equals("")) {
+                        //Назначение льготного периода
+                        contribution.setContLand(rent.getContLandMax() / 2);
+                        contribution.setBenefitsOn(true);
+                    } else {
+                        contribution.setContLand(rent.getContLandMax());
+                    }
+                    contribution.setContTarget(rent.getContTargetMax());
+                    contributionList.add(contribution);
                 }
-                contribution.setContTarget(rent.getContTargetMax());
-                contributionList.add(contribution);
             }
         }
         return contributionList;
@@ -80,7 +76,7 @@ public class ContributionServiceImpl implements ContributionService {
         //Получаем список долгов с включенным режимом пени
         for (Contribution c : contributionDAO.findByFinesOn(true)) {
             //Находим сумму долга
-            Float sum = c.getContribute() + c.getContLand() + c.getContTarget();
+            Float sum = c.getSumFixed();
             //ВЫчисляем кол-во дней с последнего обновления.
             //Первая дата должна устанавливаться при включении режима пеней
             if (sum != 0) {
@@ -111,13 +107,12 @@ public class ContributionServiceImpl implements ContributionService {
                         }
                     }
                     float sumRent = 0f;
-                    if (c.isBenefitsOn() && rent != null) {
-                        sumRent = rent.getContributeMax() + (rent.getContLandMax() / 2) + rent.getContTargetMax();
-
-                    } else if (rent != null) {
-                        sumRent = rent.getContributeMax() + rent.getContLandMax() + rent.getContTargetMax();
-
+                    if (rent != null) {
+                        sumRent = !c.isMemberBoardOn() ? rent.getContributeMax() : 0;
+                        sumRent += c.isBenefitsOn() ? rent.getContLandMax() / 2 : rent.getContLandMax();
+                        sumRent += c.getContTarget();
                     }
+
                     //Мы определили сумму начисления и сумму долга, пени не должны превышать сумму долга
                     if (sumRent != 0f && sum == sumRent && newFines > sum) {
                         c.setFinesOn(false);
@@ -167,7 +162,7 @@ public class ContributionServiceImpl implements ContributionService {
         if (cal.get(Calendar.MONTH) == 0) {
             for (Contribution c : contributionDAO.findByFinesOn(false)) {
                 if (c.getYear() < cal.get(Calendar.YEAR)) {
-                    float sum = c.getContribute() + c.getContLand() + c.getContTarget();
+                    float sum = c.getSumFixed();
                     if (sum != 0) {
                         c.setFinesOn(true);
                         c.setFinesLastUpdate(cal);
@@ -182,7 +177,15 @@ public class ContributionServiceImpl implements ContributionService {
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR))) {
                 for (Rent rent : rents) {
                     if (rent.getYearRent() == c.getYear()) {
-                        if (c.getContribute() == rent.getContributeMax()) {
+                        if (c.getContribute() == rent.getContributeMax() && !c.isMemberBoardOn()) {
+                            c.setFinesOn(true);
+                            c.setFinesLastUpdate(cal);
+                            contributionDAO.save(c);
+                        } else if (c.isMemberBoardOn() && !c.isBenefitsOn() && c.getContLand() == rent.getContLandMax()) {
+                            c.setFinesOn(true);
+                            c.setFinesLastUpdate(cal);
+                            contributionDAO.save(c);
+                        } else if (c.isMemberBoardOn() && c.isBenefitsOn() && c.getContLand() == rent.getContLandMax() / 2) {
                             c.setFinesOn(true);
                             c.setFinesLastUpdate(cal);
                             contributionDAO.save(c);
@@ -191,5 +194,5 @@ public class ContributionServiceImpl implements ContributionService {
                 }
             }
         }
-    }   
+    }
 }

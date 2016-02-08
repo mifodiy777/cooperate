@@ -70,19 +70,10 @@ public class GaragController {
     //Информационно модальное окно для гаража
 
     @RequestMapping(value = "infModal", method = RequestMethod.GET)
-    public String payModal(@RequestParam("idGarag") Integer id, ModelMap map,
-                           HttpServletResponse response) {
+    public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
-        if (garag.getPerson() == null) {
-            map.put("message", "Гаражу не назначен владелец!");
-            response.setStatus(409);
-            return "error";
-        }
-        String name = garag.getPerson().getLastName() + " " + garag.getPerson().getName() +
-                " " + garag.getPerson().getFatherName();
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
-        map.addAttribute("name", name);
         return "modalInf";
     }
 
@@ -91,12 +82,8 @@ public class GaragController {
     @RequestMapping(value = "infGarag/{id}", method = RequestMethod.GET)
     public String infGarag(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
-        String name = garag.getPerson().getLastName() + " " + garag.getPerson().getName() +
-                " " + garag.getPerson().getFatherName();
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
-        map.addAttribute("name", name);
-        map.addAttribute("name", name);
         map.addAttribute("now", Calendar.getInstance().getTime());
         return "garagInf";
     }
@@ -106,39 +93,18 @@ public class GaragController {
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
         if (garagService.existGarag(garag)) {
-            //Если гараж новый и пустой
-            if (garag.getId() == null && garag.getPerson() == null) {
-                garagService.saveOrUpdate(garag);
-                journalService.event("Новый гараж " + garag.getSeries() + "-" + garag.getNumber() + " сохранен!");
-                map.put("message", "Гараж сохранен!");
-                return "success";
-            }
-            //Если гараж новый и владелец новый
-            if (garag.getId() == null && garag.getPerson().getId() == null) {
-                garag.setContributions(contributionService.getContributionOnGarag(garag));
-                garagService.saveOrUpdate(garag);
-                journalService.event("Новый гараж " + garag.getSeries() + "-" + garag.getNumber() + " сохранен!");
-                contributionService.updateFines();
-                map.put("message", "Гараж сохранен!");
-                return "success";
-            }
             //Если гараж новый а владелец уже существует
-            if (garag.getId() == null && garag.getPerson().getId() != 0) {
+            if (garag.getId() == null && garag.getPerson() != null) {
                 garag.setContributions(contributionService.getContributionOnGarag(garag));
-                garagService.saveOrUpdate(garag);
-                journalService.event("Новый гараж " + garag.getSeries() + "-" + garag.getNumber() + " сохранен!");
-                contributionService.updateFines();
-                map.put("message", "Гараж сохранен!");
-                return "success";
-            }
-            //Редактирование гаража
-            if (garag.getId() != null) {
+                //Редактирование гаража
+            } else if (garag.getId() != null) {
                 Garag garagEdit = garagService.getGarag(garag.getId());
                 garag.setContributions(garagEdit.getContributions());
                 garag.setPayments(garagEdit.getPayments());
             }
-            journalService.event("Гараж " + garag.getSeries() + "-" + garag.getNumber() + " изменен!");
+            journalService.event("Гараж " + garag.getName() + " сохранен!");
             garagService.saveOrUpdate(garag);
+            contributionService.updateFines();
             map.put("message", "Гараж сохранен!");
             return "success";
         } else {
@@ -185,7 +151,7 @@ public class GaragController {
         try {
             Garag garag = garagService.getGarag(id);
             garagService.delete(id);
-            journalService.event("Гараж " + garag.getSeries() + "-" + garag.getNumber() + " удален!");
+            journalService.event("Гараж " + garag.getName() + " удален!");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как гараж используется!");
             response.setStatus(409);
@@ -204,7 +170,7 @@ public class GaragController {
             if (garag.getPerson() != null) {
                 garag.setPerson(null);
                 garagService.saveOrUpdate(garag);
-                journalService.event("Назначение у гаража " + garag.getSeries() + "-" + garag.getNumber() + " удалено!");
+                journalService.event("Назначение у гаража " + garag.getName() + " удалено!");
                 map.put("message", "Удалено назначение владельца!");
                 return "success";
             } else {

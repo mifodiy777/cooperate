@@ -12,8 +12,6 @@ public interface PaymentService {
 
     Payment saveOrUpdate(Payment payment);
 
-    List<Payment> getPayments();
-
     List<Payment> findByYear(Integer year);
     
     HSSFWorkbook reportPayments(Integer year);
@@ -22,7 +20,7 @@ public interface PaymentService {
 
     void delete(Integer id);
 
-    void pay(Payment payment);
+    Payment pay(Payment payment);
 
     Payment getPaymentOnGarag(Garag garag);
 

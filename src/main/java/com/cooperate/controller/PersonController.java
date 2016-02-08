@@ -1,11 +1,10 @@
 package com.cooperate.controller;
 
 import com.cooperate.Utils;
-import com.cooperate.entity.Address;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Person;
-import com.cooperate.gson.AddressAdapter;
 import com.cooperate.gson.GaragAdapter;
+import com.cooperate.gson.PersonAdapter;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PersonService;
@@ -43,21 +42,21 @@ public class PersonController {
     @RequestMapping(value = "allPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPersons() {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
         gsonBuilder.registerTypeAdapter(Garag.class, new GaragAdapter());
-        gsonBuilder.registerTypeAdapter(Address.class, new AddressAdapter());
         return Utils.convertListToJson(gsonBuilder, personService.getPersons());
     }
 
-     @RequestMapping(value = "membersPage", method = RequestMethod.GET)
+    @RequestMapping(value = "membersPage", method = RequestMethod.GET)
     public ModelAndView getPavilionsPage() {
         return new ModelAndView("members");
     }
-    
-     @RequestMapping(value = "members", method = RequestMethod.GET)
+
+    @RequestMapping(value = "members", method = RequestMethod.GET)
     public ResponseEntity<String> getMembers() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.excludeFieldsWithoutExposeAnnotation(); 
-        gsonBuilder.registerTypeAdapter(Address.class, new AddressAdapter());
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         return Utils.convertListToJson(gsonBuilder, personService.getMembers());
     }
 
@@ -72,8 +71,7 @@ public class PersonController {
     @RequestMapping(value = "savePerson", method = RequestMethod.POST)
     public String savePerson(Person person, ModelMap map) {
         personService.saveOrUpdate(person);
-        historyService.event("Владелец сохранен!(" + person.getLastName() + " " + person.getName() + " " +
-                person.getFatherName() + ")");
+        historyService.event("Владелец сохранен!(" + person.getFIO() + ")");
         map.put("message", "Владелец сохранен!");
         return "success";
     }
@@ -94,7 +92,7 @@ public class PersonController {
             Garag garag = garagService.getGarag(idGarag);
             garag.setPerson(null);
             garagService.saveOrUpdate(garag);
-            historyService.event("Удален гараж у владельца(" + garag.getSeries() + "-" + garag.getNumber() + ")");
+            historyService.event("Удален гараж у владельца(" + garag.getName() + ")");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как гараж используется!");
             response.setStatus(409);
@@ -113,8 +111,7 @@ public class PersonController {
                 garagService.saveOrUpdate(garag);
             }
             Person person = personService.getPerson(id);
-            historyService.event("Владелец удаленн(" + person.getLastName() + " " + person.getName() + " " +
-                    person.getFatherName() + ")");
+            historyService.event("Владелец удаленн(" + person.getFIO() + ")");
             personService.delete(id);
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как владелец используется!");

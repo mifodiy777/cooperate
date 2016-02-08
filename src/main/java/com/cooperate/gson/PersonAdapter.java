@@ -16,20 +16,11 @@ public class PersonAdapter implements JsonSerializer<Person> {
         JsonObject jsonObject = new JsonObject();
         if (src != null) {
             jsonObject.addProperty("personId", src.getId());
-            jsonObject.addProperty("fio", src.getLastName() + ' ' + src.getName() + ' ' + src.getFatherName());
+            jsonObject.addProperty("fio", src.getFIO());
             jsonObject.addProperty("phone", src.getTelephone());
             jsonObject.addProperty("benefits", src.getBenefits());
-            if (src.getAddress().getStreet().isEmpty()) {
-                jsonObject.addProperty("address", "");
-            } else {
-                if (src.getAddress().getApartment().isEmpty()) {
-                    jsonObject.addProperty("address", "г." + src.getAddress().getCity() + " ул." + src.getAddress().getStreet() +
-                            " д." + src.getAddress().getHome());
-                } else {
-                    jsonObject.addProperty("address", "г." + src.getAddress().getCity() + " ул." + src.getAddress().getStreet() +
-                            " д." + src.getAddress().getHome() + " кв." + src.getAddress().getApartment());
-                }
-            }
+            jsonObject.addProperty("address", src.getAddress().getAddr());
+            
         }
         return jsonObject;
     }

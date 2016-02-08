@@ -21,7 +21,7 @@
     <tr>
         <th colspan="3">Дата: <fmt:formatDate value="${now}" type="both"/></th>
         <th colspan="2">Ряд: ${garag.series} Гараж:${garag.number}</th>
-        <th colspan="4">ФИО: ${name}</th>
+        <th colspan="4">ФИО: ${garag.person.fio}</th>
     </tr>
     </thead>
     <tbody>
@@ -39,14 +39,14 @@
         <th>Оставшиеся средства(Не долги!)</th>
     </tr>
     <c:forEach items="${garag.contributions}" var="c">
-        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
+        <c:if test="${(c.sumFixed+c.fines) !=0}">
             <tr>
                 <td>${c.year}</td>
                 <td>${c.contribute} руб.</td>
                 <td>${c.contLand} руб.</td>
                 <td>${c.contTarget} руб.</td>
                 <td>${c.fines} руб.</td>
-                <td colspan="3">${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
+                <td colspan="3">${c.sumFixed+c.fines} руб.</td>
                 <td><fmt:formatNumber type="number"
                                       maxFractionDigits="2"
                                       value="${c.balance}"/> руб.

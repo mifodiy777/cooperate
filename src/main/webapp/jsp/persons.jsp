@@ -25,13 +25,11 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"render": function(data, type, full) {
-                    return full.lastName + " " + full.name + " " + full.fatherName
-                }, 'title': 'ФИО'},
+                {"data": "fio", 'title': 'ФИО'},
                 {"data": "telephone", 'title': 'Телефон'},
-                {"data": "address.address", 'title': 'Адрес'},
+                {"data": "address.addr", 'title': 'Адрес'},
                 {"data": "benefits", 'title': 'Льготы'},
-                {"data": "garagList[,<br>].garag", 'title': 'Гаражи'},
+                {"data": "garagList[,<br>].garag.fullName", 'title': 'Гаражи'},
                 {'title': 'Действия', "render": function (data, type, full) {
                     return "<a href=\"#\" class=\"btnTable  btn btn-primary btn-sm\" onclick=\"editPerson(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-pencil\"/></span></a>" +

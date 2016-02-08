@@ -12,10 +12,6 @@ public interface RentService {
 
     List<Rent> getRents();
 
-    Rent getRent(Integer id);
-
-    void delete(Integer id);
-
     void createNewPeriod(Rent rent);
 
     Rent findByYear(Integer year);
