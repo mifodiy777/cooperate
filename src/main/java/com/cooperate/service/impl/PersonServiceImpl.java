@@ -16,7 +16,7 @@ import java.util.List;
 public class PersonServiceImpl implements PersonService {
 
     @Autowired
-    PersonDAO personDAO;
+    private PersonDAO personDAO;
 
     @Override
     @Transactional

@@ -24,13 +24,13 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
-    PaymentDAO paymentDAO;
+    private PaymentDAO paymentDAO;
 
     @Autowired
-    ContributionService contributionService;
+    private ContributionService contributionService;
 
     @Autowired
-    GaragService garagService;
+    private GaragService garagService;
 
     @Override
     public List<Integer> findYears() {
@@ -78,6 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
         //Назначили время
         Calendar now = Calendar.getInstance();
         payment.setDatePayment(now);
+        payment.setYear(now.get(Calendar.YEAR));
         Integer number = getMaxNumber();
         number = (number == null) ? 1 : getMaxNumber() + 1;
         //Назначили номер
@@ -88,9 +89,9 @@ public class PaymentServiceImpl implements PaymentService {
         int size = garag.getContributions().size();
         int i = 1;
         for (Contribution c : garag.getContributions()) {
-            Float reminder = c.getSumFixed() - payment.getPay();
+            Float reminder = payment.getPay() - c.getSumFixed();
             //Если после платежа текущего периода остались деньги
-            if (reminder >= 0) {
+            if (payment.getPay() >= c.getSumFixed()) {
                 payment.setContributePay(payment.getContributePay() + c.getContribute());
                 c.setContribute(0f);
                 payment.setContLandPay(payment.getContLandPay() + c.getContLand());
@@ -108,7 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                     payment.setPay(reminder);
                 } else {
-                    payment.setFinesPay(reminder.intValue());
+                    payment.setFinesPay(c.getFines() - (c.getFines() + reminder.intValue()));
                     c.setFines(c.getFines() + reminder.intValue());
                     payment.setPay(0);
                 }

@@ -25,10 +25,10 @@
             },
             rules:{
                 contribute:{
-                    max: ${max.contribute}
+                    max: ${max.contributeMax}
                 },
                 contTarget:{
-                    max: ${max.contTarget}
+                    max: ${max.contTargetMax}
                 }
 
             },
@@ -44,12 +44,12 @@
 
         $("#benefitsOn").on("click", function() {
             if ($("#benefitsOn:checked").val()) {
-                $("#benefitsOnHide").val(${max.contLand/2});
-                $(".maxLand").html("MAX ${max.contLand/2} руб.");
+                $("#benefitsOnHide").val(${max.contLandMax/2});
+                $(".maxLand").html("MAX ${max.contLandMax/2} руб.");
 
             } else {
-                $("#benefitsOnHide").val(${max.contLand});
-                $(".maxLand").html("MAX ${max.contLand} руб.");
+                $("#benefitsOnHide").val(${max.contLandMax});
+                $(".maxLand").html("MAX ${max.contLandMax} руб.");
 
             }
         });
@@ -78,12 +78,12 @@
     });
 
     function fullSetDebt() {
-        $("#contribute").val(${max.contribute});
-        $("#contTarget").val(${max.contTarget});
+        $("#contribute").val(${max.contributeMax});
+        $("#contTarget").val(${max.contTargetMax});
         if ($("#benefitsOn:checked").val()) {
-            $("#contLand").val(${max.contLand/2});
+            $("#contLand").val(${max.contLandMax/2});
         } else {
-            $("#contLand").val(${max.contLand});
+            $("#contLand").val(${max.contLandMax});
         }
         $("#finesLastUpdate").val("01.07.${contribution.year}");
         $("#finesOn").prop("checked", true);
@@ -94,7 +94,7 @@
 
 <!-- Modal -->
 <div id="formModalContribute" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:700px">
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -103,160 +103,154 @@
                 <h4 class="modal-title">Введите долг за ${contribution.year} год</h4>
             </div>
             <form:form modelAttribute="contribution" id="contributionForm" method="post" action="saveContribute">
-                <div class="modal-body">
-                    <form:hidden path="id"/>
-                    <form:hidden path="year"/>
-                    <input type="hidden" id="idGarag" name="idGarag" value="${garagId}">
+            <div class="modal-body">
+                <form:hidden path="id"/>
+                <form:hidden path="year"/>
+                <input type="hidden" id="idGarag" name="idGarag" value="${garagId}">
 
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="contribute" class="input-group-addon">Членский взнос</label>
-                                <form:input path="contribute" id="contribute"
-                                            cssClass="number form-control"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <span class="maxValueCont">MAX ${max.contribute} руб.</span>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="contribute" class="input-group-addon">Членский взнос</label>
+                            <form:input path="contribute" id="contribute"
+                                        cssClass="number form-control"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="contLand" class="input-group-addon">Аренда земли</label>
-                                <form:input path="contLand" id="contLand"
-                                            cssClass="number form-control maxLandVal"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
+                    <div class="col-md-4">
+                        <span class="maxValueCont">MAX ${max.contributeMax} руб.</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="contLand" class="input-group-addon">Аренда земли</label>
+                            <form:input path="contLand" id="contLand"
+                                        cssClass="number form-control maxLandVal"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
                             <span class="maxValueCont maxLand">MAX <c:if
-                                    test="${contribution.benefitsOn}">${max.contLand/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${max.contLand}</c:if> руб.</span>
-                        </div>
-                        <input type="hidden" id="benefitsOnHide" value="<c:if
-                                    test="${contribution.benefitsOn}">${max.contLand/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${max.contLand}</c:if>">
+                                    test="${contribution.benefitsOn}">${max.contLandMax/2}</c:if><c:if
+                                    test="${!contribution.benefitsOn}">${max.contLandMax}</c:if> руб.</span>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="contTarget" class="input-group-addon">Целевой взнос</label>
-                                <form:input path="contTarget" id="contTarget"
-                                            cssClass="number form-control"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <span class="maxValueCont">MAX ${max.contTarget} руб.</span>
+                    <input type="hidden" id="benefitsOnHide" value="<c:if
+                                    test="${contribution.benefitsOn}">${max.contLandMax/2}</c:if><c:if
+                                    test="${!contribution.benefitsOn}">${max.contLandMax}</c:if>">
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="contTarget" class="input-group-addon">Целевой взнос</label>
+                            <form:input path="contTarget" id="contTarget"
+                                        cssClass="number form-control"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="additionallyCont" class="input-group-addon">Дополнительный взнос</label>
-                                <form:input path="additionallyCont" id="additionallyCont"
-                                            cssClass="number form-control"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
+                    <div class="col-md-4">
+                        <span class="maxValueCont">MAX ${max.contTargetMax} руб.</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="additionallyCont" class="input-group-addon">Дополнительный взнос</label>
+                            <form:input path="additionallyCont" id="additionallyCont"
+                                        cssClass="number form-control"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="fines" class="input-group-addon">Пени</label>
-                                <form:input path="fines" id="fines"
-                                            cssClass="number form-control"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="fines" class="input-group-addon">Пени</label>
+                            <form:input path="fines" id="fines"
+                                        cssClass="number form-control"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="finesSum" class="input-group-addon">Начисленные пени</label>
-                                <form:input path="finesSum" id="finesSum"
-                                            cssClass="number form-control"/>
-                                <span class="input-group-addon">руб.</span>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="finesSum" class="input-group-addon">Начисленные пени</label>
+                            <form:input path="finesSum" id="finesSum"
+                                        cssClass="number form-control"/>
+                            <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <label for="finesLastUpdate" class="input-group-addon">Дата обновления пеней</label>
-                                <form:input path="finesLastUpdate" id="finesLastUpdate"
-                                            cssClass="form-control dateRU"/>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <label for="finesLastUpdate" class="input-group-addon">Дата обновления пеней</label>
+                            <form:input path="finesLastUpdate" id="finesLastUpdate"
+                                        cssClass="form-control dateRU"/>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group input-group">
-                                <form:checkbox path="finesOn" id="finesOn"
-                                               cssClass="form-control"
-                                               name="fancy-checkbox-success" autocomplete="off"/>
-                                <div class="[ btn-group ]">
-                                    <label for="finesOn" class="[ btn btn-info ]">
-                                        <span class="[ glyphicon glyphicon-ok ]"></span>
-                                        <span> </span>
-                                    </label>
-                                    <label for="finesOn" class="[ btn btn-default ]">
-                                        Включить пени
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group input-group">
-                                <form:checkbox path="benefitsOn" id="benefitsOn"
-                                               cssClass="form-control"
-                                               name="fancy-checkbox-success" autocomplete="off"/>
-                                <div class="[ btn-group ]">
-                                    <label for="benefitsOn" class="[ btn btn-info ]">
-                                        <span class="[ glyphicon glyphicon-ok ]"></span>
-                                        <span> </span>
-                                    </label>
-                                    <label for="benefitsOn" class="[ btn btn-default ]">
-                                        Льготный период
-                                    </label>
-                                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group input-group">
+                            <form:checkbox path="finesOn" id="finesOn"
+                                           cssClass="form-control"
+                                           name="fancy-checkbox-success" autocomplete="off"/>
+                            <div class="[ btn-group ]">
+                                <label for="finesOn" class="[ btn btn-info ]">
+                                    <span class="[ glyphicon glyphicon-ok ]"></span>
+                                    <span> </span>
+                                </label>
+                                <label for="finesOn" class="[ btn btn-default ]">
+                                    Включить пени
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group input-group">
-                                <form:checkbox path="memberBoardOn" id="memberBoardOn"
-                                               cssClass="form-control"
-                                               name="fancy-checkbox-success" autocomplete="off"/>
-                                <div class="[ btn-group ]">
-                                    <label for="memberBoardOn" class="[ btn btn-info ]">
-                                        <span class="[ glyphicon glyphicon-ok ]"></span>
-                                        <span> </span>
-                                    </label>
-                                    <label for="memberBoardOn" class="[ btn btn-default ]">
-                                       Член правления
-                                    </label>
-                                </div>
+                    <div class="col-md-4">
+                        <div class="form-group input-group">
+                            <form:checkbox path="benefitsOn" id="benefitsOn"
+                                           cssClass="form-control"
+                                           name="fancy-checkbox-success" autocomplete="off"/>
+                            <div class="[ btn-group ]">
+                                <label for="benefitsOn" class="[ btn btn-info ]">
+                                    <span class="[ glyphicon glyphicon-ok ]"></span>
+                                    <span> </span>
+                                </label>
+                                <label for="benefitsOn" class="[ btn btn-default ]">
+                                    Льготный период
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="text-align:center;">
-                        <button type="button" class="btn btn-danger" onclick="fullSetDebt()">Полностью</button>
+                    <div class="col-md-4">
+                        <div class="form-group input-group">
+                            <form:checkbox path="memberBoardOn" id="memberBoardOn"
+                                           cssClass="form-control"
+                                           name="fancy-checkbox-success" autocomplete="off"/>
+                            <div class="[ btn-group ]">
+                                <label for="memberBoardOn" class="[ btn btn-info ]">
+                                    <span class="[ glyphicon glyphicon-ok ]"></span>
+                                    <span> </span>
+                                </label>
+                                <label for="memberBoardOn" class="[ btn btn-default ]">
+                                    Член правления
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer" align="center">
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Сохранить
                     </button>
+                    <button type="button" class="btn btn-danger" onclick="fullSetDebt()">Полностью</button>
 
                 </div>
-            </form:form>
-        </div>
+                </form:form>
+            </div>
 
+        </div>
     </div>
 </div>

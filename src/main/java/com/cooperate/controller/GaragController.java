@@ -74,6 +74,7 @@ public class GaragController {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
+        map.addAttribute("fio", garag.getPerson().getFIO());
         return "modalInf";
     }
 
@@ -84,6 +85,7 @@ public class GaragController {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
+        map.addAttribute("fio", garag.getPerson().getFIO());
         map.addAttribute("now", Calendar.getInstance().getTime());
         return "garagInf";
     }

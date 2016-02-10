@@ -33,7 +33,7 @@ public class Person implements Serializable {
     private String telephone;
 
     @Expose
-    @Column(name = "additional_information")
+    @Column(name = "additionalInformation")
     private String additionalInformation;
 
     @Expose
@@ -42,7 +42,6 @@ public class Person implements Serializable {
     private Address address;
 
     @Expose
-    @Column(name = "benefits")
     private String benefits;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH}, mappedBy = "person")

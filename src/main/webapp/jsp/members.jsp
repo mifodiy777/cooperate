@@ -11,14 +11,14 @@
             ],
             "ajax": "members",
             "fnCreatedRow": function (nRow, aData) {
-                $(nRow).attr('id', 'my' + aData.id);
+                $(nRow).attr('id', 'my' + aData.personId);
             },
             "columns": [
                 {"render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editPerson(' + full.id + ')\">' +  full.fio + '</a>'
+                    return '<a href=\"#\" onclick=\"editPerson(' + full.personId + ')\">' +  full.fio + '</a>'
                 }, 'title': 'ФИО'},
-                {"data":"telephone", 'title': 'Телефон'},
-                {"data": "address.addr",  'title': 'Адрес'},
+                {"data":"phone", 'title': 'Телефон'},
+                {"data": "address",  'title': 'Адрес'},
                 {"data": "benefits",  'title': 'Льготы'}
             ]
         });

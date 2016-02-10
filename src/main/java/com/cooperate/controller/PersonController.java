@@ -3,8 +3,8 @@ package com.cooperate.controller;
 import com.cooperate.Utils;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Person;
-import com.cooperate.gson.GaragAdapter;
 import com.cooperate.gson.PersonAdapter;
+import com.cooperate.gson.PersonPageAdapter;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PersonService;
@@ -41,11 +41,9 @@ public class PersonController {
 
     @RequestMapping(value = "allPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPersons() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-        gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
-        gsonBuilder.registerTypeAdapter(Garag.class, new GaragAdapter());
-        return Utils.convertListToJson(gsonBuilder, personService.getPersons());
+        GsonBuilder gson = new GsonBuilder();
+        gson.registerTypeAdapter(Person.class, new PersonPageAdapter());
+        return Utils.convertListToJson(gson, personService.getPersons());
     }
 
     @RequestMapping(value = "membersPage", method = RequestMethod.GET)
@@ -55,9 +53,10 @@ public class PersonController {
 
     @RequestMapping(value = "members", method = RequestMethod.GET)
     public ResponseEntity<String> getMembers() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-        return Utils.convertListToJson(gsonBuilder, personService.getMembers());
+        GsonBuilder gson = new GsonBuilder();
+        gson.excludeFieldsWithoutExposeAnnotation();
+        gson.registerTypeAdapter(Person.class, new PersonAdapter());
+        return Utils.convertListToJson(gson, personService.getMembers());
     }
 
     @RequestMapping(value = "person", method = RequestMethod.GET)

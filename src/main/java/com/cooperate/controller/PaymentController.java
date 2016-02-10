@@ -3,6 +3,7 @@ package com.cooperate.controller;
 import com.cooperate.Utils;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
+import com.cooperate.gson.PaymentAdapter;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PaymentService;
@@ -53,7 +54,7 @@ public class PaymentController {
     public ResponseEntity<String> getPayments(@RequestParam("setYear") Integer year) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-        gsonBuilder.setDateFormat("dd.MM.yyyy");
+        gsonBuilder.registerTypeAdapter(Payment.class, new PaymentAdapter());
         return Utils.convertListToJson(gsonBuilder, paymentService.findByYear(year));
     }
 
@@ -96,8 +97,9 @@ public class PaymentController {
     @RequestMapping(value = "deletePayment/{id}", method = RequestMethod.POST)
     public String deletePayment(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {
+            String garag = paymentService.getPayment(id).getGarag().getName();
             paymentService.delete(id);
-            historyService.event("Платеж к гаражу " + paymentService.getPayment(id).getGarag().getName() + " удален!");
+            historyService.event("Платеж к гаражу " + garag + " удален!");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить платеж");
             response.setStatus(409);

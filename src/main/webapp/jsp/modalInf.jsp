@@ -60,7 +60,7 @@
                         </span>
                     </div>
                 </div>
-                <h4>${garag.person.fio} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
+                <h4>${fio} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
                 <h4>Долги</h4>
                 <table class="table table-striped">
                     <thead>
@@ -76,10 +76,10 @@
                     </thead>
                     <c:forEach items="${garag.contributions}" var="c">
                         <%--  Проверить--%>
-                        <c:if test="${(c.fixedSum+c.fines) !=0}">
+                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
                             <tr>
                                 <td>${c.year}</td>
-                                <td>${c.fixedSum+c.fines} руб.</td>
+                                <td>${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
                                 <td>${c.contribute} руб.</td>
                                 <td>${c.contLand} руб.
                                     <c:if test="${c.benefitsOn}"> <span

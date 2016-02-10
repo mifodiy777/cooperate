@@ -6,7 +6,6 @@ import com.cooperate.service.JournalHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.util.calendar.LocalGregorianCalendar;
 
 import java.util.Calendar;
 import java.util.List;
@@ -15,17 +14,17 @@ import java.util.List;
 public class JournalHistoryServiceImpl implements JournalHistoryService {
 
     @Autowired
-    JournalHistoryDAO historyDAO;
+    private JournalHistoryDAO journalHistoryDAO;
 
     @Override
     public List<JournalHistory> getJournalHistorys() {
-        return historyDAO.findAll();
+        return journalHistoryDAO.findAll();
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        historyDAO.delete(id);
+        journalHistoryDAO.delete(id);
     }
 
     //Запись события
@@ -35,9 +34,9 @@ public class JournalHistoryServiceImpl implements JournalHistoryService {
         JournalHistory jh = new JournalHistory();
         jh.setDateEvent(Calendar.getInstance());
         jh.setEvented(event);
-        historyDAO.save(jh);
+        journalHistoryDAO.save(jh);
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 2);
-        historyDAO.delete(historyDAO.getEventMoreTwoYear(cal));
+        journalHistoryDAO.delete(journalHistoryDAO.getEventMoreTwoYear(cal));
     }
 }

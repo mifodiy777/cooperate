@@ -1,19 +1,19 @@
-#loading-indicator{
-    margin-left:80px;
+#loading-indicator {
+    margin-left: 80px;
 }
 
 input.file {
-	position: relative;
-	text-align: right;
-	-moz-opacity:0 ;
-	filter:alpha(opacity: 0);
-	opacity: 0;
-	z-index: 2;
+    position: relative;
+    text-align: right;
+    -moz-opacity: 0;
+    filter: alpha(opacity:0);
+    opacity: 0;
+    z-index: 2;
 }
 
 input[readonly] {
-  background-color: white !important;
-  cursor: text !important;
+    background-color: white !important;
+    cursor: text !important;
 }
 
 .input-group {
@@ -30,14 +30,14 @@ input[readonly] {
     font-size: 18px;
 }
 
-.maxValueCont{
-   text-align:center;
-    background-color:#ffcccc;
-    border-style:solid;
-   border: 1px solid red;
-    border-radius:5px;
-    margin-top:15px;
-    display:block;
+.maxValueCont {
+    text-align: center;
+    background-color: #ffcccc;
+    border-style: solid;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-top: 15px;
+    display: block;
 }
 
 .center {
@@ -50,17 +50,16 @@ input[readonly] {
 }
 
 td.actionBtn {
-    min-width:160px;    
+    min-width: 160px;
     vertical-align: middle !important;
     white-space: nowrap !important;
 }
 
-a.seriesLink{
-    text-align:center;    
-    font-weight:bold;
-    font-size:12pt
+a.seriesLink {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt
 }
-
 
 html,
 body {
@@ -379,15 +378,15 @@ max-width:
     display: none;
 }
 
-td.series{
-    text-align:center;
-    font-weight:bold;
-   vertical-align: middle !important;
-    font-size:14pt
+td.series {
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle !important;
+    font-size: 14pt
 }
 
-.footerMenu{
-    text-align:center;
+.footerMenu {
+    text-align: center;
 }
 
 

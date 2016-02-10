@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class FileParseController {
 
@@ -42,13 +44,14 @@ public class FileParseController {
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   @RequestParam(value = "benefits", defaultValue = "false") Boolean benefits, ModelMap map) {
+                                   @RequestParam(value = "benefits", defaultValue = "false") Boolean benefits,
+                                   ModelMap map, HttpServletResponse response) {
         if (!file.isEmpty()) {
             if (benefits) {
                 fileParseService.parsePerson(file);
             } else {
                 fileParseService.parseGarag(file);
-                for (Garag g : garagService.getGarags()) {                   
+                for (Garag g : garagService.getGarags()) {
                     g.setContributions(contributionService.getContributionOnGarag(g));
                     garagService.saveOrUpdate(g);
                 }
@@ -58,6 +61,7 @@ public class FileParseController {
             return "success";
         } else {
             map.put("message", "Файл не найден");
+            response.setStatus(409);
             return "error";
         }
     }

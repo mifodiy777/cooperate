@@ -75,10 +75,13 @@
             $("body").scrollTop(0);
             $("#addFormPersonDiv").hide();
             $("#searchFormDiv").show();
+            $("#searchPerson").focus();
             $("#searchPersonBtn").val("Создать владельца");
+
         } else {
             $("#addFormPersonDiv").show();
             $("#searchFormDiv").hide();
+            $("#lastName").focus();
             $("#searchPersonBtn").val("Найти владельца");
             $("#personResults").hide();
         }

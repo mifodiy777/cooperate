@@ -26,7 +26,7 @@ import java.util.*;
 public class GaragServiceImpl implements GaragService {
 
     @Autowired
-    GaragDAO garagDAO;
+    private GaragDAO garagDAO;
 
     @Autowired
     private RentService rentService;
@@ -319,7 +319,7 @@ public class GaragServiceImpl implements GaragService {
         return workBook;
     }
 
-    //todo check method
+    //todo TESTING!!!
     @Override
     public HSSFWorkbook reportProfit(Integer year) {
         HSSFWorkbook workBook = new HSSFWorkbook();
@@ -457,6 +457,8 @@ public class GaragServiceImpl implements GaragService {
             HSSFCell finesCNHCell = rowTwo.createCell(26);
             finesCNHCell.setCellValue("пени");
             finesCNHCell.setCellStyle(headerStyle);
+
+            //Расчеты
             int fistRow = 3;
             int lastRow;
             int number = 1;
@@ -472,11 +474,7 @@ public class GaragServiceImpl implements GaragService {
                         nPay += 1;
                     }
                 }
-                if (nPay == 0) {
-                    lastRow = fistRow;
-                } else {
-                    lastRow = fistRow + nPay - 1;
-                }
+                lastRow = (nPay == 0) ?  fistRow : fistRow + nPay - 1;
                 HSSFRow row = sheet.createRow(fistRow);
                 HSSFCell countCell = row.createCell(0);
                 countCell.setCellValue(number);
@@ -488,8 +486,7 @@ public class GaragServiceImpl implements GaragService {
                 nubmerCell.setCellValue(g.getNumber());
                 sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 2, 2));
                 HSSFCell fioCell = row.createCell(3);
-                fioCell.setCellValue(g.getPerson().getLastName() + " " + g.getPerson().getName() +
-                        " " + g.getPerson().getFatherName());
+                fioCell.setCellValue(g.getPerson().getFIO());
                 sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 3, 3));
                 //Задолжность до оплат выбранного года
                 float oldContribute = 0f;
@@ -663,6 +660,8 @@ public class GaragServiceImpl implements GaragService {
                 fistRow += nPay;
                 number++;
             }
+            
+            //FOOTER
             CellStyle footerStyle = workBook.createCellStyle();
             footerStyle.setWrapText(true);
             footerStyle.setAlignment(CellStyle.ALIGN_CENTER);

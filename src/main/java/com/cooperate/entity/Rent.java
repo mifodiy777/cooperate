@@ -67,4 +67,30 @@ public class Rent {
     public void setContTargetMax(float contTargetMax) {
         this.contTargetMax = contTargetMax;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rent)) return false;
+
+        Rent rent = (Rent) o;
+
+        if (Float.compare(rent.contLandMax, contLandMax) != 0) return false;
+        if (Float.compare(rent.contTargetMax, contTargetMax) != 0) return false;
+        if (Float.compare(rent.contributeMax, contributeMax) != 0) return false;
+        if (yearRent != rent.yearRent) return false;
+        if (id != null ? !id.equals(rent.id) : rent.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + yearRent;
+        result = 31 * result + (contributeMax != +0.0f ? Float.floatToIntBits(contributeMax) : 0);
+        result = 31 * result + (contLandMax != +0.0f ? Float.floatToIntBits(contLandMax) : 0);
+        result = 31 * result + (contTargetMax != +0.0f ? Float.floatToIntBits(contTargetMax) : 0);
+        return result;
+    }
 }

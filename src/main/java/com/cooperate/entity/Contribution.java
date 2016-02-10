@@ -27,13 +27,13 @@ public class Contribution implements Serializable {
     //Аренда земли - долг
     /* При появлении нового начисления и периода данное значения
            становиться равным значением арендой земли класса Rent */
-    @Column(name = "cont_land")
+    @Column(name = "contLand")
     private float contLand;
 
     //Целевой взнос - долг
     /* При появлении нового начисления и периода данное значения
            становиться равным значением целевого взноса класса Rent */
-    @Column(name = "cont_target")
+    @Column(name = "contTarget")
     private float contTarget;
 
     //Пени - долг
@@ -73,10 +73,10 @@ public class Contribution implements Serializable {
 
 
     //Льготный ли период
-    @Column(name = "benefits_on")
+    @Column(name = "benefitsOn")
     private boolean benefitsOn;
 
-    //Член правления в этом периоде
+   //Член правления в этом периоде
     @Column(name = "member_board_on")
     private boolean memberBoardOn;
 

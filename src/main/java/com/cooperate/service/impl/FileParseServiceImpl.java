@@ -23,10 +23,10 @@ import java.util.Iterator;
 public class FileParseServiceImpl implements FileParseService {
 
     @Autowired
-    GaragService garagService;
+    private GaragService garagService;
 
     @Autowired
-    PersonService personService;
+    private PersonService personService;
 
     //Парсер гаражей
     @Transactional

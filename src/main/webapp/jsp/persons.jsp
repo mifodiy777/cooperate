@@ -26,10 +26,10 @@
             },
             "columns": [
                 {"data": "fio", 'title': 'ФИО'},
-                {"data": "telephone", 'title': 'Телефон'},
-                {"data": "address.addr", 'title': 'Адрес'},
+                {"data": "phone", 'title': 'Телефон'},
+                {"data": "address", 'title': 'Адрес'},
                 {"data": "benefits", 'title': 'Льготы'},
-                {"data": "garagList[,<br>].garag.fullName", 'title': 'Гаражи'},
+                {"data": "garags[,<br>].garag", 'title': 'Гаражи'},
                 {'title': 'Действия', "render": function (data, type, full) {
                     return "<a href=\"#\" class=\"btnTable  btn btn-primary btn-sm\" onclick=\"editPerson(" + full.id +
                             ");\"><span class=\"glyphicon glyphicon-pencil\"/></span></a>" +

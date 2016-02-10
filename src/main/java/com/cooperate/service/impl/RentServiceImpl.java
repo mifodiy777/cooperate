@@ -18,13 +18,13 @@ import java.util.List;
 public class RentServiceImpl implements RentService {
 
     @Autowired
-    RentDAO rentDAO;
+    private RentDAO rentDAO;
 
     @Autowired
-    GaragService garagService;
+    private GaragService garagService;
 
     @Autowired
-    PaymentService paymentService;
+    private PaymentService paymentService;
 
     @Override
     @Transactional

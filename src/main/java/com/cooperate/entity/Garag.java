@@ -92,11 +92,11 @@ public class Garag implements Serializable {
         this.payments = payments;
     }
 
-    public String getName(){
-        return  this.series+"-"+this.number;
+    public String getName() {
+        return this.series + "-" + this.number;
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return " Ряд: " + this.series + " Номер: " + this.number;
     }
 

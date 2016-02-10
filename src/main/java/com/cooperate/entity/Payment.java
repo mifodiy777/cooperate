@@ -22,7 +22,6 @@ public class Payment implements Serializable {
     @Column(name = "number_payment", nullable = false, unique = true)
     private Integer number;
 
-    @Expose
     @Column(name = "year", nullable = false)
     private Integer year;
 
@@ -35,6 +34,7 @@ public class Payment implements Serializable {
     //К какому гаражу прикреплен платеж
     @Expose
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Garag garag;
 
     //ФИО платильщика
@@ -113,7 +113,7 @@ public class Payment implements Serializable {
 
     public String getDatePay() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd.MM.yyyy");
-        return fmt.format(this.datePayment);
+        return fmt.format(this.datePayment.getTime());
     }
 
     public Garag getGarag() {
@@ -140,8 +140,8 @@ public class Payment implements Serializable {
         this.pay = pay;
     }
 
-    public Float getSumPay(){
-        return this.pay+this.contributePay+this.contLandPay+this.contTargetPay+this.additionallyPay+this.finesPay;
+    public Float getSumPay() {
+        return this.pay + this.contributePay + this.contLandPay + this.contTargetPay + this.additionallyPay + this.finesPay;
     }
 
     public float getContributePay() {

@@ -35,11 +35,11 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"data": "number", 'title': 'Платеж'},
+                {"data": "number", 'title': 'Платеж',className: "series"},
                 {"data": "datePay", 'title': 'Дата'},
-                {"data":"garag.name", 'title': 'Гараж'},
+                {"data":"garag", 'title': 'Гараж'},
                 {"data": "fio", 'title': 'ФИО'},
-                {"data":"sumPay", 'title': 'Сумма'},
+                {"data":"pay", 'title': 'Сумма'},
                 { 'title': 'Действия', "render": function (data, type, full) {
                     var del = "";
                     if ($("#role").val() == 1) {
