@@ -95,11 +95,8 @@ public class GaragController {
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
         if (garagService.existGarag(garag)) {
-            //Если гараж новый а владелец уже существует
-            if (garag.getId() == null && garag.getPerson() != null) {
-                garag.setContributions(contributionService.getContributionOnGarag(garag));
-                //Редактирование гаража
-            } else if (garag.getId() != null) {
+            //Редактирование гаража
+            if (garag.getId() != null) {
                 Garag garagEdit = garagService.getGarag(garag.getId());
                 garag.setContributions(garagEdit.getContributions());
                 garag.setPayments(garagEdit.getPayments());

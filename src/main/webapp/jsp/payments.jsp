@@ -75,10 +75,6 @@
         }
     }
 
-    function reportProfit(year) {
-        window.location.href = "reportProfit/" + year;
-    }
-
 
 </script>
 <div class="container">
@@ -103,26 +99,6 @@
                 <div class="col-md-3">
                     <h3>Платежи ${setYear} года</h3>
                     Общее количество: <span id="count" class="badge"></span>
-                </div>
-
-                <div class="col-md-3 - col-md-offset-6 center">
-                    <h3>
-                        <button class="btn btn-primary" onclick='$("#profitDiv").toggle()'>Отчет о доходах</button>
-                    </h3>
-                    <div id="profitDiv" style="display:none;">
-                        <div class="input-group form-group">
-                            <label for="year" class="input-group-addon">Год*</label>
-                            <select id="year" class="form-control ">
-                                <c:forEach items="${rents}" var="rent">
-                                    <option value="${rent.yearRent}">${rent.yearRent}</option>
-                                </c:forEach>
-                            </select>
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" onclick='reportProfit($("#year").val());'>Подготовить
-                                </button>
-                            </span>
-                        </div>
-                    </div>
                 </div>
             </div>
             <table id="paymentTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>

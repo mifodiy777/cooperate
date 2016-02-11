@@ -3,6 +3,7 @@ package com.cooperate.controller;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PaymentService;
+import com.cooperate.service.RentService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,18 @@ public class ReportsController {
     private PaymentService paymentService;
 
     @Autowired
+    private RentService rentService;
+
+    @Autowired
     private JournalHistoryService journalService;
+
+    //Страница отчетов
+    @RequestMapping(value = "reportOther", method = RequestMethod.GET)
+    public String reportOther(ModelMap map) {
+        map.addAttribute("rents",rentService.getRents());
+        map.addAttribute("years", paymentService.findYears());
+        return "report";
+    }
 
     //Отчет - общий список гаражей
     @RequestMapping(method = RequestMethod.GET, value = "reportAllPerson")

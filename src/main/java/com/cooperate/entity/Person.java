@@ -44,7 +44,7 @@ public class Person implements Serializable {
     @Expose
     private String benefits;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH}, mappedBy = "person")
+    @OneToMany(mappedBy = "person")
     private List<Garag> garagList;
 
     @Expose

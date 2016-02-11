@@ -193,9 +193,9 @@ public class PaymentServiceImpl implements PaymentService {
             Date dt = p.getDatePayment().getTime();
             DateFormat ndf = new SimpleDateFormat("dd/MM/yyyy");
             String dateFull = ndf.format(dt);
-            HSSFCell datePay = row.createCell(2);
+            HSSFCell datePay = nextRow.createCell(2);
             datePay.setCellValue(dateFull);
-            HSSFCell garagCell = row.createCell(3);
+            HSSFCell garagCell = nextRow.createCell(3);
             garagCell.setCellValue(p.getGarag().getName());
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());

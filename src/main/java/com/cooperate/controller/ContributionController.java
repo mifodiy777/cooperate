@@ -52,9 +52,9 @@ public class ContributionController {
         if (contribution == null) {
             contribution = new Contribution();
             contribution.setYear(year);
-        }
+        }        
         map.addAttribute("contribution", contribution);
-        map.addAttribute("garagId", id);
+        map.addAttribute("garag", garagService.getGarag(id));
         map.addAttribute("max", rentService.findByYear(year));
         return "modalEditContribute";
     }

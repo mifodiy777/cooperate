@@ -16,7 +16,7 @@
     <link type="text/css" href="<c:url value="/css/tooltipster.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/pill.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/bootstrap-modal.css"/>" rel="stylesheet"/>
-     <link type="text/css" href="<c:url value="/css/levelNav.css"/>" rel="stylesheet"/>
+    <link type="text/css" href="<c:url value="/css/levelNav.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="<c:url value="/js/jquery.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery-ui.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.validate.min.js"/>"></script>
@@ -34,7 +34,7 @@
     <script type="text/javascript" src="<c:url value="/js/bootstrap-modalmanager.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/formatted-numbers.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>
 
 
     <script type="text/javascript">
@@ -51,7 +51,7 @@
             "language": {
                 "url": '<c:url value="/js/locale/dataTablesRu.json"/>'
             }
-        });       
+        });
 
         function showSuccessMessage(html) {
             $("#messages").removeClass("alert-danger");
@@ -148,6 +148,9 @@
                         <li>
                             <a href="<c:url value="/reportContribute"/>">Список должников</a>
                         </li>
+                        <li>
+                             <a href="<c:url value="/reportOther"/>">Дополнительные отчеты</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -159,7 +162,7 @@
                             <a href="<c:url value="/historyPage"/>"><span class="glyphicon glyphicon-header"></span>
                                 История</a>
                         </li>
-                         <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
+                        <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
                             <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
                                 Члены правления</a>
                         </li>
@@ -184,9 +187,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-               <li>
-                   <a style="cursor:default"> <c:out value="${user.username}"/> </a>
-               </li>
+                <li>
+                    <a style="cursor:default"> <c:out value="${user.username}"/> </a>
+                </li>
                 <li>
                     <a href="<c:url value="/j_spring_security_logout"/>" title="Выйти">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>

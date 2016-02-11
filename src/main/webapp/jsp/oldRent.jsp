@@ -57,9 +57,9 @@
     })
 </script>
 <div class="container">
-    <div class="panel panel-success">
+    <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3>Введите прошлые периоды</h3>
+            <h4>Введите прошлые периоды</h4>
         </div>
         <div class="panel-body">
             <div class="col-md-4 col-md-offset-4">

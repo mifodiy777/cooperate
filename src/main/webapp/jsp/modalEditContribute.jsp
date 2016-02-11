@@ -87,6 +87,10 @@
         }
         $("#finesLastUpdate").val("01.07.${contribution.year}");
         $("#finesOn").prop("checked", true);
+        if ($("#membersPerson").text().length != 0) {
+            $("#memberBoardOn").prop("checked", true);
+            $("#contribute").val(0);
+        }
 
     }
 
@@ -101,12 +105,13 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Введите долг за ${contribution.year} год</h4>
+                <c:if test="${garag.person.memberBoard}"><span id="membersPerson" class="label label-warning">Член правления</span> </c:if>
             </div>
             <form:form modelAttribute="contribution" id="contributionForm" method="post" action="saveContribute">
             <div class="modal-body">
                 <form:hidden path="id"/>
                 <form:hidden path="year"/>
-                <input type="hidden" id="idGarag" name="idGarag" value="${garagId}">
+                <input type="hidden" id="idGarag" name="idGarag" value="${garag.id}">
 
                 <div class="row">
                     <div class="col-md-8">

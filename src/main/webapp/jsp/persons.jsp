@@ -97,8 +97,9 @@
             <div id="personDiv"></div>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3>Список членов ГК</h3>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4>Список членов ГК</h4>
             Общее количество: <span id="count" class="badge"></span></div>
         <br>
 

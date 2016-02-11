@@ -22,9 +22,9 @@
 
 </script>
 <div class="container">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3>История</h3>
+            <h4>История</h4>
         </div>
         <div class="panel-body">
             <table id="historyTable" class="table table-striped table-bordered">

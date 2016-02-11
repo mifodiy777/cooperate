@@ -29,7 +29,8 @@ public class Garag implements Serializable {
 
     //Владелец
     @Expose
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_person")
     private Person person;
 
 
@@ -39,7 +40,7 @@ public class Garag implements Serializable {
     private List<Contribution> contributions;
 
     //Платежи
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "garag")
+    @OneToMany(cascade = CascadeType.ALL)
     @OrderBy("datePayment DESC")
     private List<Payment> payments;
 

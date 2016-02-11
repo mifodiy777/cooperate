@@ -33,6 +33,15 @@ public class GaragServiceImpl implements GaragService {
 
     @Transactional
     public Garag saveOrUpdate(Garag garag) {
+        if (garag.getId() == null && garag.getPerson() != null) {
+            if (garag.getPerson().getId() != null) {
+                Person p = garag.getPerson();
+                garag.setPerson(null);
+                Garag getGarag = garagDAO.save(garag);
+                getGarag.setPerson(p);
+                return garagDAO.save(getGarag);
+            }
+        }
         return garagDAO.save(garag);
     }
 
@@ -320,6 +329,7 @@ public class GaragServiceImpl implements GaragService {
     }
 
     //todo TESTING!!!
+
     @Override
     public HSSFWorkbook reportProfit(Integer year) {
         HSSFWorkbook workBook = new HSSFWorkbook();
@@ -474,7 +484,7 @@ public class GaragServiceImpl implements GaragService {
                         nPay += 1;
                     }
                 }
-                lastRow = (nPay == 0) ?  fistRow : fistRow + nPay - 1;
+                lastRow = (nPay == 0) ? fistRow : fistRow + nPay - 1;
                 HSSFRow row = sheet.createRow(fistRow);
                 HSSFCell countCell = row.createCell(0);
                 countCell.setCellValue(number);
@@ -660,7 +670,7 @@ public class GaragServiceImpl implements GaragService {
                 fistRow += nPay;
                 number++;
             }
-            
+
             //FOOTER
             CellStyle footerStyle = workBook.createCellStyle();
             footerStyle.setWrapText(true);
