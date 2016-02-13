@@ -40,7 +40,7 @@ public class Garag implements Serializable {
     private List<Contribution> contributions;
 
     //Платежи
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "garag")
     @OrderBy("datePayment DESC")
     private List<Payment> payments;
 

@@ -52,7 +52,7 @@ public class ContributionController {
         if (contribution == null) {
             contribution = new Contribution();
             contribution.setYear(year);
-        }        
+        }
         map.addAttribute("contribution", contribution);
         map.addAttribute("garag", garagService.getGarag(id));
         map.addAttribute("max", rentService.findByYear(year));
@@ -65,16 +65,14 @@ public class ContributionController {
     public String saveContribute(Contribution contribute, @RequestParam("idGarag") Integer id,
                                  ModelMap map, HttpServletResponse response) {
         Garag garag = garagService.getGarag(id);
-        List<Contribution> list = garag.getContributions();
-        if (contribute.getId() == null) {
-            list.add(contribute);
-        } else {
-            contributionService.saveOrUpdate(contribute);
-        }
-        garag.setContributions(list);
         try {
-            garagService.saveOrUpdate(garag);
-            journalService.event("Долг для гаража " + garag.getSeries() + "-" + garag.getNumber() + " за " +
+            if (contribute.getId() != null) {
+                contributionService.saveOrUpdate(contribute);
+            } else {
+                garag.getContributions().add(contribute);
+                garagService.saveOrUpdate(garag);
+            }
+            journalService.event("Долг для гаража " + garag.getName() + " за " +
                     contribute.getYear() + " год назначен");
             map.put("message", "Долг за " + contribute.getYear() + " год введен успешно");
             return "success";

@@ -9,7 +9,7 @@
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java-version>1.6</java-version>
+        <java-version>1.7</java-version>
         <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
         <org.springf-secutity-version>3.2.5.RELEASE</org.springf-secutity-version>
         <org.aspectj-version>1.6.9</org.aspectj-version>
