@@ -3,55 +3,158 @@
 <jsp:include page="header.jsp"/>
 <script type="text/javascript">
 
-    function reportProfit(year) {
-        window.location.href = "reportProfit/" + year;
+    $(function() {
+
+        rangeDate();
+
+        $('.reportForm input').tooltipster({
+            animation: 'slide',
+            trigger: 'custom',
+            onlyOne: false,
+            position: 'top'
+        });
+
+
+        $("#reportProfitForm").validate({
+            submitHandler: function (form) {
+                var data = $(form).serialize();
+                window.open($(form).attr("action") + "?" + data)
+            },
+            errorPlacement: function (error, element) {
+                $(element).tooltipster('update', $(error).text());
+                $(element).tooltipster('show');
+            },
+            success: function (label, element) {
+                $(element).tooltipster('hide');
+            }
+        });
+
+        $("#reportPaymentsForm").validate({
+            submitHandler: function (form) {
+                var data = $(form).serialize();
+                window.open($(form).attr("action") + "?" + data)
+            },
+            errorPlacement: function (error, element) {
+                $(element).tooltipster('update', $(error).text());
+                $(element).tooltipster('show');
+            },
+            success: function (label, element) {
+                $(element).tooltipster('hide');
+            }
+        });
+    })
+
+    function rangeDate() {
+        var startDate = new Date('01/01/2015');
+        var FromEndDate = new Date();
+        var ToEndDate = new Date();
+
+        ToEndDate.setDate(ToEndDate.getDate());
+
+        $('.from_date').datepicker({
+            format: "dd.mm.yyyy",
+            weekStart: 1,
+            startDate: '01/01/2015',
+            endDate: FromEndDate,
+            language:'ru',
+            autoclose: true
+        })
+                .on('changeDate', function(selected) {
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('.to_date').datepicker('setStartDate', startDate);
+        });
+        $('.to_date')
+                .datepicker({
+            format: "dd.mm.yyyy",
+            weekStart: 1,
+            startDate: startDate,
+            endDate: ToEndDate,
+            language:'ru',
+            autoclose: true
+        })
+                .on('changeDate', function(selected) {
+            FromEndDate = new Date(selected.date.valueOf());
+            FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+            $('.from_date').datepicker('setEndDate', FromEndDate);
+        });
+
     }
 
-    function reportPays(year) {
-        window.location.href = "reportPayments/" + year;
-    }
 </script>
 <div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4>Отчеты</h4>
         </div>
-        <div class="panel-body">
-
+        <div class="panel-body ">
             <div class="row center">
                 <div class="col-md-6">
-                    <h3>Отчет по доходам</h3>
-                    <div class="input-group form-group">
-                <label for="yearProfit" class="input-group-addon">Год*</label>
-                <select id="yearProfit" class="form-control ">
-                    <c:forEach items="${rents}" var="rent">
-                        <option value="${rent.yearRent}">${rent.yearRent}</option>
-                    </c:forEach>
-                </select>
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" onclick='reportProfit($("#yearProfit").val());'>Подготовить</button>
-                            </span>
-            </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>Отчет по доходам</h3>
+
+                            <form action="reportProfit" id="reportProfitForm" class="reportForm" method="post">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="input-group form-group">
+                                            <label for="profitDateStart" class="input-group-addon">C </label>
+                                            <input id="profitDateStart" name="profitDateStart"
+                                                   class="from_date required form-control dateRU">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group form-group">
+                                            <label for="profitDateEnd" class="input-group-addon"> ПО </label>
+                                            <input id="profitDateEnd" name="profitDateEnd"
+                                                   class="to_date required form-control dateRU">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group form-group">
+                                            <button type="submit" class="btn btn-primary">Подготовить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                    <div class="col-md-6">
-                    <h3>Отчет по платежам</h3>
-                    <div class="input-group form-group">
-                <label for="yearPay" class="input-group-addon">Год*</label>
-                <select id="yearPay" class="form-control ">
-                    <c:forEach items="${years}" var="year">
-                        <option value="${year}">${year}</option>
-                    </c:forEach>
-                </select>
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" onclick='reportPays($("#yearPay").val());'>Подготовить</button>
-                            </span>
-            </div>
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>Отчет по платежам</h3>
+
+                            <form action="reportPayments" id="reportPaymentsForm" class="reportForm" method="post">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="input-group form-group">
+                                            <label for="paymentDateStart" class="input-group-addon">C </label>
+                                            <input id="paymentDateStart" name="paymentDateStart"
+                                                   class="from_date required form-control dateRU">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group form-group">
+                                            <label for="paymentDateEnd" class="input-group-addon"> ПО </label>
+                                            <input id="paymentDateEnd" name="paymentDateEnd"
+                                                   class="to_date required form-control dateRU">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group form-group">
+                                            <button type="submit" class="btn btn-primary">Подготовить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
-
         </div>
-
     </div>
-    <jsp:include page="footer.jsp"/>
+</div>
+
+<jsp:include page="footer.jsp"/>

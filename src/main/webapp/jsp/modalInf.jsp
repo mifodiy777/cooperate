@@ -76,7 +76,7 @@
                     </thead>
                     <c:forEach items="${garag.contributions}" var="c">
                         <%--  Проверить--%>
-                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
+                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines+c.balance) !=0}">
                             <tr>
                                 <td>${c.year}</td>
                                 <td>${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>

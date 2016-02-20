@@ -23,7 +23,7 @@
                 $(form).ajaxSubmit({
                     success: function (html) {
                         var series = $("#seriesNumber").val();
-                        $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
+                        $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + series).load(null, false);
                         showSuccessMessage(html);
                         $("#editPanel").hide();
                         $("#garagDiv").empty();
@@ -99,7 +99,7 @@
         $("#personBtn").hide();
 
     }
-    <c:if test="${isAdmin && editContribute}">
+    <c:if test="${isAdmin}">
     function setOldContribute() {
         $.get('editContribute', {"idGarag":${garag.id}, "year":$("#year_select").val()}, function(html) {
             $("#modalDiv").html(html);
@@ -145,7 +145,7 @@
     }
 
 </script>
-<c:if test="${isAdmin && editContribute}">
+<c:if test="${isAdmin}">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h4 align="center">Внести старые долги</h4>
@@ -162,7 +162,6 @@
                     </span>
             </div>
         </div>
-
     </div>
 </c:if>
 

@@ -328,10 +328,9 @@ public class GaragServiceImpl implements GaragService {
         return workBook;
     }
 
-    //todo TESTING!!!
 
     @Override
-    public HSSFWorkbook reportProfit(Integer year) {
+    public HSSFWorkbook reportProfit(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
         for (String series : garagDAO.getSeries()) {
             HSSFSheet sheet = workBook.createSheet(series);
@@ -474,13 +473,17 @@ public class GaragServiceImpl implements GaragService {
             int number = 1;
             List<Garag> garagList = garagDAO.findBySeries(series);
             Collections.sort(garagList, new GaragComparator());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(start.getTime());
+            Integer year = cal.get(Calendar.YEAR);
             for (Garag g : garagList) {
                 if (g.getPerson() == null) {
                     continue;
                 }
                 int nPay = 0;
                 for (Payment payment : g.getPayments()) {
-                    if (payment.getDatePayment().get(Calendar.YEAR) == year) {
+                    Calendar datePay = payment.getDatePayment();
+                    if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
                         nPay += 1;
                     }
                 }
@@ -525,7 +528,8 @@ public class GaragServiceImpl implements GaragService {
                 Float sumContributions = newContribute + newContLand + newContTarget + newFines;
                 Rent rent = rentService.findByYear(year);
                 for (Payment payment : g.getPayments()) {
-                    if (payment.getDatePayment().get(Calendar.YEAR) == year) {
+                    Calendar datePay = payment.getDatePayment();
+                    if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
                         oldContribute += payment.getContributePay();
                         oldContLand += payment.getContLandPay();
                         oldContTarget += payment.getContTargetPay();

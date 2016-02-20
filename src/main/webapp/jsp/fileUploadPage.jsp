@@ -10,7 +10,7 @@
             <h4>Конвертация</h4>
         </div>
         <div class="panel-body">
-            <form method="POST" enctype="multipart/form-data"
+            <form id="uploadForm" method="POST" enctype="multipart/form-data"
                   action="upload">
                 <div class="form-group input-group">
                     <label for="file" class="input-group-addon"> Конвертировать: </label>

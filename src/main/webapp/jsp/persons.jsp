@@ -7,13 +7,14 @@
 
         $.scrollUp();
 
-        $('#listPerson').DataTable({
+        var table = $('#listPerson').DataTable({
             "ajax": "allPerson",
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'my' + aData.id);
             },
-            "fnDrawCallback": function () {                
-                 $('a.deleteButton').popConfirm({
+            "fnDrawCallback": function () {
+                $('a.deleteButton').off("click");
+                $('a.deleteButton').popConfirm({
                     title: "Удалить?",
                     content: "",
                     placement: "bottom",
@@ -39,6 +40,7 @@
                 }
             ]
         });
+
     });
 
     function closeForm(formName) {

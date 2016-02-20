@@ -85,6 +85,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setNumber(number);
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
+        payment.setGarag(garag);
         payment.setFio(garag.getPerson().getFIO());
         int size = garag.getContributions().size();
         int i = 1;
@@ -115,25 +116,25 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             } else {
                 if (c.getContribute() > payment.getPay()) {
-                    payment.setContributePay(payment.getPay());
+                    payment.setContributePay(payment.getContributePay() + payment.getPay());
                     c.setContribute(c.getContribute() - payment.getPay());
                     payment.setPay(0);
                 } else {
-                    payment.setContributePay(c.getContribute());
+                    payment.setPay(payment.getPay() - c.getContribute());
+                    payment.setContributePay(payment.getContributePay() + c.getContribute());
                     c.setContribute(0f);
-                    payment.setPay(payment.getPay() - payment.getContributePay());
                 }
                 if (c.getContLand() > payment.getPay()) {
-                    payment.setContLandPay(payment.getPay());
+                    payment.setContLandPay(payment.getContLandPay() + payment.getPay());
                     c.setContLand(c.getContLand() - payment.getPay());
                     payment.setPay(0);
                 } else {
-                    payment.setContLandPay(c.getContLand());
+                    payment.setPay(payment.getPay() - c.getContLand());
+                    payment.setContLandPay(payment.getContLandPay() + c.getContLand());
                     c.setContLand(0f);
-                    payment.setPay(payment.getPay() - payment.getContLandPay());
                 }
                 if (c.getContTarget() > payment.getPay()) {
-                    payment.setContTargetPay(payment.getPay());
+                    payment.setContTargetPay(payment.getContTargetPay() + payment.getPay());
                     c.setContTarget(c.getContTarget() - payment.getPay());
                     payment.setPay(0);
                 }
@@ -146,9 +147,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public HSSFWorkbook reportPayments(Integer year) {
+    public HSSFWorkbook reportPayments(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
-        HSSFSheet sheet = workBook.createSheet("Список платежей " + year + " г");
+        HSSFSheet sheet = workBook.createSheet("Список платежей");
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Счет", "Дата", "Гараж", "ФИО", "Сумма", "Членский взнос",
@@ -184,7 +185,9 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         int numberRow = 1;
-        for (Payment p : paymentDAO.findByYear(year)) {
+        //При выборе например 18 числа будет выборка всех платеже по 19.01.01 00:00:00
+        end.set(Calendar.DAY_OF_MONTH, end.get(Calendar.DAY_OF_MONTH) + 1);
+        for (Payment p : paymentDAO.findByDateBetween(start, end)) {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
@@ -250,6 +253,14 @@ public class PaymentServiceImpl implements PaymentService {
             finesResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
             finesResume.setCellFormula("SUM(J2:J" + numberRow + ")");
             finesResume.setCellStyle(footerStyle);
+            HSSFCell addingResume = resumeRow.createCell(10);
+            addingResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            addingResume.setCellFormula("SUM(K2:K" + numberRow + ")");
+            addingResume.setCellStyle(footerStyle);
+            HSSFCell reminderResume = resumeRow.createCell(11);
+            reminderResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            reminderResume.setCellFormula("SUM(L2:L" + numberRow + ")");
+            reminderResume.setCellStyle(footerStyle);
         }
         return workBook;
     }

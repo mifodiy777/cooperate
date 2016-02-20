@@ -3,6 +3,7 @@ package com.cooperate.service;
 import com.cooperate.entity.Garag;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public interface GaragService {
 
     HSSFWorkbook reportContribute();
 
-    HSSFWorkbook reportProfit(Integer year);
+    HSSFWorkbook reportProfit(Calendar start, Calendar end);
 
 
 }

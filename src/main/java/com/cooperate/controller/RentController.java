@@ -1,7 +1,5 @@
 package com.cooperate.controller;
 
-import com.cooperate.entity.Contribution;
-import com.cooperate.entity.Garag;
 import com.cooperate.entity.Rent;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Controller
 public class RentController {
@@ -66,19 +63,6 @@ public class RentController {
     @RequestMapping(value = "saveOldRent", method = RequestMethod.POST)
     public String saveOldRent(Rent rent, ModelMap map, HttpServletResponse response) {
         if (rentService.checkRent(rent.getYearRent())) {
-            for (Garag g : garagService.getGarags()) {
-                List<Contribution> contributions = g.getContributions();
-                Contribution contribution = new Contribution();
-                contribution.setYear(rent.getYearRent());
-                if (g.getPerson() != null) {
-                    if (!g.getPerson().getBenefits().equals("")) {
-                        contribution.setBenefitsOn(true);
-                    }
-                }
-                contributions.add(contribution);
-                g.setContributions(contributions);
-                garagService.saveOrUpdate(g);
-            }
             rentService.saveOrUpdate(rent);
             historyService.event("Создан старый период-" + rent.getYearRent());
             map.put("message", "Начисление за " + rent.getYearRent() + " сохранено!");

@@ -118,7 +118,6 @@ public class GaragController {
     @RequestMapping(value = "garag/{id}", method = RequestMethod.GET)
     public String editGaragForm(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("type", "Режим редактирования гаража");
-        map.addAttribute("editContribute", true);
         map.addAttribute("rents", rentService.getRents());
         map.addAttribute("now", Calendar.getInstance().get(Calendar.YEAR));
         map.addAttribute("garag", garagService.getGarag(id));

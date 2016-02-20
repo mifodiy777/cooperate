@@ -23,6 +23,7 @@
             ],
             "ajax": "payments?setYear=${setYear}",
             "fnDrawCallback": function () {
+                $('a.deleteButton').off("click");
                 $('a.deleteButton').popConfirm({
                     title: "Удалить?",
                     content: "",

@@ -1,4 +1,5 @@
 jQuery.validator.addMethod("dateRU", function(value, element) {
+    if (!value == "") {
     var check = false;
     var re = /^\d{1,2}\.\d{1,2}\.\d{4}$/;
     var today = new Date();
@@ -16,6 +17,8 @@ jQuery.validator.addMethod("dateRU", function(value, element) {
     } else
         check = false;
     return this.optional(element) || check;
+    }
+    return true;
 }, "Пожалуйста, введите корректную дату.");
 
 $.validator.addMethod("lettersonly", function(value, element) {

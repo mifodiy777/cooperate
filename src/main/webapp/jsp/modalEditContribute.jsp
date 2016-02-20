@@ -10,6 +10,12 @@
 
         $("#contributionForm").validate({
             submitHandler: function (form) {
+                $('#contributionForm input.number').each(function() {
+                    var val = $(this).val();
+                    if (val.length == 0) {
+                        $(this).val(0);
+                    }
+                });
                 $(form).ajaxSubmit({
                     success: function (html) {
                         $('#formModalContribute').modal('hide');

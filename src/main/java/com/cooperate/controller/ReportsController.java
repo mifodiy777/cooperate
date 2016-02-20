@@ -1,5 +1,6 @@
 package com.cooperate.controller;
 
+import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PaymentService;
@@ -8,16 +9,20 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Controller
@@ -35,10 +40,16 @@ public class ReportsController {
     @Autowired
     private JournalHistoryService journalService;
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Calendar.class, new CalendarCustomEditor());
+    }
+
+
     //Страница отчетов
     @RequestMapping(value = "reportOther", method = RequestMethod.GET)
     public String reportOther(ModelMap map) {
-        map.addAttribute("rents",rentService.getRents());
+        map.addAttribute("rents", rentService.getRents());
         map.addAttribute("years", paymentService.findYears());
         return "report";
     }
@@ -138,21 +149,23 @@ public class ReportsController {
 
 
     //Отчет -  доходы
-    @RequestMapping(method = RequestMethod.GET, value = "reportProfit/{year}")
-    public String reportProfit(@PathVariable("year") Integer year, HttpServletResponse response, ModelMap map) throws IOException {
-        HSSFWorkbook workBook = garagService.reportProfit(year);
-        String filename = "Отчет по доходам за" + year;
+    @RequestMapping(method = RequestMethod.GET, value = "reportProfit")
+    public String reportProfit(@RequestParam("profitDateStart") Calendar dateStart,
+                               @RequestParam("profitDateEnd") Calendar dateEnd,
+
+                               HttpServletResponse response, ModelMap map) throws IOException, ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        dateFormat.setLenient(false);
+        HSSFWorkbook workBook = garagService.reportProfit(dateStart, dateEnd);
+        String filename = "Отчет по доходам";
         String URLEncodedFileName;
         try {
             URLEncodedFileName = URLEncoder.encode(filename, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-        dateFormat.setLenient(false);
-        String strDate = dateFormat.format(new Date().getTime());
         String resultFileName = URLEncodedFileName.replace('+', ' ');
-        resultFileName += "(" + strDate + ").xls";
+        resultFileName +="(" + dateFormat.format(dateStart.getTime()) + "-" + dateFormat.format(dateEnd.getTime()) + ").xls";
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + resultFileName + "\"");
         try {
@@ -162,28 +175,30 @@ public class ReportsController {
             os.close();
             journalService.event("Сформирован отчет  - ДОХОДЫ ");
         } catch (IOException e) {
-            map.addAttribute("errMessage", "Ошибка отправки отчета");
+            map.put("message", "Ошибка отправки отчета");
+            response.setStatus(409);
             return "error";
         }
         return null;
     }
 
     //Отчет по платежам
-    @RequestMapping(method = RequestMethod.GET, value = "reportPayments/{year}")
-    public String reportPayments(@PathVariable("year") Integer year, HttpServletResponse response, ModelMap map) throws IOException {
-        HSSFWorkbook workBook = paymentService.reportPayments(year) ;
-        String filename = "Отчет по платежам за" + year;
+    @RequestMapping(method = RequestMethod.GET, value = "reportPayments")
+    public String reportPayments(@RequestParam("paymentDateStart") Calendar dateStart,
+                                 @RequestParam("paymentDateEnd") Calendar dateEnd,
+                                 HttpServletResponse response, ModelMap map) throws IOException, ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        dateFormat.setLenient(false);
+        HSSFWorkbook workBook = paymentService.reportPayments(dateStart, dateEnd);
+        String filename = "Отчет по платежам";
         String URLEncodedFileName;
         try {
             URLEncodedFileName = URLEncoder.encode(filename, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-        dateFormat.setLenient(false);
-        String strDate = dateFormat.format(new Date().getTime());
         String resultFileName = URLEncodedFileName.replace('+', ' ');
-        resultFileName += "(" + strDate + ").xls";
+        resultFileName += "(" + dateFormat.format(dateStart.getTime()) + "-" + dateFormat.format(dateEnd.getTime()) + ").xls";
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + resultFileName + "\"");
         try {
@@ -193,7 +208,8 @@ public class ReportsController {
             os.close();
             journalService.event("Сформирован отчет  - ПЛАТЕЖИ ");
         } catch (IOException e) {
-            map.addAttribute("errMessage", "Ошибка отправки отчета");
+            map.put("message", "Ошибка отправки отчета");
+            response.setStatus(409);
             return "error";
         }
         return null;

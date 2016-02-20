@@ -16,6 +16,7 @@
                 $(nRow).attr('id', 'my' + aData.id);
             },
             "fnDrawCallback": function () {
+                $('a.deleteButton').off("click");
                 $('a.deleteButton').popConfirm({
                     title: "Удалить?",
                     content: "",

@@ -4,6 +4,7 @@ import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import java.util.Calendar;
 import java.util.List;
 
 public interface PaymentService {
@@ -14,7 +15,7 @@ public interface PaymentService {
 
     List<Payment> findByYear(Integer year);
     
-    HSSFWorkbook reportPayments(Integer year);
+    HSSFWorkbook reportPayments(Calendar start, Calendar end);
 
     Payment getPayment(Integer id);
 
