@@ -99,7 +99,7 @@
         $("#personBtn").hide();
 
     }
-    <c:if test="${isAdmin}">
+    <c:if test="${isAdmin && isOldGarag}">
     function setOldContribute() {
         $.get('editContribute', {"idGarag":${garag.id}, "year":$("#year_select").val()}, function(html) {
             $("#modalDiv").html(html);
@@ -145,7 +145,7 @@
     }
 
 </script>
-<c:if test="${isAdmin}">
+<c:if test="${isAdmin && isOldGarag}">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h4 align="center">Внести старые долги</h4>
@@ -273,7 +273,7 @@
     <div id="searchDivPerson">
 
         <div class="col-md-12">
-            <input type="button" class="btn btn-primary" id="searchPersonBtn" value="Найти владельца">
+            <button type="button" class="btn btn-primary" id="searchPersonBtn"><span class="glyphicon glyphicon-search"></span> Найти владельца</button>
         </div>
 
         <div class="row">

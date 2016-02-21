@@ -67,7 +67,7 @@ public class PaymentController {
     //Сохранение платежа
     @RequestMapping(value = "savePayment", method = RequestMethod.POST)
     public String savePayment(Payment payment, ModelMap map) {
-        payment = paymentService.pay(payment);
+        payment = paymentService.pay(payment,false);
         historyService.event("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
         map.put("message", "Оплата произведена");
         return "success";

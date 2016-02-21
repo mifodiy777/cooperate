@@ -166,16 +166,6 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="input-group">
-                            <label for="additionallyCont" class="input-group-addon">Дополнительный взнос</label>
-                            <form:input path="additionallyCont" id="additionallyCont"
-                                        cssClass="number form-control"/>
-                            <span class="input-group-addon">руб.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="input-group">
                             <label for="fines" class="input-group-addon">Пени</label>
                             <form:input path="fines" id="fines"
                                         cssClass="number form-control"/>
@@ -256,7 +246,8 @@
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Сохранить
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="fullSetDebt()">Полностью</button>
+                    <button type="button" class="btn btn-danger" onclick="fullSetDebt()"><span class="glyphicon glyphicon-signal"></span> Полностью</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
 
                 </div>
                 </form:form>

@@ -10,7 +10,9 @@
     });
 
     function openAddingCount() {
-        $("#setAddingDiv").show();
+        $("#setAddingDiv").toggle();
+        $("#openAddingCount").toggle();
+        $("#setAdding").focus();
     }
 
     function setAddingCount() {
@@ -19,7 +21,7 @@
         if (count == "" || !$.isNumeric(count)) {
             $("#setAdding").tooltip({placement: 'bottom', trigger: 'manual', font: '14px'}).tooltip('show');
         } else {
-            $.get("saveAddingCount", {id:id,count:count}, function(html) {
+            $.get("saveAddingCount", {id: id, count: count}, function (html) {
                 $("#setAddingDiv").hide();
                 $('#modalInf').modal('hide');
                 showSuccessMessage(html);
@@ -32,6 +34,7 @@
     function hideTooltipAdding() {
         $('#setAdding').tooltip('destroy');
     }
+
 
 </script>
 
@@ -46,21 +49,10 @@
                 <h4 class="modal-title">Гараж ${garag.name}</h4>
             </div>
             <div class="modal-body">
-                <div id="setAddingDiv" style="display:none">
-                    <h4>Введите сумму дополнительного взноса</h4>
-                    <input type="hidden" id="yearAdding">
 
-                    <div class="form-group input-group">
-                        <label for="setAdding" class="input-group-addon">Сумма</label>
-                        <input id="setAdding" rel="tooltip"
-                               data-original-title="Введите сумму"
-                               onkeypress="hideTooltipAdding();" onclick="hideTooltipAdding();" class="form-control">
-                        <span class="input-group-btn">
-                            <button onclick="setAddingCount()" class="btn btn-info">Записать</button>
-                        </span>
-                    </div>
-                </div>
-                <h4>${fio} <c:if test="${garag.person.memberBoard}"><span class="label label-warning">Член правления</span> </c:if></h4>
+
+                <h4>${fio} <c:if test="${garag.person.memberBoard}"><span
+                        class="label label-warning">Член правления</span> </c:if></h4>
                 <h4>Долги</h4>
                 <table class="table table-striped">
                     <thead>
@@ -71,12 +63,11 @@
                         <th>Аренда земли</th>
                         <th>Целевой взнос</th>
                         <th>Пени</th>
-                        <th>Оставшиеся средства</th>                      
                     </tr>
                     </thead>
                     <c:forEach items="${garag.contributions}" var="c">
                         <%--  Проверить--%>
-                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines+c.balance) !=0}">
+                        <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
                             <tr>
                                 <td>${c.year}</td>
                                 <td>${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
@@ -88,7 +79,6 @@
                                 <td>${c.contTarget} руб.</td>
                                 <td>${c.fines} руб. <c:if test="${c.finesOn}">
                                     <span class="glyphicon glyphicon-fire"></span></c:if></td>
-                                <td>${c.balance} руб.</td>
                             </tr>
                         </c:if>
                     </c:forEach>
@@ -96,9 +86,29 @@
                 <h4>Общий долг: ${contributionAll}</h4>
                 <hr>
                 <h4>Платежи</h4>
-                <button class="btn btn-primary" onclick="openAddingCount()">
+                <button id="openAddingCount" class="btn btn-primary" onclick="openAddingCount()">
                     <span class="glyphicon glyphicon-shopping-cart"></span> Дополнительный взнос
                 </button>
+                <div class="row">
+                    <div id="setAddingDiv" style="display:none" class="col-md-offset-3 col-md-6 center panel panel-default">
+                        <h4>Введите сумму дополнительного взноса</h4>
+                        <input type="hidden" id="yearAdding">
+
+                        <div class="form-group input-group">
+                            <label for="setAdding" class="input-group-addon">Сумма</label>
+                            <input id="setAdding" rel="tooltip"
+                                   data-original-title="Введите сумму"
+                                   onkeypress="hideTooltipAdding();" onclick="hideTooltipAdding();"
+                                   class="form-control">
+                        <span class="input-group-btn">
+                            <button onclick="setAddingCount()" class="btn btn-info">Записать</button>
+                        </span>
+                        </div>
+                        <div class="form-group input-group">
+                            <button type="button" class="btn btn-danger" onclick="openAddingCount()">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -141,7 +151,7 @@
                         class="glyphicon glyphicon-print"></span>
                     Распечатать
                 </a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
             </div>
 
         </div>

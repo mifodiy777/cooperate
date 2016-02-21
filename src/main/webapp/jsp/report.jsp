@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group form-group">
-                                            <button type="submit" class="btn btn-primary">Подготовить</button>
+                                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-open-file"></span> Подготовить</button>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group form-group">
-                                            <button type="submit" class="btn btn-primary">Подготовить</button>
+                                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-open-file"></span> Подготовить</button>
                                         </div>
                                     </div>
                                 </div>

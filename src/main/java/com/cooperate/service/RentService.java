@@ -15,4 +15,8 @@ public interface RentService {
     void createNewPeriod(Rent rent);
 
     Rent findByYear(Integer year);
+
+    List<Rent> findAll();
+
+
 }

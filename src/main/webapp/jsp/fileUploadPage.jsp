@@ -16,7 +16,7 @@
                     <label for="file" class="input-group-addon"> Конвертировать: </label>
                     <input type="file" id="file" name="file" class="form-control">
             <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary">Загрузить</button>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Загрузить</button>
         </span>
                 </div>
 

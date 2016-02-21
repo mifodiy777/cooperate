@@ -91,7 +91,6 @@
                 success: function(html) {
                     $('#modalLoading').modal('hide');
                     showSuccessMessage(html);
-                    $.cookie('day_sync', now.getDate())
                 },
                 error:function(xhr) {
                     $('#modalLoading').modal('hide');
@@ -102,10 +101,9 @@
 
         $(document).ready(function () {
             var now = new Date();
-            if ($.cookie('day_sync') == null || $.cookie('day_sync') != now.getDate()) {
+            if ($.cookie('day_sync') == null) {
                 openNewRent();
                 updateFines();
-
             }
         })
     </script>
@@ -140,13 +138,13 @@
                        role="button" aria-expanded="false"><span class="glyphicon glyphicon-stats"></span> Отчеты </a>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="<c:url value="/reportAllPerson"/>">Общий список</a>
+                            <a href="<c:url value="/reportAllPerson"/>"><span class="glyphicon glyphicon-open-file"></span> Общий список</a>
                         </li>
                         <li>
-                            <a href="<c:url value="/reportBenefitsPerson"/>">Список льготников</a>
+                            <a href="<c:url value="/reportBenefitsPerson"/>"><span class="glyphicon glyphicon-open-file"></span> Список льготников</a>
                         </li>
                         <li>
-                            <a href="<c:url value="/reportContribute"/>">Список должников</a>
+                            <a href="<c:url value="/reportContribute"/>"><span class="glyphicon glyphicon-open-file"></span> Список должников</a>
                         </li>
                         <li>
                              <a href="<c:url value="/reportOther"/>">Дополнительные отчеты</a>

@@ -10,7 +10,6 @@ import com.cooperate.service.PaymentService;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.util.IntegerField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +39,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment saveOrUpdate(Payment rent) {
-        return paymentDAO.save(rent);
+    public Payment saveOrUpdate(Payment payment) {
+        return paymentDAO.save(payment);
     }
 
 
@@ -63,13 +62,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     //Возвращает платеж для определенного гаража с остатками денег
     @Override
-    public Payment getPaymentOnGarag(Garag garag) {
+    public List<Payment> getPaymentOnGarag(Garag garag) {
         return paymentDAO.getPaymentOnGarag(garag.getId());
     }
 
     @Override
     public Integer getMaxNumber() {
-        Integer number =  paymentDAO.getMaxValueNumber();
+        Integer number = paymentDAO.getMaxValueNumber();
         number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
         return number;
     }
@@ -77,17 +76,19 @@ public class PaymentServiceImpl implements PaymentService {
     //Метод платежа
     @Override
     @Transactional
-    public Payment pay(Payment payment) {
-        //Назначили время
-        Calendar now = Calendar.getInstance();
-        payment.setDatePayment(now);
-        payment.setYear(now.get(Calendar.YEAR));
-        //Назначили номер
-        payment.setNumber(getMaxNumber());
+    public Payment pay(Payment payment, Boolean isCreateNewPeriod) {
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
-        payment.setGarag(garag);
-        payment.setFio(garag.getPerson().getFIO());
+        if (!isCreateNewPeriod) {
+            Calendar now = Calendar.getInstance();
+            //Назначили время
+            payment.setDatePayment(now);
+            payment.setYear(now.get(Calendar.YEAR));
+            //Назначили номер
+            payment.setNumber(getMaxNumber());
+            payment.setGarag(garag);
+            payment.setFio(garag.getPerson().getFIO());
+        }
         int size = garag.getContributions().size();
         int i = 1;
         for (Contribution c : garag.getContributions()) {
@@ -106,9 +107,6 @@ public class PaymentServiceImpl implements PaymentService {
                 if (reminder >= 0) {
                     payment.setFinesPay(payment.getFinesPay() + c.getFines());
                     c.setFines(0);
-                    if (i == size) {
-                        c.setBalance(reminder);
-                    }
                     payment.setPay(reminder);
                 } else {
                     payment.setFinesPay(c.getFines() - (c.getFines() + reminder.intValue()));
@@ -144,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
             i++;
         }
         payment.setDebtPastPay(garagService.sumContribution(payment.getGarag()));
-        return saveOrUpdate(payment);
+        return paymentDAO.save(payment);
     }
 
     @Override

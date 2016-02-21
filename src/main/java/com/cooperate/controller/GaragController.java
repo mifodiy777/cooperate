@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.List;
@@ -50,6 +51,7 @@ public class GaragController {
         return "garags";
     }
 
+    //Список гаражей
     @RequestMapping(value = "allGarag", method = RequestMethod.GET)
     public ResponseEntity<String> getGarag(@RequestParam("setSeries") String series) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -58,17 +60,28 @@ public class GaragController {
         return Utils.convertListToJson(gsonBuilder, garagService.findBySeries(series));
     }
 
+    //Добавление гаража
     @RequestMapping(value = "garag", method = RequestMethod.GET)
     public String addGaragForm(ModelMap map) {
         map.addAttribute("type", "Режим добавления гаража");
-        map.addAttribute("editContribute", false);
+        map.addAttribute("isOldGarag", false);
+        map.addAttribute("rents", rentService.getRents());
         map.addAttribute("garag", new Garag());
+        return "garag";
+    }
+
+    //Редактирование гаража
+    @RequestMapping(value = "garag/{id}", method = RequestMethod.GET)
+    public String editGaragForm(@PathVariable("id") Integer id, ModelMap map) {
+        map.addAttribute("type", "Режим редактирования гаража");
+        map.addAttribute("isOldGarag", true);
+        map.addAttribute("rents", rentService.findAll());
+        map.addAttribute("garag", garagService.getGarag(id));
         return "garag";
     }
 
 
     //Информационно модальное окно для гаража
-
     @RequestMapping(value = "infModal", method = RequestMethod.GET)
     public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
@@ -79,7 +92,6 @@ public class GaragController {
     }
 
     //Печатная форма информации по гаражу
-
     @RequestMapping(value = "infGarag/{id}", method = RequestMethod.GET)
     public String infGarag(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
@@ -91,7 +103,6 @@ public class GaragController {
     }
 
     //Сохранения гаража
-
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
         if (garagService.existGarag(garag)) {
@@ -113,27 +124,15 @@ public class GaragController {
         }
     }
 
-    //Редактирование гаража
-
-    @RequestMapping(value = "garag/{id}", method = RequestMethod.GET)
-    public String editGaragForm(@PathVariable("id") Integer id, ModelMap map) {
-        map.addAttribute("type", "Режим редактирования гаража");
-        map.addAttribute("rents", rentService.getRents());
-        map.addAttribute("now", Calendar.getInstance().get(Calendar.YEAR));
-        map.addAttribute("garag", garagService.getGarag(id));
-        return "garag";
-    }
-
     //Поиск имеющихся владельцев
-
     @RequestMapping(value = "searchPerson", method = RequestMethod.POST)
     public String searchPerson(@RequestParam("pattern") String pattern, ModelMap map) {
         List<Person> persons = personService.findByfio(pattern);
         map.addAttribute("persons", persons);
         return "personRes";
     }
-    //Вывод владельца после поиска и внесение в форму данных
 
+    //Вывод владельца после поиска и внесение в форму данных
     @RequestMapping(value = "getPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPerson(@RequestParam("personId") Integer id) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -142,7 +141,6 @@ public class GaragController {
     }
 
     //Удаление гаража
-
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deleteGarag/{id}", method = RequestMethod.POST)
     public String deleteGarag(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
@@ -160,7 +158,6 @@ public class GaragController {
     }
 
     //Удалить у гаража владельца(Сам владелец сохраняется)
-
     @RequestMapping(value = "assignDelete/{id}", method = RequestMethod.POST)
     public String assignDelete(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {
@@ -184,12 +181,13 @@ public class GaragController {
     }
 
     //Пересччет долгов по пеням и включение пеней
-
     @RequestMapping(value = "updateFines", method = RequestMethod.POST)
     public String updateFines(ModelMap map, HttpServletResponse response) {
         try {
             contributionService.updateFines();
             contributionService.onFines();
+            Cookie day_sync =  new Cookie("day_sync", "checked");
+            response.addCookie(day_sync);
             map.put("message", "Данные успешно обнавленны!");
             return "success";
         } catch (DataIntegrityViolationException e) {

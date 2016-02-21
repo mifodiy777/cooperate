@@ -35,8 +35,8 @@
         <th>Аренда земли</th>
         <th>Целевой взнос</th>
         <th>Пени</th>
-        <th colspan="3">Годовой долг</th>
-        <th>Оставшиеся средства(Не долги!)</th>
+        <th colspan="4">Годовой долг</th>
+
     </tr>
     <c:forEach items="${garag.contributions}" var="c">
         <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
@@ -46,11 +46,7 @@
                 <td>${c.contLand} руб.</td>
                 <td>${c.contTarget} руб.</td>
                 <td>${c.fines} руб.</td>
-                <td colspan="3">${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
-                <td><fmt:formatNumber type="number"
-                                      maxFractionDigits="2"
-                                      value="${c.balance}"/> руб.
-                </td>
+                <td colspan="4">${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
             </tr>
         </c:if>
     </c:forEach>

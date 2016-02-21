@@ -18,9 +18,6 @@ public class ContributionServiceImpl implements ContributionService {
     @Autowired
     private ContributionDAO contributionDAO;
 
-    @Autowired
-    private RentService rentService;
-
     @Override
     @Transactional
     public void saveOrUpdate(Contribution contribution) {

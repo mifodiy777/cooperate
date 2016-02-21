@@ -9,10 +9,11 @@ import com.cooperate.service.GaragService;
 import com.cooperate.service.PaymentService;
 import com.cooperate.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RentServiceImpl implements RentService {
@@ -49,17 +50,10 @@ public class RentServiceImpl implements RentService {
     public void createNewPeriod(Rent rent) {
         for (Garag garag : garagService.getGarags()) {
             if (garag.getPerson() != null) {
-                //Проверка остатков не проведенных в период
-                if (garag.getContributions() != null) {
-                    Contribution c = garag.getContributions().get(garag.getContributions().size() - 1);
-                    if (c.getBalance() != 0f) {
-                        Payment payment = paymentService.getPaymentOnGarag(garag);
-                        paymentService.pay(payment);
-                    }
-                }
+                //Создаем новый период для каждого гаража
                 Contribution contribution = new Contribution();
                 contribution.setYear(rent.getYearRent());
-                if (garag.getPerson().getMemberBoard()) {
+                if (garag.getPerson().getMemberBoard()  != null && garag.getPerson().getMemberBoard()  ) {
                     contribution.setMemberBoardOn(true);
                 } else {
                     contribution.setContribute(rent.getContributeMax());
@@ -69,13 +63,19 @@ public class RentServiceImpl implements RentService {
                 } else {
                     contribution.setContLand(rent.getContLandMax() / 2);
                     contribution.setBenefitsOn(true);
-
                 }
                 contribution.setContTarget(rent.getContTargetMax());
-                List<Contribution> list = garag.getContributions();
-                list.add(contribution);
-                garag.setContributions(list);
+                if (garag.getContributions() != null) {
+                    garag.getContributions().add(contribution);
+                } else {
+                    List<Contribution> list = new ArrayList<>();
+                    list.add(contribution);
+                    garag.setContributions(list);
+                }
                 garagService.saveOrUpdate(garag);
+                for(Payment payment : paymentService.getPaymentOnGarag(garag)){
+                    paymentService.pay(payment,true);
+                }
             }
         }
     }
@@ -84,5 +84,14 @@ public class RentServiceImpl implements RentService {
     //Период начисления определенного года
     public Rent findByYear(Integer year) {
         return rentDAO.findByYearRent(year);
+    }
+
+    @Override
+    public List<Rent> findAll() {
+        return rentDAO.findAll(sortByYearAsc());
+    }
+
+    private Sort sortByYearAsc() {
+        return new Sort(Sort.Direction.DESC, "yearRent");
     }
 }

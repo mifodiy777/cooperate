@@ -61,12 +61,6 @@ public class Contribution implements Serializable {
     @Column(name = "fines_last_update")
     private Calendar finesLastUpdate;
 
-    /*Остаточные деньги при уплате всех долгов, При появлении нового периода деньги перейдут в новый период.
-      При этом данное значение становиться равным 0, а если сумма покрывает весь следующий период - то деньги перейдут
-      в новый период в параметр balance*/
-    @Column(name = "balance")
-    private float balance;
-
     //Льготный ли период
     @Column(name = "benefitsOn")
     private boolean benefitsOn;
@@ -147,14 +141,6 @@ public class Contribution implements Serializable {
         this.finesLastUpdate = finesLastUpdate;
     }
 
-    public Float getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Float balance) {
-        this.balance = balance;
-    }
-
     public boolean isBenefitsOn() {
         return benefitsOn;
     }
@@ -188,7 +174,6 @@ public class Contribution implements Serializable {
         if (fines != that.fines) return false;
         if (finesSum != that.finesSum) return false;
         if (finesOn != that.finesOn) return false;
-        if (Float.compare(that.balance, balance) != 0) return false;
         if (benefitsOn != that.benefitsOn) return false;
         if (memberBoardOn != that.memberBoardOn) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
@@ -208,7 +193,6 @@ public class Contribution implements Serializable {
         result = 31 * result + finesSum;
         result = 31 * result + (finesOn ? 1 : 0);
         result = 31 * result + (finesLastUpdate != null ? finesLastUpdate.hashCode() : 0);
-        result = 31 * result + (balance != +0.0f ? Float.floatToIntBits(balance) : 0);
         result = 31 * result + (benefitsOn ? 1 : 0);
         result = 31 * result + (memberBoardOn ? 1 : 0);
         return result;

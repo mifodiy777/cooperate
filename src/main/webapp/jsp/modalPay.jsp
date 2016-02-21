@@ -6,6 +6,7 @@
     $(document).ready(function () {
 
         $("#garagId").val('<c:out value="${garag.id}"/>');
+
         $('#formModalPay').modal().on('shown.bs.modal', function () {
             $('#pay').focus()
         });
@@ -88,7 +89,7 @@
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Оплатить
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
                 </div>
             </form:form>
         </div>

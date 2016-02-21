@@ -21,9 +21,9 @@ public interface PaymentService {
 
     void delete(Integer id);
 
-    Payment pay(Payment payment);
+    Payment pay(Payment payment,Boolean isNewPeriod);
 
-    Payment getPaymentOnGarag(Garag garag);
+    List<Payment> getPaymentOnGarag(Garag garag);
 
     Integer getMaxNumber();
 
