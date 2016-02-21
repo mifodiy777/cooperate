@@ -471,20 +471,15 @@ public class GaragServiceImpl implements GaragService {
             int fistRow = 3;
             int lastRow;
             int number = 1;
-            List<Garag> garagList = garagDAO.findBySeries(series);
+            List<Garag> garagList = garagDAO.findBySeriesWithNotPerson(series);
             Collections.sort(garagList, new GaragComparator());
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(start.getTime());
-            Integer year = cal.get(Calendar.YEAR);
+            Integer year = start.get(Calendar.YEAR);
             for (Garag g : garagList) {
-                if (g.getPerson() == null) {
-                    continue;
-                }
                 int nPay = 0;
                 for (Payment payment : g.getPayments()) {
                     Calendar datePay = payment.getDatePayment();
                     if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
-                        nPay += 1;
+                        nPay++;
                     }
                 }
                 lastRow = (nPay == 0) ? fistRow : fistRow + nPay - 1;
@@ -512,6 +507,7 @@ public class GaragServiceImpl implements GaragService {
                 float newContTarget = 0f;
                 int newFines = 0;
                 boolean benefits = false;
+
                 Contribution contribution = null;
                 for (Contribution c : g.getContributions()) {
                     if (c.getYear() <= year) {
@@ -527,6 +523,8 @@ public class GaragServiceImpl implements GaragService {
                 }
                 Float sumContributions = newContribute + newContLand + newContTarget + newFines;
                 Rent rent = rentService.findByYear(year);
+                float rentSum = rent.getContributeMax() + rent.getContTargetMax();
+                rentSum += (benefits) ? rent.getContLandMax() / 2 : rent.getContLandMax();
                 for (Payment payment : g.getPayments()) {
                     Calendar datePay = payment.getDatePayment();
                     if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
@@ -536,13 +534,13 @@ public class GaragServiceImpl implements GaragService {
                         oldFines += payment.getFinesPay();
                     }
                 }
-                oldContribute = oldContribute + newContribute - rent.getContributeMax();
+                oldContribute += newContribute - rent.getContributeMax();
                 if (benefits) {
-                    oldContLand = oldContLand + newContLand - (rent.getContLandMax() / 2);
+                    oldContLand += newContLand - (rent.getContLandMax() / 2);
                 } else {
-                    oldContLand = oldContLand + newContLand - rent.getContLandMax();
+                    oldContLand += newContLand - rent.getContLandMax();
                 }
-                oldContTarget = oldContTarget + newContTarget - rent.getContTargetMax();
+                oldContTarget += newContTarget - rent.getContTargetMax();
                 oldFines = newFines + oldFines - contribution.getFinesSum();
                 float sumOldContribute = oldContribute + oldContLand + oldContTarget + oldFines;
                 //Сумма прошлой задолжности
@@ -567,7 +565,7 @@ public class GaragServiceImpl implements GaragService {
                 sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 8, 8));
                 //Начисления текущего года
                 HSSFCell rentSumCell = row.createCell(9);
-                rentSumCell.setCellValue(rent.getContributeMax() + rent.getContLandMax() + rent.getContTargetMax());
+                rentSumCell.setCellValue(rentSum);
                 sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 9, 9));
                 //Начисления текущего года по членскому взносу
                 HSSFCell rentContributeCell = row.createCell(10);

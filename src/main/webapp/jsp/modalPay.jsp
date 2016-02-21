@@ -6,7 +6,9 @@
     $(document).ready(function () {
 
         $("#garagId").val('<c:out value="${garag.id}"/>');
-        $('#formModalPay').modal();
+        $('#formModalPay').modal().on('shown.bs.modal', function () {
+            $('#pay').focus()
+        });
 
         $("#paymentForm").validate({
             submitHandler: function (form) {
@@ -31,11 +33,11 @@
             success: function (label, element) {
                 $(element).tooltipster('hide');
             },
-            rules:{
-                pay:{
-                    required:true,
-                    number:true,
-                    min:100
+            rules: {
+                pay: {
+                    required: true,
+                    number: true,
+                    min: 100
                 }
             }
         });

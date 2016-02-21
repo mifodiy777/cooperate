@@ -88,27 +88,17 @@ public class ContributionController {
     public String saveAddingCount(@RequestParam("id") Integer id,
                                   @RequestParam("count") Float count, ModelMap map) {
         Garag garag = garagService.getGarag(id);
-        Integer cSize = garag.getContributions().size();
-        Contribution c = garag.getContributions().get(cSize - 1);
-        c.setAdditionallyCont(count + c.getAdditionallyCont());
-        contributionService.saveOrUpdate(c);
-        String fio = garag.getPerson().getFIO();
         Payment payment = new Payment();
-        Integer number = paymentService.getMaxNumber();
-        if (number == null) {
-            payment.setNumber(1);
-        } else {
-            payment.setNumber(paymentService.getMaxNumber() + 1);
-        }
+        payment.setNumber(paymentService.getMaxNumber());
         payment.setYear(Calendar.getInstance().get(Calendar.YEAR));
-        payment.setFio(fio);
+        payment.setFio(garag.getPerson().getFIO());
         payment.setAdditionallyPay(count);
         payment.setDatePayment(Calendar.getInstance());
         payment.setGarag(garag);
         payment.setDebtPastPay(garagService.sumContribution(garag));
         paymentService.saveOrUpdate(payment);
-        journalService.event("Дополнительный взнос  для гаража " + garag.getName() + " за " + c.getYear() + " год уплачен");
-        map.put("message", "Дополнительный взнос за " + c.getYear() + " год уплачен успешно");
+        journalService.event("Дополнительный взнос  для гаража " + garag.getName() + " уплачен");
+        map.put("message", "Дополнительный взнос  для гаража " + garag.getName() + " уплачен");
         return "success";
     }
 

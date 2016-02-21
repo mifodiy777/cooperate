@@ -11,8 +11,6 @@ public interface ContributionService {
 
     Contribution getContributionByGaragAndYear(Integer garagId, Integer year);
 
-    List<Contribution> getContributionOnGarag(Garag garag);
-
     void updateFines();
 
     void onFines();

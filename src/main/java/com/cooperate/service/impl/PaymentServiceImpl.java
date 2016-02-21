@@ -10,6 +10,7 @@ import com.cooperate.service.PaymentService;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.util.IntegerField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +69,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Integer getMaxNumber() {
-        return paymentDAO.getMaxValueNumber();
+        Integer number =  paymentDAO.getMaxValueNumber();
+        number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
+        return number;
     }
 
     //Метод платежа
@@ -79,10 +82,8 @@ public class PaymentServiceImpl implements PaymentService {
         Calendar now = Calendar.getInstance();
         payment.setDatePayment(now);
         payment.setYear(now.get(Calendar.YEAR));
-        Integer number = getMaxNumber();
-        number = (number == null) ? 1 : getMaxNumber() + 1;
         //Назначили номер
-        payment.setNumber(number);
+        payment.setNumber(getMaxNumber());
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
         payment.setGarag(garag);

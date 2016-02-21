@@ -51,10 +51,6 @@ public class FileParseController {
                 fileParseService.parsePerson(file);
             } else {
                 fileParseService.parseGarag(file);
-                for (Garag g : garagService.getGarags()) {
-                    g.setContributions(contributionService.getContributionOnGarag(g));
-                    garagService.saveOrUpdate(g);
-                }
             }
             historyService.event("Ковертирование выполненно!");
             map.put("message", "Конвертация выполненна!");

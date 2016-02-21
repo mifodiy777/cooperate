@@ -67,11 +67,6 @@ public class Contribution implements Serializable {
     @Column(name = "balance")
     private float balance;
 
-    /*Дополнительные начисления: уплаты различного рода*/
-    @Column(name = "additionally_cont")
-    private float additionallyCont;
-
-
     //Льготный ли период
     @Column(name = "benefitsOn")
     private boolean benefitsOn;
@@ -160,14 +155,6 @@ public class Contribution implements Serializable {
         this.balance = balance;
     }
 
-    public float getAdditionallyCont() {
-        return additionallyCont;
-    }
-
-    public void setAdditionallyCont(float additionallyCont) {
-        this.additionallyCont = additionallyCont;
-    }
-
     public boolean isBenefitsOn() {
         return benefitsOn;
     }
@@ -191,26 +178,23 @@ public class Contribution implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Contribution)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Contribution that = (Contribution) o;
 
-        if (Float.compare(that.additionallyCont, additionallyCont) != 0) return false;
-        if (Float.compare(that.balance, balance) != 0) return false;
-        if (benefitsOn != that.benefitsOn) return false;
+        if (Float.compare(that.contribute, contribute) != 0) return false;
         if (Float.compare(that.contLand, contLand) != 0) return false;
         if (Float.compare(that.contTarget, contTarget) != 0) return false;
-        if (Float.compare(that.contribute, contribute) != 0) return false;
         if (fines != that.fines) return false;
-        if (finesOn != that.finesOn) return false;
         if (finesSum != that.finesSum) return false;
+        if (finesOn != that.finesOn) return false;
+        if (Float.compare(that.balance, balance) != 0) return false;
+        if (benefitsOn != that.benefitsOn) return false;
         if (memberBoardOn != that.memberBoardOn) return false;
-        if (finesLastUpdate != null ? !finesLastUpdate.equals(that.finesLastUpdate) : that.finesLastUpdate != null)
-            return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (year != null ? !year.equals(that.year) : that.year != null) return false;
+        return finesLastUpdate != null ? finesLastUpdate.equals(that.finesLastUpdate) : that.finesLastUpdate == null;
 
-        return true;
     }
 
     @Override
@@ -225,7 +209,6 @@ public class Contribution implements Serializable {
         result = 31 * result + (finesOn ? 1 : 0);
         result = 31 * result + (finesLastUpdate != null ? finesLastUpdate.hashCode() : 0);
         result = 31 * result + (balance != +0.0f ? Float.floatToIntBits(balance) : 0);
-        result = 31 * result + (additionallyCont != +0.0f ? Float.floatToIntBits(additionallyCont) : 0);
         result = 31 * result + (benefitsOn ? 1 : 0);
         result = 31 * result + (memberBoardOn ? 1 : 0);
         return result;

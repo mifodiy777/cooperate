@@ -3,6 +3,7 @@ package com.cooperate.dao;
 import com.cooperate.entity.Garag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,6 +41,10 @@ public interface GaragDAO extends JpaRepository<Garag, Integer> {
 
     //Нахождение гаражей выбранного ряда
     List<Garag> findBySeries(String series);
+
+    //Нахождение гаражей выбранного ряда
+    @Query("select distinct g from Garag g inner join g.person p where g.series = :series ")
+    List<Garag> findBySeriesWithNotPerson(@Param("series") String series);
 
 
 }

@@ -21,9 +21,6 @@ public class RentController {
     private RentService rentService;
 
     @Autowired
-    private GaragService garagService;
-
-    @Autowired
     private JournalHistoryService historyService;
 
     //Проверка на существование такого начисления

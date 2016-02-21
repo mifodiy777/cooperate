@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ContributionServiceImpl implements ContributionService {
@@ -29,39 +27,6 @@ public class ContributionServiceImpl implements ContributionService {
         contributionDAO.save(contribution);
     }
 
-    //Метод начисления долгов новосозданного гаража
-    @Override
-    @Transactional
-    public List<Contribution> getContributionOnGarag(Garag garag) {
-        List<Contribution> contributionList = new ArrayList<Contribution>();
-        for (Rent rent : rentService.getRents()) {
-            if (rent.getYearRent() == Calendar.getInstance().get(Calendar.YEAR)) {
-                Contribution contribution = new Contribution();
-                contribution.setYear(rent.getYearRent());
-                if (garag.getPerson() == null) {
-                    contributionList.add(contribution);
-                    return contributionList;
-                } else {
-                    if (garag.getPerson().getMemberBoard()) {
-                        contribution.setMemberBoardOn(true);
-                    } else {
-                        contribution.setContribute(rent.getContributeMax());
-                    }
-                    if (garag.getPerson().getBenefits().equals("")) {
-                        //Назначение льготного периода
-                        contribution.setContLand(rent.getContLandMax() / 2);
-                        contribution.setBenefitsOn(true);
-                    } else {
-                        contribution.setContLand(rent.getContLandMax());
-                    }
-                    contribution.setContTarget(rent.getContTargetMax());
-                    contributionList.add(contribution);
-                }
-            }
-        }
-        return contributionList;
-    }
-
     @Override
     public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
         return contributionDAO.getContributionByGaragAndYear(garagId, year);
@@ -72,71 +37,41 @@ public class ContributionServiceImpl implements ContributionService {
     @Transactional
     public void updateFines() {
         Calendar calendar = Calendar.getInstance();
-        List<Rent> rentList = rentService.getRents();
         //Получаем список долгов с включенным режимом пени
         for (Contribution c : contributionDAO.findByFinesOn(true)) {
             //Находим сумму долга
-            Float sum = c.getSumFixed();
+            Float sumContribute = c.getSumFixed();
             //ВЫчисляем кол-во дней с последнего обновления.
             //Первая дата должна устанавливаться при включении режима пеней
-            if (sum != 0) {
+            if (sumContribute != 0) {
                 long days = getDays(calendar, c.getFinesLastUpdate());
-                Double finesDouble = (sum * 0.001) * days;
+                Double finesDouble = (sumContribute * 0.001) * days;
                 int fines = (finesDouble.intValue() / 50);
                 fines *= 50;
                 //Вычисляем сумму пени
                 if (fines != 0) {
                     c.setFinesLastUpdate(calendar);
-                }
-                int newFines = c.getFines() + fines;
-                if (newFines < sum) {
-                    c.setFines(newFines);
-                    c.setFinesSum(c.getFines());
-                    contributionDAO.save(c);
-                } else if (newFines == sum) {
-                    c.setFines(newFines);
-                    c.setFinesSum(c.getFines());
-                    c.setFinesOn(false);
-                    contributionDAO.save(c);
-                } else {
-                    //Если новые пени больши суммы долго определяем сумму начислений этого года
-                    Rent rent = null;
-                    for (Rent r : rentList) {
-                        if (r.getYearRent() == c.getYear()) {
-                            rent = r;
-                        }
-                    }
-                    float sumRent = 0f;
-                    if (rent != null) {
-                        sumRent = !c.isMemberBoardOn() ? rent.getContributeMax() : 0;
-                        sumRent += c.isBenefitsOn() ? rent.getContLandMax() / 2 : rent.getContLandMax();
-                        sumRent += c.getContTarget();
-                    }
-
-                    //Мы определили сумму начисления и сумму долга, пени не должны превышать сумму долга
-                    if (sumRent != 0f && sum == sumRent && newFines > sum) {
-                        c.setFinesOn(false);
-                        c.setFines(sum.intValue());
+                    int newFines = c.getFines() + fines;
+                    if (newFines < sumContribute) {
+                        c.setFines(newFines);
                         c.setFinesSum(c.getFines());
-                        contributionDAO.save(c);
-                    }
-                    if (c.isFinesOn()) {
+                    } else if (newFines == sumContribute) {
+                        c.setFines(newFines);
+                        c.setFinesSum(c.getFines());
                         c.setFinesOn(false);
-                        if ((newFines - sum) == 50) {
-                            c.setFines(sum.intValue());
-                            c.setFinesSum(c.getFines());
+                    } else {
+                        //Если новые пени больши суммы долго определяем сумму начислений этого года и отключаем пени
+                        c.setFinesOn(false);
+                        if (c.getFines() == 0) {
+                            c.setFines(sumContribute.intValue());
+                            c.setFinesSum(sumContribute.intValue());
                         }
-                        if (newFines > sum) {
-                            c.setFines(sum.intValue());
-                            c.setFinesSum(sum.intValue());
-                        }
-                        contributionDAO.save(c);
                     }
                 }
             } else {
                 c.setFinesOn(false);
-                contributionDAO.save(c);
             }
+            contributionDAO.save(c);
         }
     }
 
@@ -160,38 +95,23 @@ public class ContributionServiceImpl implements ContributionService {
         Calendar cal = Calendar.getInstance();
         //Включение пеней для должников со следующего года
         if (cal.get(Calendar.MONTH) == 0) {
-            for (Contribution c : contributionDAO.findByFinesOn(false)) {
-                if (c.getYear() < cal.get(Calendar.YEAR)) {
-                    float sum = c.getSumFixed();
-                    if (sum != 0) {
-                        c.setFinesOn(true);
-                        c.setFinesLastUpdate(cal);
-                        contributionDAO.save(c);
-                    }
+            for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR) - 1)) {
+                if (c.getSumFixed() != 0) {
+                    c.setFinesOn(true);
+                    c.setFinesLastUpdate(cal);
+                    contributionDAO.save(c);
                 }
             }
         }
         //Включение пеней для должников не уплативших до 1 июля
         if (cal.get(Calendar.MONTH) == 6) {
-            List<Rent> rents = rentService.getRents();
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR))) {
-                for (Rent rent : rents) {
-                    if (rent.getYearRent() == c.getYear()) {
-                        if (c.getContribute() == rent.getContributeMax() && !c.isMemberBoardOn()) {
-                            c.setFinesOn(true);
-                            c.setFinesLastUpdate(cal);
-                            contributionDAO.save(c);
-                        } else if (c.isMemberBoardOn() && !c.isBenefitsOn() && c.getContLand() == rent.getContLandMax()) {
-                            c.setFinesOn(true);
-                            c.setFinesLastUpdate(cal);
-                            contributionDAO.save(c);
-                        } else if (c.isMemberBoardOn() && c.isBenefitsOn() && c.getContLand() == rent.getContLandMax() / 2) {
-                            c.setFinesOn(true);
-                            c.setFinesLastUpdate(cal);
-                            contributionDAO.save(c);
-                        }
-                    }
+                if (c.getSumFixed() != 0) {
+                    c.setFinesOn(true);
+                    c.setFinesLastUpdate(cal);
+                    contributionDAO.save(c);
                 }
+
             }
         }
     }

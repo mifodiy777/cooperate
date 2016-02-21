@@ -41,9 +41,7 @@ public class PaymentController {
 
     @RequestMapping(value = "paymentsPage", method = RequestMethod.GET)
     public String getPaymentsPage(@RequestParam(required = false, value = "year") Integer year, ModelMap map) {
-        if (year == null) {
-            year = Calendar.getInstance().get(Calendar.YEAR);
-        }
+        year = (year == null) ? Calendar.getInstance().get(Calendar.YEAR) : year;
         map.addAttribute("setYear", year);
         map.addAttribute("years", paymentService.findYears());
         map.addAttribute("rents", rentService.getRents());
@@ -61,8 +59,7 @@ public class PaymentController {
     //Модальное окно платежа
     @RequestMapping(value = "payModal", method = RequestMethod.GET)
     public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
-        Garag garag = garagService.getGarag(id);
-        map.addAttribute("garag", garag);
+        map.addAttribute("garag", garagService.getGarag(id));
         map.addAttribute("payment", new Payment());
         return "modalPay";
     }
@@ -78,17 +75,15 @@ public class PaymentController {
 
     //Печать выбранного чека
     @RequestMapping(value = "printOrder/{id}", method = RequestMethod.GET)
-    public String printOrder(@PathVariable("id") Integer id, ModelMap map) {
-        Payment payment = paymentService.getPayment(id);
-        map.addAttribute("pay", payment);
+    public String printOrder(@PathVariable("id") Integer id, ModelMap map){
+        map.addAttribute("pay", paymentService.getPayment(id));
         return "order";
     }
 
     //Печать новосозданного чека
     @RequestMapping(value = "printNewOrder/{id}", method = RequestMethod.GET)
     public String printNewOrder(@PathVariable("id") Integer id, ModelMap map) {
-        Garag garag = garagService.getGarag(id);
-        map.addAttribute("pay", garag.getPayments().get(0));
+        map.addAttribute("pay", garagService.getGarag(id).getPayments().get(0));
         return "order";
     }
 

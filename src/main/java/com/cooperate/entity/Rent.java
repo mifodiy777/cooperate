@@ -1,5 +1,7 @@
 package com.cooperate.entity;
 
+import org.apache.poi.util.IntegerField;
+
 import javax.persistence.*;
 
 /*Класс суммы взноса*/
