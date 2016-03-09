@@ -42,9 +42,8 @@ public interface GaragDAO extends JpaRepository<Garag, Integer> {
     //Нахождение гаражей выбранного ряда
     List<Garag> findBySeries(String series);
 
-    //Нахождение гаражей выбранного ряда
-    @Query("select distinct g from Garag g inner join g.person p where g.series = :series ")
-    List<Garag> findBySeriesWithNotPerson(@Param("series") String series);
-
+    //Нахождение гаражей выбранного ряда c назначенными владельцами
+     @Query("select distinct g from Garag g inner join g.person p where g.series = :series")
+    List<Garag> findBySeriesAndPerson(@Param("series") String series);
 
 }

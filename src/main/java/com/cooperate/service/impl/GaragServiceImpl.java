@@ -471,7 +471,7 @@ public class GaragServiceImpl implements GaragService {
             int fistRow = 3;
             int lastRow;
             int number = 1;
-            List<Garag> garagList = garagDAO.findBySeriesWithNotPerson(series);
+            List<Garag> garagList = garagDAO.findBySeriesAndPerson(series);
             Collections.sort(garagList, new GaragComparator());
             Integer year = start.get(Calendar.YEAR);
             for (Garag g : garagList) {
