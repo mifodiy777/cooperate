@@ -3,6 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<c:set var="sumAll" scope="page" value="0.0"/>
+<c:set var="sumContribute" scope="page" value="0.0"/>
+<c:set var="sumContLand" scope="page" value="0.0"/>
+<c:set var="sumContTarget" scope="page" value="0.0"/>
+<c:set var="sumFines" scope="page" value="0.0"/>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -71,17 +76,31 @@
                             <tr>
                                 <td>${c.year}</td>
                                 <td>${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
+                                <c:set var="sumAll" scope="page"
+                                       value="${sumAll+c.contribute+c.contLand+c.contTarget+c.fines}"/>
                                 <td>${c.contribute} руб.</td>
+                                <c:set var="sumContribute" scope="page" value="${sumContribute+c.contribute}"/>
                                 <td>${c.contLand} руб.
                                     <c:if test="${c.benefitsOn}"> <span
                                             class="glyphicon glyphicon-heart-empty"></span></c:if>
                                 </td>
+                                <c:set var="sumContLand" scope="page" value="${sumContLand+c.contLand}"/>
                                 <td>${c.contTarget} руб.</td>
+                                <c:set var="sumContTarget" scope="page" value="${sumContTarget+c.contTarget}"/>
                                 <td>${c.fines} руб. <c:if test="${c.finesOn}">
                                     <span class="glyphicon glyphicon-fire"></span></c:if></td>
+                                <c:set var="sumFines" scope="page" value="${sumFines+c.fines}"/>
                             </tr>
                         </c:if>
                     </c:forEach>
+                    <tr>
+                        <th>Итого:</th>
+                        <th>${sumAll} руб.</th>
+                        <th>${sumContribute} руб.</th>
+                        <th>${sumContLand} руб.</th>
+                        <th>${sumContTarget} руб.</th>
+                        <th>${sumFines} руб.</th>
+                    </tr>
                 </table>
                 <h5>Долги прошлых лет: ${garag.oldContribute} руб.</h5>
                 <h4>Общий долг: ${contributionAll} руб.</h4>

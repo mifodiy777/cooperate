@@ -27,11 +27,7 @@ $.validator.addMethod("lettersonly", function(value, element) {
 
 jQuery.validator.addMethod("maxLandVal", function(value, element) {
     var check = true;
-    if (value <= $("#benefitsOnHide").val()) {
-        check = true;
-    } else {
-        check = false;
-    }
+    check = parseInt(value) <= parseInt($("#benefitsOnHide").val());
     return this.optional(element) || check;
 }, "Пожалуйста, введите значение меньшее максимального");
 
