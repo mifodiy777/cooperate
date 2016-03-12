@@ -45,12 +45,6 @@ public class Contribution implements Serializable {
     @Column(name = "fines")
     private int fines;
 
-    //Пени - начисленные
-    /* Данно значение будет равным fines, но при достижении fines
-    максимального значения данный параметр изменяться не будет. Т.е. это сумма начисленного пени за период  */
-    @Column(name = "fines_sum")
-    private int finesSum;
-
     //Включение начисление пеней
     //Включаеться при не полностью погашеном долге в след. году
     //Если true то начисление пеней включено
@@ -117,14 +111,6 @@ public class Contribution implements Serializable {
         this.fines = fines;
     }
 
-    public int getFinesSum() {
-        return finesSum;
-    }
-
-    public void setFinesSum(int finesSum) {
-        this.finesSum = finesSum;
-    }
-
     public boolean isFinesOn() {
         return finesOn;
     }
@@ -172,7 +158,6 @@ public class Contribution implements Serializable {
         if (Float.compare(that.contLand, contLand) != 0) return false;
         if (Float.compare(that.contTarget, contTarget) != 0) return false;
         if (fines != that.fines) return false;
-        if (finesSum != that.finesSum) return false;
         if (finesOn != that.finesOn) return false;
         if (benefitsOn != that.benefitsOn) return false;
         if (memberBoardOn != that.memberBoardOn) return false;
@@ -190,7 +175,6 @@ public class Contribution implements Serializable {
         result = 31 * result + (contLand != +0.0f ? Float.floatToIntBits(contLand) : 0);
         result = 31 * result + (contTarget != +0.0f ? Float.floatToIntBits(contTarget) : 0);
         result = 31 * result + fines;
-        result = 31 * result + finesSum;
         result = 31 * result + (finesOn ? 1 : 0);
         result = 31 * result + (finesLastUpdate != null ? finesLastUpdate.hashCode() : 0);
         result = 31 * result + (benefitsOn ? 1 : 0);

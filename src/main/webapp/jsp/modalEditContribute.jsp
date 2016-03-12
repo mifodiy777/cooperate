@@ -176,16 +176,6 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="input-group">
-                            <label for="finesSum" class="input-group-addon">Начисленные пени</label>
-                            <form:input path="finesSum" id="finesSum"
-                                        cssClass="number form-control"/>
-                            <span class="input-group-addon">руб.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="input-group">
                             <label for="finesLastUpdate" class="input-group-addon">Дата обновления пеней</label>
                             <form:input path="finesLastUpdate" id="finesLastUpdate"
                                         cssClass="form-control dateRU"/>
