@@ -2,24 +2,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp"/>
 <script type="text/javascript">
-    $(function() {
+    $(function () {
         $.scrollUp();
 
         var table = $('#membersTable').DataTable({
             "order": [
-                [ 0, 'asc' ]
+                [0, 'asc']
             ],
             "ajax": "members",
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'my' + aData.personId);
             },
             "columns": [
-                {"render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editPerson(' + full.personId + ')\">' +  full.fio + '</a>'
-                }, 'title': 'ФИО'},
-                {"data":"phone", 'title': 'Телефон'},
-                {"data": "address",  'title': 'Адрес'},
-                {"data": "benefits",  'title': 'Льготы'}
+                {
+                    "render": function (data, type, full) {
+                        return '<a href=\"#\" onclick=\"editPerson(' + full.personId + ')\">' + full.fio + '</a>'
+                    }, 'title': 'ФИО'
+                },
+                {"data": "phone", 'title': 'Телефон'},
+                {"data": "address", 'title': 'Адрес'},
+                {"data": "benefits", 'title': 'Льготы'}
             ]
         });
 
@@ -33,6 +35,12 @@
         $("#personDiv").load("person/" + id);
         $("#addPersonButton").hide();
     }
+
+    function closeForm(formName) {
+        $("#editPanel").hide();
+        $("#" + formName + "Div").empty();
+    }
+
 </script>
 <div class="container">
     <div id="editPanel" class="panel panel-success" style="display:none">
