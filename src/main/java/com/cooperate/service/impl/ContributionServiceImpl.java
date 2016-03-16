@@ -51,17 +51,14 @@ public class ContributionServiceImpl implements ContributionService {
                     int newFines = c.getFines() + fines;
                     if (newFines < sumContribute) {
                         c.setFines(newFines);
-                        c.setFinesSum(c.getFines());
                     } else if (newFines == sumContribute) {
                         c.setFines(newFines);
-                        c.setFinesSum(c.getFines());
                         c.setFinesOn(false);
                     } else {
                         //Если новые пени больши суммы долго определяем сумму начислений этого года и отключаем пени
                         c.setFinesOn(false);
                         if (c.getFines() == 0) {
                             c.setFines(sumContribute.intValue());
-                            c.setFinesSum(sumContribute.intValue());
                         }
                     }
                 }
