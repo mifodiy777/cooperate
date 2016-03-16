@@ -77,7 +77,7 @@ public class GaragServiceImpl implements GaragService {
     @Override
     //Общая сумма долга
     public Float sumContribution(Garag garag) {
-        Float sum = 0f;
+        Float sum = garag.getOldContribute();
         for (Contribution c : garagDAO.getOne(garag.getId()).getContributions()) {
             sum += c.getSumFixed() + c.getFines();
         }
@@ -223,7 +223,7 @@ public class GaragServiceImpl implements GaragService {
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес",
-                "Общий долг", "Членские взносы", "За землю", "Целевой взнос", "Пени"};
+                "Общий долг", "Членские взносы", "За землю", "Целевой взнос", "Пени", "Долги прошлых лет"};
         CellStyle headerStyle = workBook.createCellStyle();
         headerStyle.setWrapText(true);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -248,10 +248,10 @@ public class GaragServiceImpl implements GaragService {
                 sheet.setColumnWidth(i, (short) (15 * 256));
             }
             if (i == 4) {
-                sheet.setColumnWidth(i, (short) (50 * 256));
+                sheet.setColumnWidth(i, (short) (40 * 256));
             }
             if (i >= 5) {
-                sheet.setColumnWidth(i, (short) (15 * 256));
+                sheet.setColumnWidth(i, (short) (20 * 256));
             }
         }
         int numberRow = 1;
@@ -290,6 +290,8 @@ public class GaragServiceImpl implements GaragService {
             tagetColumn.setCellValue(target);
             HSSFCell finesColumn = nextRow.createCell(9);
             finesColumn.setCellValue(fines);
+            HSSFCell oldColumn = nextRow.createCell(10);
+            oldColumn.setCellValue(garag.getOldContribute());
             numberRow++;
         }
         if (!garagList.isEmpty()) {
@@ -324,6 +326,10 @@ public class GaragServiceImpl implements GaragService {
             finesResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
             finesResume.setCellFormula("SUM(J2:J" + numberRow + ")");
             finesResume.setCellStyle(footerStyle);
+            HSSFCell oldResume = resumeRow.createCell(10);
+            oldResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            oldResume.setCellFormula("SUM(K2:K" + numberRow + ")");
+            oldResume.setCellStyle(footerStyle);
         }
         return workBook;
     }
@@ -476,7 +482,7 @@ public class GaragServiceImpl implements GaragService {
             Collections.sort(garagList, new GaragComparator());
             Integer year = start.get(Calendar.YEAR);
             for (Garag g : garagList) {
-                List<Payment> paymentsPeriod = new ArrayList<>();
+                List<Payment> paymentsPeriod = new ArrayList<Payment>();
                 for (Payment payment : g.getPayments()) {
                     Calendar datePay = payment.getDatePayment();
                     if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {

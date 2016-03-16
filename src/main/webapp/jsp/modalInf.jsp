@@ -83,14 +83,16 @@
                         </c:if>
                     </c:forEach>
                 </table>
-                <h4>Общий долг: ${contributionAll}</h4>
+                <h5>Долги прошлых лет: ${garag.oldContribute} руб.</h5>
+                <h4>Общий долг: ${contributionAll} руб.</h4>
                 <hr>
                 <h4>Платежи</h4>
                 <button id="openAddingCount" class="btn btn-primary" onclick="openAddingCount()">
                     <span class="glyphicon glyphicon-shopping-cart"></span> Дополнительный взнос
                 </button>
                 <div class="row">
-                    <div id="setAddingDiv" style="display:none" class="col-md-offset-3 col-md-6 center panel panel-default">
+                    <div id="setAddingDiv" style="display:none"
+                         class="col-md-offset-3 col-md-6 center panel panel-default">
                         <h4>Введите сумму дополнительного взноса</h4>
                         <input type="hidden" id="yearAdding">
 
@@ -120,6 +122,7 @@
                         <th>Целевой взнос</th>
                         <th>Дополнительный взнос</th>
                         <th>Пени</th>
+                        <th>Долги прошлых лет</th>
                         <th>Оставшиеся средства</th>
                         <th>Печать чека</th>
                     </tr>
@@ -138,6 +141,7 @@
                                 <td>${p.contTargetPay} руб.</td>
                                 <td>${p.additionallyPay} руб.</td>
                                 <td>${p.finesPay} руб.</td>
+                                <td>${p.oldContributePay} руб.</td>
                                 <td>${p.pay} руб.</td>
                                 <td><a href="printOrder/${p.id}" target="_blank">
                                     <span class="glyphicon glyphicon-print"></span></a></td>
@@ -151,7 +155,9 @@
                         class="glyphicon glyphicon-print"></span>
                     Распечатать
                 </a>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                        class="glyphicon glyphicon-remove"></span> Закрыть
+                </button>
             </div>
 
         </div>

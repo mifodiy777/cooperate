@@ -91,6 +91,18 @@ public class PaymentServiceImpl implements PaymentService {
         }
         int size = garag.getContributions().size();
         int i = 1;
+        float oldContribute = garag.getOldContribute();
+        if (oldContribute != 0) {
+            if (payment.getPay() <= oldContribute) {
+                payment.setOldContributePay(payment.getPay());
+                garag.setOldContribute(oldContribute - payment.getPay());
+                payment.setPay(0);
+            } else {
+                payment.setOldContributePay(oldContribute);
+                payment.setPay(payment.getPay() - oldContribute);
+                garag.setOldContribute(0f);
+            }
+        }
         for (Contribution c : garag.getContributions()) {
             Float reminder = payment.getPay() - c.getSumFixed();
             //Если после платежа текущего периода остались деньги
@@ -152,7 +164,7 @@ public class PaymentServiceImpl implements PaymentService {
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Счет", "Дата", "Гараж", "ФИО", "Сумма", "Членский взнос",
-                "Аренда земли", "Целевой взнос", "Пени", "Доп.взнос", "Остаток"};
+                "Аренда земли", "Целевой взнос", "Пени", "Доп.взнос", "Долги прошлых лет", "Остаток"};
         CellStyle headerStyle = workBook.createCellStyle();
         headerStyle.setWrapText(true);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -177,10 +189,10 @@ public class PaymentServiceImpl implements PaymentService {
                 sheet.setColumnWidth(i, (short) (10 * 256));
             }
             if (i == 4) {
-                sheet.setColumnWidth(i, (short) (50 * 256));
+                sheet.setColumnWidth(i, (short) (40 * 256));
             }
             if (i >= 5) {
-                sheet.setColumnWidth(i, (short) (15 * 256));
+                sheet.setColumnWidth(i, (short) (20 * 256));
             }
         }
         int numberRow = 1;
@@ -202,7 +214,7 @@ public class PaymentServiceImpl implements PaymentService {
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());
             Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +
-                    p.getPay() + p.getAdditionallyPay();
+                    p.getPay() + p.getAdditionallyPay()+p.getOldContributePay();
             HSSFCell sumPayColumn = nextRow.createCell(5);
             sumPayColumn.setCellValue(sum);
             HSSFCell contributeColumn = nextRow.createCell(6);
@@ -215,7 +227,9 @@ public class PaymentServiceImpl implements PaymentService {
             finesColumn.setCellValue(p.getFinesPay());
             HSSFCell addingColumn = nextRow.createCell(10);
             addingColumn.setCellValue(p.getAdditionallyPay());
-            HSSFCell reminderColumn = nextRow.createCell(11);
+            HSSFCell oldContributeColumn = nextRow.createCell(11);
+            oldContributeColumn.setCellValue(p.getOldContributePay());
+            HSSFCell reminderColumn = nextRow.createCell(12);
             reminderColumn.setCellValue(p.getPay());
             numberRow++;
         }
@@ -256,9 +270,13 @@ public class PaymentServiceImpl implements PaymentService {
             addingResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
             addingResume.setCellFormula("SUM(K2:K" + numberRow + ")");
             addingResume.setCellStyle(footerStyle);
-            HSSFCell reminderResume = resumeRow.createCell(11);
+            HSSFCell oldResume = resumeRow.createCell(11);
+            oldResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            oldResume.setCellFormula("SUM(L2:L" + numberRow + ")");
+            oldResume.setCellStyle(footerStyle);
+            HSSFCell reminderResume = resumeRow.createCell(12);
             reminderResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            reminderResume.setCellFormula("SUM(L2:L" + numberRow + ")");
+            reminderResume.setCellFormula("SUM(M2:M" + numberRow + ")");
             reminderResume.setCellStyle(footerStyle);
         }
         return workBook;

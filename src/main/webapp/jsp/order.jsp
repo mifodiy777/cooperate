@@ -22,12 +22,12 @@
         <th>Чек № ${pay.number}</th>
         <th colspan="2">Дата: <fmt:formatDate value="${pay.datePayment.time}" type="both"/></th>
         <th>Ряд: ${pay.garag.series} Гараж:${pay.garag.number}</th>
-        <th colspan="2">ФИО:${pay.fio}</th>
+        <th colspan="3">ФИО:${pay.fio}</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <th colspan="6">Сумма платежа распределена на:</th>
+        <th colspan="7">Сумма платежа распределена на:</th>
     </tr>
     <tr>
         <th>Членский взнос</th>
@@ -35,6 +35,7 @@
         <th>Целевой взнос</th>
         <th>Дополнительный взнос</th>
         <th>Пени</th>
+        <th>Долги прошлых лет</th>
         <th>Оставшиеся средства</th>
 
     <tr>
@@ -43,19 +44,20 @@
         <td>${pay.contTargetPay} руб.</td>
         <td>${pay.additionallyPay} руб.</td>
         <td>${pay.finesPay} руб.</td>
+        <td>${pay.oldContributePay} руб.</td>
         <td>${pay.pay} руб.</td>
     </tr>
     <tr>
         <th colspan="3">Сумма платежа:${pay.contributePay+pay.contLandPay+
-                pay.contTargetPay+pay.additionallyPay+pay.finesPay+pay.pay} рублей
+                pay.contTargetPay+pay.additionallyPay+pay.finesPay+pay.oldContributePay+pay.pay} рублей
         </th>
-        <th colspan="3">Сумма долга после оплаты: ${pay.debtPastPay} рублей</th>
+        <th colspan="4">Сумма долга после оплаты: ${pay.debtPastPay} рублей</th>
     </tr>
     <tr>
         <td colspan="3" class="sign">
             Подпись платильщика:
         </td>
-        <td colspan="3" class="sign">
+        <td colspan="4" class="sign">
             Подпись кассира:
             <div style="text-align:right; float:right;">
                 М.П.
@@ -72,12 +74,12 @@
         <th>Чек № ${pay.number}</th>
         <th colspan="2">Дата: <fmt:formatDate value="${pay.datePayment.time}" type="both"/></th>
         <th>Ряд: ${pay.garag.series} Гараж:${pay.garag.number}</th>
-        <th colspan="2">ФИО:${pay.fio}</th>
+        <th colspan="3">ФИО:${pay.fio}</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <th colspan="6">Сумма платежа распределена на:</th>
+        <th colspan="7">Сумма платежа распределена на:</th>
     </tr>
     <tr>
         <th>Членский взнос</th>
@@ -85,6 +87,7 @@
         <th>Целевой взнос</th>
         <th>Дополнительный взнос</th>
         <th>Пени</th>
+        <th>Долги прошлых лет</th>
         <th>Оставшиеся средства</th>
 
     <tr>
@@ -93,19 +96,20 @@
         <td>${pay.contTargetPay} руб.</td>
         <td>${pay.additionallyPay} руб.</td>
         <td>${pay.finesPay} руб.</td>
+        <td>${pay.oldContributePay} руб.</td>
         <td>${pay.pay} руб.</td>
     </tr>
     <tr>
         <th colspan="3">Сумма платежа:${pay.contributePay+pay.contLandPay+
-                pay.contTargetPay+pay.additionallyPay+pay.finesPay+pay.pay} рублей
+                pay.contTargetPay+pay.additionallyPay+pay.oldContributePay+pay.finesPay+pay.pay} рублей
         </th>
-        <th colspan="3">Сумма долга после оплаты: ${pay.debtPastPay} рублей</th>
+        <th colspan="4">Сумма долга после оплаты: ${pay.debtPastPay} рублей</th>
     </tr>
     <tr>
         <td colspan="3" class="sign">
             Подпись платильщика:
         </td>
-        <td colspan="3" class="sign">
+        <td colspan="4" class="sign">
             Подпись кассира:
             <div style="text-align:right; float:right;">
                 М.П.

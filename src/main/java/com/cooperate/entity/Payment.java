@@ -73,6 +73,11 @@ public class Payment implements Serializable {
     @Column(name = "additionally_pay")
     private float additionallyPay;
 
+     //Платеж в долги прошлых лет
+    @Expose
+    @Column(name = "old_contribute_pay")
+    private float oldContributePay;
+
     //Долг после оплаты(Для повторного печати чека)
     @Expose
     @Column(name = "debt_past_pay")
@@ -141,7 +146,7 @@ public class Payment implements Serializable {
     }
 
     public Float getSumPay() {
-        return this.pay + this.contributePay + this.contLandPay + this.contTargetPay + this.additionallyPay + this.finesPay;
+        return this.pay + this.contributePay + this.contLandPay + this.contTargetPay + this.additionallyPay + this.finesPay+this.oldContributePay;
     }
 
     public float getContributePay() {
@@ -184,6 +189,14 @@ public class Payment implements Serializable {
         this.additionallyPay = additionallyPay;
     }
 
+    public float getOldContributePay() {
+        return oldContributePay;
+    }
+
+    public void setOldContributePay(float oldContributePay) {
+        this.oldContributePay = oldContributePay;
+    }
+
     public float getDebtPastPay() {
         return debtPastPay;
     }
@@ -205,6 +218,7 @@ public class Payment implements Serializable {
         if (Float.compare(payment.contributePay, contributePay) != 0) return false;
         if (Float.compare(payment.debtPastPay, debtPastPay) != 0) return false;
         if (finesPay != payment.finesPay) return false;
+        if (Float.compare(payment.oldContributePay, oldContributePay) != 0) return false;
         if (Float.compare(payment.pay, pay) != 0) return false;
         if (datePayment != null ? !datePayment.equals(payment.datePayment) : payment.datePayment != null) return false;
         if (fio != null ? !fio.equals(payment.fio) : payment.fio != null) return false;
@@ -230,6 +244,7 @@ public class Payment implements Serializable {
         result = 31 * result + (contTargetPay != +0.0f ? Float.floatToIntBits(contTargetPay) : 0);
         result = 31 * result + finesPay;
         result = 31 * result + (additionallyPay != +0.0f ? Float.floatToIntBits(additionallyPay) : 0);
+        result = 31 * result + (oldContributePay != +0.0f ? Float.floatToIntBits(oldContributePay) : 0);
         result = 31 * result + (debtPastPay != +0.0f ? Float.floatToIntBits(debtPastPay) : 0);
         return result;
     }

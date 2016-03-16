@@ -35,7 +35,7 @@ public interface GaragDAO extends JpaRepository<Garag, Integer> {
     List<String> getSeries();
 
     //Метод получает должников
-    @Query("select distinct g from Garag g inner join g.person p inner join g.contributions c where c.contribute > 0 or c.contLand > 0 " +
+    @Query("select distinct g from Garag g inner join g.person p inner join g.contributions c where g.oldContribute > 0 or c.contribute > 0 or c.contLand > 0 " +
             "or c.contTarget > 0 or c.fines > 0 ")
     List<Garag> getGaragDebt();
 

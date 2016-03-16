@@ -169,16 +169,22 @@
     <form:hidden path="id"/>
     <div class="divider"><h4> Гараж: </h4></div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="input-group">
                 <label for="series" class="input-group-addon">Ряд</label>
                 <form:input path="series" id="series" cssClass="required form-control"/>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="input-group">
                 <label for="number" class="input-group-addon">Номер</label>
                 <form:input path="number" id="number" cssClass="required form-control"/>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <label for="oldContribute" class="input-group-addon">Долг прошлых лет</label>
+                <form:input path="oldContribute" id="oldContribute" cssClass="form-control"/>
             </div>
         </div>
     </div>
