@@ -68,7 +68,7 @@ public class RentServiceImpl implements RentService {
                 if (garag.getContributions() != null) {
                     garag.getContributions().add(contribution);
                 } else {
-                    List<Contribution> list = new ArrayList<>();
+                    List<Contribution> list = new ArrayList<Contribution>();
                     list.add(contribution);
                     garag.setContributions(list);
                 }

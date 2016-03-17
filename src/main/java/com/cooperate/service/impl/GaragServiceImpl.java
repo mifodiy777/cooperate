@@ -3,6 +3,7 @@ package com.cooperate.service.impl;
 import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.entity.*;
+import com.cooperate.service.ContributionService;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.RentService;
 import org.apache.poi.hssf.usermodel.*;
@@ -30,6 +31,9 @@ public class GaragServiceImpl implements GaragService {
 
     @Autowired
     private RentService rentService;
+
+    @Autowired
+    private ContributionService contributionService;
 
     @Transactional
     public Garag saveOrUpdate(Garag garag) {
@@ -279,7 +283,7 @@ public class GaragServiceImpl implements GaragService {
                 target += c.getContTarget();
                 fines += c.getFines();
             }
-            Float sum = cont + land + target + fines;
+            Float sum = cont + land + target + fines + garag.getOldContribute();
             HSSFCell allContributeColumn = nextRow.createCell(5);
             allContributeColumn.setCellValue(sum);
             HSSFCell contributeColumn = nextRow.createCell(6);
@@ -338,457 +342,481 @@ public class GaragServiceImpl implements GaragService {
     @Override
     public HSSFWorkbook reportProfit(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
+        CellStyle style = workBook.createCellStyle();
+        style.setWrapText(true);
+        style.setAlignment(CellStyle.ALIGN_CENTER);       
+        Font font = workBook.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        style.setFont(font);
         for (String series : garagDAO.getSeries()) {
             HSSFSheet sheet = workBook.createSheet(series);
-            CellStyle headerStyle = workBook.createCellStyle();
-            headerStyle.setWrapText(true);
-            headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            Font font = workBook.createFont();
-            font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-            headerStyle.setFont(font);
-            HSSFRow rowZero = sheet.createRow(0);
-            HSSFRow rowOne = sheet.createRow(1);
-            HSSFRow rowTwo = sheet.createRow(2);
-            HSSFCell countHCell = rowZero.createCell(0);
-            countHCell.setCellValue("№ п/п");
-            countHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
-            HSSFCell seriesHCell = rowZero.createCell(1);
-            seriesHCell.setCellValue("№ ряда");
-            seriesHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-            HSSFCell nubmerHCell = rowZero.createCell(2);
-            nubmerHCell.setCellValue("№ гаража");
-            nubmerHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));
-            HSSFCell fioHCell = rowZero.createCell(3);
-            fioHCell.setCellValue("ФИО");
-            fioHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));
-            HSSFCell allCHCell = rowZero.createCell(4);
-            allCHCell.setCellValue("Задолженность");
-            allCHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 7));
-            HSSFCell allSumCHCell = rowOne.createCell(4);
-            allSumCHCell.setCellValue("Всего");
-            allSumCHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 4, 4));
-            HSSFCell divedeCHCell = rowOne.createCell(5);
-            divedeCHCell.setCellValue("в том числе");
-            divedeCHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 5, 7));
-            HSSFCell contributeCHCell = rowTwo.createCell(5);
-            contributeCHCell.setCellValue("членский взнос");
-            contributeCHCell.setCellStyle(headerStyle);
-            HSSFCell contLandCHCell = rowTwo.createCell(6);
-            contLandCHCell.setCellValue("аренда земли");
-            contLandCHCell.setCellStyle(headerStyle);
-            HSSFCell contTargCHCell = rowTwo.createCell(7);
-            contTargCHCell.setCellValue("целевой взнос");
-            contTargCHCell.setCellStyle(headerStyle);
-            HSSFCell allRHCell = rowZero.createCell(8);
-            allRHCell.setCellValue("Начисленно");
-            allRHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 8, 11));
-            HSSFCell allSumRHCell = rowOne.createCell(8);
-            allSumRHCell.setCellValue("Всего");
-            allSumRHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));
-            HSSFCell divedeRHCell = rowOne.createCell(10);
-            divedeRHCell.setCellValue("в том числе");
-            divedeRHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 9, 11));
-            HSSFCell contributeRHCell = rowTwo.createCell(9);
-            contributeRHCell.setCellValue("членский взнос");
-            contributeRHCell.setCellStyle(headerStyle);
-            HSSFCell contLandRHCell = rowTwo.createCell(10);
-            contLandRHCell.setCellValue("аренда земли");
-            contLandRHCell.setCellStyle(headerStyle);
-            HSSFCell contTargRHCell = rowTwo.createCell(11);
-            contTargRHCell.setCellValue("целевой взнос");
-            contTargRHCell.setCellStyle(headerStyle);
-            HSSFCell countTWOHCell = rowZero.createCell(12);
-            countTWOHCell.setCellValue("№ п/п");
-            countTWOHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 2, 12, 12));
-            HSSFCell allPHCell = rowZero.createCell(13);
-            allPHCell.setCellValue("Уплачено");
-            allPHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 13, 20));
-            HSSFCell numberPHCell = rowOne.createCell(13);
-            numberPHCell.setCellValue("№");
-            numberPHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
-            HSSFCell datePHCell = rowOne.createCell(14);
-            datePHCell.setCellValue("Дата");
-            datePHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
-            HSSFCell allSumPHCell = rowOne.createCell(15);
-            allSumPHCell.setCellValue("Всего");
-            allSumPHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
-            HSSFCell divedePHCell = rowOne.createCell(16);
-            divedePHCell.setCellValue("в том числе");
-            divedePHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 16, 21));
-            HSSFCell contributePHCell = rowTwo.createCell(16);
-            contributePHCell.setCellValue("членский взнос");
-            contributePHCell.setCellStyle(headerStyle);
-            HSSFCell contLandPHCell = rowTwo.createCell(17);
-            contLandPHCell.setCellValue("аренда земли");
-            contLandPHCell.setCellStyle(headerStyle);
-            HSSFCell contTargPHCell = rowTwo.createCell(18);
-            contTargPHCell.setCellValue("целевой взнос");
-            contTargPHCell.setCellStyle(headerStyle);
-            HSSFCell assignPHCell = rowTwo.createCell(19);
-            assignPHCell.setCellValue("дополнительный взнос");
-            assignPHCell.setCellStyle(headerStyle);
-            HSSFCell finesPHCell = rowTwo.createCell(20);
-            finesPHCell.setCellValue("пени");
-            finesPHCell.setCellStyle(headerStyle);
-            HSSFCell balancePHCell = rowTwo.createCell(21);
-            balancePHCell.setCellValue("остаток");
-            balancePHCell.setCellStyle(headerStyle);
-            HSSFCell allCNHCell = rowZero.createCell(22);
-            allCNHCell.setCellValue("Задолжность");
-            allCNHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 22, 26));
-            HSSFCell allSumCNHCell = rowOne.createCell(22);
-            allSumCNHCell.setCellValue("Всего");
-            allSumCNHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 2, 22, 22));
-            HSSFCell divedeCNHCell = rowOne.createCell(23);
-            divedeCNHCell.setCellValue("в том числе");
-            divedeCNHCell.setCellStyle(headerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 23, 26));
-            HSSFCell contributeCNHCell = rowTwo.createCell(23);
-            contributeCNHCell.setCellValue("членский взнос");
-            contributeCNHCell.setCellStyle(headerStyle);
-            HSSFCell contLandCNHCell = rowTwo.createCell(24);
-            contLandCNHCell.setCellValue("аренда земли");
-            contLandCNHCell.setCellStyle(headerStyle);
-            HSSFCell contTargCNHCell = rowTwo.createCell(25);
-            contTargCNHCell.setCellValue("целевой взнос");
-            contTargCNHCell.setCellStyle(headerStyle);
-            HSSFCell finesCNHCell = rowTwo.createCell(26);
-            finesCNHCell.setCellValue("пени");
-            finesCNHCell.setCellStyle(headerStyle);
-
+            createHeader(sheet, style);
             //Расчеты
             int fistRow = 3;
             int lastRow;
+            //Порядковый номер гаража
             int number = 1;
+            //Находим гаражи с назначенными владельцами
             List<Garag> garagList = garagDAO.findBySeriesAndPerson(series);
+            //Сортируем по номеру гаража
             Collections.sort(garagList, new GaragComparator());
+            //Период выбираеться по стартовой дате
             Integer year = start.get(Calendar.YEAR);
-            for (Garag g : garagList) {
-                List<Payment> paymentsPeriod = new ArrayList<Payment>();
-                for (Payment payment : g.getPayments()) {
-                    Calendar datePay = payment.getDatePayment();
-                    if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
-                        paymentsPeriod.add(payment);
+            Rent rent = rentService.findByYear(year);
+            if (rent != null) {
+                for (Garag g : garagList) {
+                    //Находим платежи входящие в выбранный период для текущего гаража, заодно считаем их
+                    List<Payment> paymentsPeriod = new ArrayList<Payment>();
+                    for (Payment payment : g.getPayments()) {
+                        Calendar datePay = payment.getDatePayment();
+                        if (datePay.getTimeInMillis() >= start.getTimeInMillis() && datePay.getTimeInMillis() <= end.getTimeInMillis()) {
+                            paymentsPeriod.add(payment);
+                        }
                     }
-                }
-                lastRow = (paymentsPeriod.size() == 0) ? fistRow : fistRow + paymentsPeriod.size() - 1;
-                HSSFRow row = sheet.createRow(fistRow);
-                HSSFCell countCell = row.createCell(0);
-                countCell.setCellValue(number);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 0, 0));
-                HSSFCell seriesCell = row.createCell(1);
-                seriesCell.setCellValue(g.getSeries());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 1, 1));
-                HSSFCell nubmerCell = row.createCell(2);
-                nubmerCell.setCellValue(g.getNumber());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 2, 2));
-                HSSFCell fioCell = row.createCell(3);
-                fioCell.setCellValue(g.getPerson().getFIO());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 3, 3));
-                //Задолжность до оплат выбранного года
-                float oldContribute = 0f;
-                float oldContLand = 0f;
-                float oldContTarget = 0f;
-                //Задолжность после оплат выбранного года
-                float newContribute = 0f;
-                float newContLand = 0f;
-                float newContTarget = 0f;
-                int newFines = 0;
-                Contribution contribution = null;
-                for (Contribution c : g.getContributions()) {
-                    if (c.getYear() <= year) {
-                        newContribute += c.getContribute();
-                        newContLand += c.getContLand();
-                        newContTarget += c.getContTarget();
-                        newFines += c.getFines();
+                    //Из количества платежей определяем количество строк в таблице для данного гаража
+                    lastRow = (paymentsPeriod.size() == 0) ? fistRow : fistRow + paymentsPeriod.size() - 1;
+                    HSSFRow row = sheet.createRow(fistRow);
+                    //Порядковый номер 1
+                    HSSFCell countCell = row.createCell(0);
+                    countCell.setCellValue(number);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 0, 0));
+                    //Порядковый номер 2
+                    HSSFCell countTwoCell = row.createCell(13);
+                    countTwoCell.setCellValue(number);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 13, 13));
+                    //Ряд
+                    HSSFCell seriesCell = row.createCell(1);
+                    seriesCell.setCellValue(g.getSeries());
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 1, 1));
+                    //Номер гаража
+                    HSSFCell nubmerCell = row.createCell(2);
+                    nubmerCell.setCellValue(g.getNumber());
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 2, 2));
+                    //ФИО владельца
+                    HSSFCell fioCell = row.createCell(3);
+                    fioCell.setCellValue(g.getPerson().getFIO());
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 3, 3));
+                    //Задолжность после оплат выбранного года
+                    float contribute = 0f;
+                    float contLand = 0f;
+                    float contTarget = 0f;
+                    float old = g.getOldContribute();
+                    int fines = 0;
+                    Contribution contribution = contributionService.getContributionByGaragAndYear(g.getId(), year);
+                    for (Contribution c : g.getContributions()) {
+                        if (c.getYear() <= year) {
+                            contribute += c.getContribute();
+                            contLand += c.getContLand();
+                            contTarget += c.getContTarget();
+                        }
                     }
-                    if (c.getYear().equals(year)) {
-                        contribution = c;
+                    Float sumContributions = contribute + contLand + contTarget + fines + old;
+                    //Долг после оплат
+                    HSSFCell contributeSumNewCell = row.createCell(24);
+                    contributeSumNewCell.setCellValue(new BigDecimal(sumContributions).setScale(2, RoundingMode.UP).floatValue());
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 24, 24));
+                    //Долг по членскому взносу
+                    HSSFCell contributeNewCell = row.createCell(25);
+                    contributeNewCell.setCellValue(contribute);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 25, 25));
+                    //Долги по аренде
+                    HSSFCell contLandNewCell = row.createCell(26);
+                    contLandNewCell.setCellValue(contLand);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 26, 26));
+                    //Долг по целевому взносу
+                    HSSFCell contTargetNewCell = row.createCell(27);
+                    contTargetNewCell.setCellValue(contTarget);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 27, 27));
+                    //Долг по прошлым годам
+                    HSSFCell contOldNewCell = row.createCell(28);
+                    contOldNewCell.setCellValue(old);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 28, 28));
+                    //Долг по пеням
+                    HSSFCell contFinesNewCell = row.createCell(29);
+                    contFinesNewCell.setCellValue(fines);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 29, 29));
+                    //Начисления текущего года
+                    float rentSum = 0f;
+                    float rentContribute = 0f;
+                    float rentContLand = 0f;
+                    float rentContTarget = 0f;
+                    if (contribution != null) {
+                        rentContribute = rent.getContributeMax();
+                        rentContLand = (contribution.isBenefitsOn()) ? rent.getContLandMax() / 2 : rent.getContLandMax();
+                        rentContTarget = rent.getContTargetMax();
+                        rentSum = rentContribute + rentContLand + rentContTarget;
                     }
-                }
-                Float sumContributions = newContribute + newContLand + newContTarget + newFines;
-                Rent rent = rentService.findByYear(year);
-                float rentSum = rent.getContributeMax() + rent.getContTargetMax();
-                rentSum += (contribution.isBenefitsOn()) ? rent.getContLandMax() / 2 : rent.getContLandMax();
-                for (Payment payment : paymentsPeriod) {
-                    oldContribute += payment.getContributePay();
-                    oldContLand += payment.getContLandPay();
-                    oldContTarget += payment.getContTargetPay();
-                }
-                oldContribute += newContribute - rent.getContributeMax();
-                if (contribution.isBenefitsOn()) {
-                    oldContLand += newContLand - (rent.getContLandMax() / 2);
-                } else {
-                    oldContLand += newContLand - rent.getContLandMax();
-                }
-                oldContTarget += newContTarget - rent.getContTargetMax();
-                float sumOldContribute = oldContribute + oldContLand + oldContTarget;
-                //Сумма прошлой задолжности
-                HSSFCell oldContributeSumCell = row.createCell(4);
-                oldContributeSumCell.setCellValue(new BigDecimal(sumOldContribute).setScale(2, RoundingMode.UP).floatValue());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 4, 4));
-                //Прошлая задолжность по членскому взносу
-                HSSFCell oldContributeCell = row.createCell(5);
-                oldContributeCell.setCellValue(oldContribute);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 5, 5));
-                //Прошлая задолжность по аренде
-                HSSFCell oldContLandCell = row.createCell(6);
-                oldContLandCell.setCellValue(oldContLand);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 6, 6));
-                //Прошлая задолжность по целевому взносу
-                HSSFCell oldContTargetCell = row.createCell(7);
-                oldContTargetCell.setCellValue(oldContTarget);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 7, 7));
-                //Начисления текущего года
-                HSSFCell rentSumCell = row.createCell(8);
-                rentSumCell.setCellValue(rentSum);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 8, 8));
-                //Начисления текущего года по членскому взносу
-                HSSFCell rentContributeCell = row.createCell(9);
-                rentContributeCell.setCellValue(rent.getContributeMax());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 9, 9));
-                //Начисления текущего года по аренде земли
-                HSSFCell rentContLandCell = row.createCell(10);
-                if (contribution.isBenefitsOn()) {
-                    rentContLandCell.setCellValue(rent.getContLandMax() / 2);
-                } else {
-                    rentContLandCell.setCellValue(rent.getContLandMax());
-                }
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 10, 10));
-                //Начисления текущего года по целевому взносу
-                HSSFCell rentContTargetCell = row.createCell(11);
-                rentContTargetCell.setCellValue(rent.getContTargetMax());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 11, 11));
-                //Порядковый номер
-                HSSFCell countTwoCell = row.createCell(12);
-                countTwoCell.setCellValue(number);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 12, 12));
-                int t = fistRow;
-                for (Payment p : paymentsPeriod) {
-                    if (t == fistRow) {
-                        HSSFCell numberPay = row.createCell(13);
-                        numberPay.setCellValue(p.getNumber());
-                        Date dt = p.getDatePayment().getTime();
-                        DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
-                        String dateFull = ndf.format(dt);
-                        //Дата платежа
-                        HSSFCell datePay = row.createCell(14);
-                        datePay.setCellValue(dateFull);
-                        //Сумма платежа
-                        HSSFCell sumPay = row.createCell(15);
-                        sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
-                                p.getAdditionallyPay() + p.getFinesPay() + p.getPay());
-                        //Платеж  по членскому взносу
-                        HSSFCell contributePay = row.createCell(16);
-                        contributePay.setCellValue(p.getContributePay());
-                        //Платеж по аренде
-                        HSSFCell contLandPay = row.createCell(17);
-                        contLandPay.setCellValue(p.getContLandPay());
-                        //Платеж по целевому взносу
-                        HSSFCell contTargetPay = row.createCell(18);
-                        contTargetPay.setCellValue(p.getContTargetPay());
-                        //Платеж по добавочному взносу
-                        HSSFCell addingPay = row.createCell(19);
-                        addingPay.setCellValue(p.getAdditionallyPay());
-                        //Платеж по пеням
-                        HSSFCell finesPay = row.createCell(20);
-                        finesPay.setCellValue(p.getFinesPay());
-                        //Остаточные деньги
-                        HSSFCell balancePay = row.createCell(21);
-                        balancePay.setCellValue(p.getPay());
-                    } else {
-                        HSSFRow rowNext = sheet.createRow(t);
-                        HSSFCell numberPay = rowNext.createCell(13);
-                        numberPay.setCellValue(p.getNumber());
-                        Date dt = p.getDatePayment().getTime();
-                        DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
-                        String dateFull = ndf.format(dt);
-                        //Дата платежа
-                        HSSFCell datePay = rowNext.createCell(14);
-                        datePay.setCellValue(dateFull);
-                        //Сумма платежа
-                        HSSFCell sumPay = rowNext.createCell(15);
-                        sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
-                                p.getAdditionallyPay() + p.getFinesPay() + p.getPay());
-                        //Платеж  по членскому взносу
-                        HSSFCell contributePay = rowNext.createCell(16);
-                        contributePay.setCellValue(p.getContributePay());
-                        //Платеж по аренде
-                        HSSFCell contLandPay = rowNext.createCell(17);
-                        contLandPay.setCellValue(p.getContLandPay());
-                        //Платеж по целевому взносу
-                        HSSFCell contTargetPay = rowNext.createCell(18);
-                        contTargetPay.setCellValue(p.getContTargetPay());
-                        //Платеж по добавочному взносу
-                        HSSFCell addingPay = rowNext.createCell(19);
-                        addingPay.setCellValue(p.getAdditionallyPay());
-                        //Платеж по пеням
-                        HSSFCell finesPay = rowNext.createCell(20);
-                        finesPay.setCellValue(p.getFinesPay());
-                        //Остаточные деньги
-                        HSSFCell balancePay = rowNext.createCell(21);
-                        balancePay.setCellValue(p.getPay());
+                    //Сумма начислений
+                    HSSFCell rentSumCell = row.createCell(9);
+                    rentSumCell.setCellValue(rentSum);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 9, 9));
+                    //Начисления членского взноса
+                    HSSFCell rentContributeCell = row.createCell(10);
+                    rentContributeCell.setCellValue(rentContribute);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 10, 10));
+                    //Начисления аренды земли
+                    HSSFCell rentContLandCell = row.createCell(11);
+                    rentContLandCell.setCellValue(rentContLand);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 11, 11));
+                    //Начисления целевого взноса
+                    HSSFCell rentContTargetCell = row.createCell(12);
+                    rentContTargetCell.setCellValue(rentContTarget);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 12, 12));
+                    //Приход
+                    int t = fistRow;
+                    for (Payment p : paymentsPeriod) {
+                        if (t == fistRow) {
+                            calculatePayment(row, p);
+                        } else {
+                            HSSFRow rowNext = sheet.createRow(t);
+                            calculatePayment(rowNext, p);
+                        }
+                        t++;
                     }
-                    t++;
+                    //Задолжность до оплат выбранного года
+                    float pastContribute = 0f;
+                    float pastContLand = 0f;
+                    float pastContTarget = 0f;
+                    float pastOld = 0f;
+                    for (Payment payment : paymentsPeriod) {
+                        pastContribute += payment.getContributePay();
+                        pastContLand += payment.getContLandPay();
+                        pastContTarget += payment.getContTargetPay();
+                        pastOld += payment.getOldContributePay();
+                    }
+                    pastContribute += contribute - rentContribute;
+                    pastContLand += contLand - rentContLand;
+                    pastContTarget += contTarget - rentContTarget;
+                    pastOld += old;
+                    float sumOldContribute = pastContribute + pastContLand + pastContTarget + pastOld;
+                    //Сумма прошлой задолжности
+                    HSSFCell oldContributeSumCell = row.createCell(4);
+                    oldContributeSumCell.setCellValue(new BigDecimal(sumOldContribute).setScale(2, RoundingMode.UP).floatValue());
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 4, 4));
+                    //Прошлая задолжность по членскому взносу
+                    HSSFCell oldContributeCell = row.createCell(5);
+                    oldContributeCell.setCellValue(pastContribute);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 5, 5));
+                    //Прошлая задолжность по аренде
+                    HSSFCell oldContLandCell = row.createCell(6);
+                    oldContLandCell.setCellValue(pastContLand);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 6, 6));
+                    //Прошлая задолжность по целевому взносу
+                    HSSFCell oldContTargetCell = row.createCell(7);
+                    oldContTargetCell.setCellValue(pastContTarget);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 7, 7));
+                    //Прошлая задолжность по долгам прошлых лет
+                    HSSFCell pastOldCell = row.createCell(8);
+                    pastOldCell.setCellValue(pastOld);
+                    sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 8, 8));
+                    //Счетчики
+                    if (paymentsPeriod.size() == 0) {
+                        fistRow += 1;
+                    }
+                    fistRow += paymentsPeriod.size();
+                    number++;
                 }
-                //Долг после оплат
-                HSSFCell contributeSumNewCell = row.createCell(22);
-                contributeSumNewCell.setCellValue(new BigDecimal(sumContributions).setScale(2, RoundingMode.UP).floatValue());
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 22, 22));
-                //Долг по членскому взносу
-                HSSFCell contributeNewCell = row.createCell(23);
-                contributeNewCell.setCellValue(newContribute);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 23, 23));
-                //Долги по аренде
-                HSSFCell contLandNewCell = row.createCell(24);
-                contLandNewCell.setCellValue(newContLand);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 24, 24));
-                //Долг по целевому взносу
-                HSSFCell contTargetNewCell = row.createCell(25);
-                contTargetNewCell.setCellValue(newContTarget);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 25, 25));
-                //Долг по пеням
-                HSSFCell contFinesNewCell = row.createCell(26);
-                contFinesNewCell.setCellValue(newFines);
-                sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 26, 26));
-                if (paymentsPeriod.size() == 0) {
-                    fistRow += 1;
-                }
-                fistRow += paymentsPeriod.size();
-                number++;
             }
+            //Суммы
+            createFooter(sheet, style, fistRow);
 
-            //FOOTER
-            CellStyle footerStyle = workBook.createCellStyle();
-            footerStyle.setWrapText(true);
-            footerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            footerStyle.setBorderTop(CellStyle.BORDER_MEDIUM);
-            Font fontFooter = workBook.createFont();
-            fontFooter.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-            footerStyle.setFont(fontFooter);
-            HSSFRow resumeRow = sheet.createRow(fistRow);
-            HSSFCell resume = resumeRow.createCell(3);
-            resume.setCellValue("Итого:");
-            resume.setCellStyle(footerStyle);
-            HSSFCell allContributeOld = resumeRow.createCell(4);
-            allContributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allContributeOld.setCellFormula("SUM(E4:E" + fistRow + ")");
-            allContributeOld.setCellStyle(footerStyle);
-
-            HSSFCell contributeOld = resumeRow.createCell(5);
-            contributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributeOld.setCellFormula("SUM(F4:F" + fistRow + ")");
-            contributeOld.setCellStyle(footerStyle);
-
-            HSSFCell landOld = resumeRow.createCell(6);
-            landOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landOld.setCellFormula("SUM(G4:G" + fistRow + ")");
-            landOld.setCellStyle(footerStyle);
-
-            HSSFCell tagetOld = resumeRow.createCell(7);
-            tagetOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            tagetOld.setCellFormula("SUM(H4:H" + fistRow + ")");
-            tagetOld.setCellStyle(footerStyle);
-
-            HSSFCell allRent = resumeRow.createCell(8);
-            allRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allRent.setCellFormula("SUM(I4:I" + fistRow + ")");
-            allRent.setCellStyle(footerStyle);
-
-            HSSFCell contributeRent = resumeRow.createCell(9);
-            contributeRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributeRent.setCellFormula("SUM(J4:J" + fistRow + ")");
-            contributeRent.setCellStyle(footerStyle);
-
-            HSSFCell landRent = resumeRow.createCell(10);
-            landRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landRent.setCellFormula("SUM(K4:K" + fistRow + ")");
-            landRent.setCellStyle(footerStyle);
-
-            HSSFCell tagetRent = resumeRow.createCell(11);
-            tagetRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            tagetRent.setCellFormula("SUM(L4:L" + fistRow + ")");
-            tagetRent.setCellStyle(footerStyle);
-
-            HSSFCell allPay = resumeRow.createCell(15);
-            allPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allPay.setCellFormula("SUM(P4:P" + fistRow + ")");
-            allPay.setCellStyle(footerStyle);
-
-            HSSFCell contributePay = resumeRow.createCell(16);
-            contributePay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributePay.setCellFormula("SUM(Q4:Q" + fistRow + ")");
-            contributePay.setCellStyle(footerStyle);
-
-            HSSFCell landPay = resumeRow.createCell(17);
-            landPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landPay.setCellFormula("SUM(R4:R" + fistRow + ")");
-            landPay.setCellStyle(footerStyle);
-
-            HSSFCell tagetPay = resumeRow.createCell(18);
-            tagetPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            tagetPay.setCellFormula("SUM(S4:S" + fistRow + ")");
-            tagetPay.setCellStyle(footerStyle);
-
-            HSSFCell assignPay = resumeRow.createCell(19);
-            assignPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            assignPay.setCellFormula("SUM(T4:T" + fistRow + ")");
-            assignPay.setCellStyle(footerStyle);
-
-            HSSFCell finesPay = resumeRow.createCell(20);
-            finesPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            finesPay.setCellFormula("SUM(U4:U" + fistRow + ")");
-            finesPay.setCellStyle(footerStyle);
-
-            HSSFCell balance = resumeRow.createCell(21);
-            balance.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            balance.setCellFormula("SUM(V4:V" + fistRow + ")");
-            balance.setCellStyle(footerStyle);
-
-            HSSFCell allContributeNew = resumeRow.createCell(22);
-            allContributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allContributeNew.setCellFormula("SUM(W4:W" + fistRow + ")");
-            allContributeNew.setCellStyle(footerStyle);
-
-            HSSFCell contributeNew = resumeRow.createCell(23);
-            contributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributeNew.setCellFormula("SUM(X4:X" + fistRow + ")");
-            contributeNew.setCellStyle(footerStyle);
-
-            HSSFCell landNew = resumeRow.createCell(24);
-            landNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landNew.setCellFormula("SUM(Y4:Y" + fistRow + ")");
-            landNew.setCellStyle(footerStyle);
-
-            HSSFCell targetNew = resumeRow.createCell(25);
-            targetNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            targetNew.setCellFormula("SUM(Z4:Z" + fistRow + ")");
-            targetNew.setCellStyle(footerStyle);
-
-            HSSFCell finesNew = resumeRow.createCell(26);
-            finesNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            finesNew.setCellFormula("SUM(AA4:AA" + fistRow + ")");
-            finesNew.setCellStyle(footerStyle);
         }
         return workBook;
+    }
+
+    public void createHeader(HSSFSheet sheet, CellStyle style) {
+        HSSFRow rowZero = sheet.createRow(0);
+        HSSFRow rowOne = sheet.createRow(1);
+        HSSFRow rowTwo = sheet.createRow(2);
+        HSSFCell countHCell = rowZero.createCell(0);
+        countHCell.setCellValue("№ п/п");
+        countHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
+        HSSFCell seriesHCell = rowZero.createCell(1);
+        seriesHCell.setCellValue("№ ряда");
+        seriesHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
+        HSSFCell nubmerHCell = rowZero.createCell(2);
+        nubmerHCell.setCellValue("№ гаража");
+        nubmerHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));
+        HSSFCell fioHCell = rowZero.createCell(3);
+        fioHCell.setCellValue("ФИО");
+        fioHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));
+        HSSFCell allCHCell = rowZero.createCell(4);
+        allCHCell.setCellValue("Задолженность");
+        allCHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 7));
+        HSSFCell allSumCHCell = rowOne.createCell(4);
+        allSumCHCell.setCellValue("Всего");
+        allSumCHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 4, 4));
+        HSSFCell divedeCHCell = rowOne.createCell(5);
+        divedeCHCell.setCellValue("в том числе");
+        divedeCHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 5, 7));
+        HSSFCell contributeCHCell = rowTwo.createCell(5);
+        contributeCHCell.setCellValue("членский взнос");
+        contributeCHCell.setCellStyle(style);
+        HSSFCell contLandCHCell = rowTwo.createCell(6);
+        contLandCHCell.setCellValue("аренда земли");
+        contLandCHCell.setCellStyle(style);
+        HSSFCell contTargCHCell = rowTwo.createCell(7);
+        contTargCHCell.setCellValue("целевой взнос");
+        contTargCHCell.setCellStyle(style);
+        HSSFCell oldCHCell = rowTwo.createCell(8);
+        oldCHCell.setCellValue("долги прошлых лет");
+        oldCHCell.setCellStyle(style);
+        HSSFCell allRHCell = rowZero.createCell(9);
+        allRHCell.setCellValue("Начисленно");
+        allRHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 9, 12));
+        HSSFCell allSumRHCell = rowOne.createCell(9);
+        allSumRHCell.setCellValue("Всего");
+        allSumRHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));
+        HSSFCell divedeRHCell = rowOne.createCell(10);
+        divedeRHCell.setCellValue("в том числе");
+        divedeRHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 10, 12));
+        HSSFCell contributeRHCell = rowTwo.createCell(10);
+        contributeRHCell.setCellValue("членский взнос");
+        contributeRHCell.setCellStyle(style);
+        HSSFCell contLandRHCell = rowTwo.createCell(11);
+        contLandRHCell.setCellValue("аренда земли");
+        contLandRHCell.setCellStyle(style);
+        HSSFCell contTargRHCell = rowTwo.createCell(12);
+        contTargRHCell.setCellValue("целевой взнос");
+        contTargRHCell.setCellStyle(style);
+        HSSFCell countTWOHCell = rowZero.createCell(13);
+        countTWOHCell.setCellValue("№ п/п");
+        countTWOHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 13, 13));
+        HSSFCell allPHCell = rowZero.createCell(14);
+        allPHCell.setCellValue("Уплачено");
+        allPHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 14, 23));
+        HSSFCell numberPHCell = rowOne.createCell(14);
+        numberPHCell.setCellValue("№");
+        numberPHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+        HSSFCell datePHCell = rowOne.createCell(15);
+        datePHCell.setCellValue("Дата");
+        datePHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+        HSSFCell allSumPHCell = rowOne.createCell(16);
+        allSumPHCell.setCellValue("Всего");
+        allSumPHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+        HSSFCell divedePHCell = rowOne.createCell(17);
+        divedePHCell.setCellValue("в том числе");
+        divedePHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 17, 23));
+        HSSFCell contributePHCell = rowTwo.createCell(17);
+        contributePHCell.setCellValue("членский взнос");
+        contributePHCell.setCellStyle(style);
+        HSSFCell contLandPHCell = rowTwo.createCell(18);
+        contLandPHCell.setCellValue("аренда земли");
+        contLandPHCell.setCellStyle(style);
+        HSSFCell contTargPHCell = rowTwo.createCell(19);
+        contTargPHCell.setCellValue("целевой взнос");
+        contTargPHCell.setCellStyle(style);
+        HSSFCell assignPHCell = rowTwo.createCell(20);
+        assignPHCell.setCellValue("дополнительный взнос");
+        assignPHCell.setCellStyle(style);
+        HSSFCell oldPHCell = rowTwo.createCell(21);
+        oldPHCell.setCellValue("долги прошлых лет");
+        oldPHCell.setCellStyle(style);
+        HSSFCell finesPHCell = rowTwo.createCell(22);
+        finesPHCell.setCellValue("пени");
+        finesPHCell.setCellStyle(style);
+        HSSFCell balancePHCell = rowTwo.createCell(23);
+        balancePHCell.setCellValue("остаток");
+        balancePHCell.setCellStyle(style);
+        HSSFCell allCNHCell = rowZero.createCell(24);
+        allCNHCell.setCellValue("Задолжность");
+        allCNHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 24, 29));
+        HSSFCell allSumCNHCell = rowOne.createCell(24);
+        allSumCNHCell.setCellValue("Всего");
+        allSumCNHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 24, 24));
+        HSSFCell divedeCNHCell = rowOne.createCell(25);
+        divedeCNHCell.setCellValue("в том числе");
+        divedeCNHCell.setCellStyle(style);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 25, 29));
+        HSSFCell contributeCNHCell = rowTwo.createCell(25);
+        contributeCNHCell.setCellValue("членский взнос");
+        contributeCNHCell.setCellStyle(style);
+        HSSFCell contLandCNHCell = rowTwo.createCell(26);
+        contLandCNHCell.setCellValue("аренда земли");
+        contLandCNHCell.setCellStyle(style);
+        HSSFCell contTargCNHCell = rowTwo.createCell(27);
+        contTargCNHCell.setCellValue("целевой взнос");
+        contTargCNHCell.setCellStyle(style);
+        HSSFCell oldCNHCell = rowTwo.createCell(28);
+        oldCNHCell.setCellValue("долги прошлых лет");
+        oldCNHCell.setCellStyle(style);
+        HSSFCell finesCNHCell = rowTwo.createCell(29);
+        finesCNHCell.setCellValue("пени");
+        finesCNHCell.setCellStyle(style);
+    }
+
+    public void createFooter(HSSFSheet sheet, CellStyle style, int numberRow) {
+        HSSFRow resumeRow = sheet.createRow(numberRow);
+        HSSFCell resume = resumeRow.createCell(3);
+        resume.setCellValue("Итого:");
+        resume.setCellStyle(style);
+        HSSFCell allContributeOld = resumeRow.createCell(4);
+        allContributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allContributeOld.setCellFormula("SUM(E4:E" + numberRow + ")");
+        allContributeOld.setCellStyle(style);
+
+        HSSFCell contributeOld = resumeRow.createCell(5);
+        contributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeOld.setCellFormula("SUM(F4:F" + numberRow + ")");
+        contributeOld.setCellStyle(style);
+
+        HSSFCell landOld = resumeRow.createCell(6);
+        landOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landOld.setCellFormula("SUM(G4:G" + numberRow + ")");
+        landOld.setCellStyle(style);
+
+        HSSFCell tagetOld = resumeRow.createCell(7);
+        tagetOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        tagetOld.setCellFormula("SUM(H4:H" + numberRow + ")");
+        tagetOld.setCellStyle(style);
+
+        HSSFCell pastOld = resumeRow.createCell(8);
+        pastOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        pastOld.setCellFormula("SUM(I4:I" + numberRow + ")");
+        pastOld.setCellStyle(style);
+
+        HSSFCell allRent = resumeRow.createCell(9);
+        allRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allRent.setCellFormula("SUM(J4:J" + numberRow + ")");
+        allRent.setCellStyle(style);
+
+        HSSFCell contributeRent = resumeRow.createCell(10);
+        contributeRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeRent.setCellFormula("SUM(K4:K" + numberRow + ")");
+        contributeRent.setCellStyle(style);
+
+        HSSFCell landRent = resumeRow.createCell(11);
+        landRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landRent.setCellFormula("SUM(L4:L" + numberRow + ")");
+        landRent.setCellStyle(style);
+
+        HSSFCell tagetRent = resumeRow.createCell(12);
+        tagetRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        tagetRent.setCellFormula("SUM(M4:M" + numberRow + ")");
+        tagetRent.setCellStyle(style);
+
+        HSSFCell allPay = resumeRow.createCell(16);
+        allPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allPay.setCellFormula("SUM(Q4:Q" + numberRow + ")");
+        allPay.setCellStyle(style);
+
+        HSSFCell contributePay = resumeRow.createCell(17);
+        contributePay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributePay.setCellFormula("SUM(R4:R" + numberRow + ")");
+        contributePay.setCellStyle(style);
+
+        HSSFCell landPay = resumeRow.createCell(18);
+        landPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landPay.setCellFormula("SUM(S4:S" + numberRow + ")");
+        landPay.setCellStyle(style);
+
+        HSSFCell tagetPay = resumeRow.createCell(19);
+        tagetPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        tagetPay.setCellFormula("SUM(T4:T" + numberRow + ")");
+        tagetPay.setCellStyle(style);
+
+        HSSFCell assignPay = resumeRow.createCell(20);
+        assignPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        assignPay.setCellFormula("SUM(U4:U" + numberRow + ")");
+        assignPay.setCellStyle(style);
+
+        HSSFCell oldPay = resumeRow.createCell(21);
+        oldPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        oldPay.setCellFormula("SUM(V4:V" + numberRow + ")");
+        oldPay.setCellStyle(style);
+
+        HSSFCell finesPay = resumeRow.createCell(22);
+        finesPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        finesPay.setCellFormula("SUM(W4:W" + numberRow + ")");
+        finesPay.setCellStyle(style);
+
+        HSSFCell balance = resumeRow.createCell(23);
+        balance.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        balance.setCellFormula("SUM(X4:X" + numberRow + ")");
+        balance.setCellStyle(style);
+
+        HSSFCell allContributeNew = resumeRow.createCell(24);
+        allContributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allContributeNew.setCellFormula("SUM(Y4:Y" + numberRow + ")");
+        allContributeNew.setCellStyle(style);
+
+        HSSFCell contributeNew = resumeRow.createCell(25);
+        contributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeNew.setCellFormula("SUM(Z4:Z" + numberRow + ")");
+        contributeNew.setCellStyle(style);
+
+        HSSFCell landNew = resumeRow.createCell(26);
+        landNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landNew.setCellFormula("SUM(AA4:AA" + numberRow + ")");
+        landNew.setCellStyle(style);
+
+        HSSFCell targetNew = resumeRow.createCell(27);
+        targetNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        targetNew.setCellFormula("SUM(AB4:AB" + numberRow + ")");
+        targetNew.setCellStyle(style);
+
+        HSSFCell oldNew = resumeRow.createCell(28);
+        oldNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        oldNew.setCellFormula("SUM(AC4:AC" + numberRow + ")");
+        oldNew.setCellStyle(style);
+
+        HSSFCell finesNew = resumeRow.createCell(29);
+        finesNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        finesNew.setCellFormula("SUM(AD4:AD" + numberRow + ")");
+        finesNew.setCellStyle(style);
+    }
+
+    public void calculatePayment(HSSFRow row, Payment p) {
+        HSSFCell numberPay = row.createCell(14);
+        numberPay.setCellValue(p.getNumber());
+        //Дата платежа
+        HSSFCell datePay = row.createCell(15);
+        Date dt = p.getDatePayment().getTime();
+        DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
+        datePay.setCellValue(ndf.format(dt));
+        //Сумма платежа
+        HSSFCell sumPay = row.createCell(16);
+        sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
+                p.getAdditionallyPay() + p.getFinesPay() + p.getOldContributePay() + p.getPay());
+        //Платеж  по членскому взносу
+        HSSFCell contributePay = row.createCell(17);
+        contributePay.setCellValue(p.getContributePay());
+        //Платеж по аренде
+        HSSFCell contLandPay = row.createCell(18);
+        contLandPay.setCellValue(p.getContLandPay());
+        //Платеж по целевому взносу
+        HSSFCell contTargetPay = row.createCell(19);
+        contTargetPay.setCellValue(p.getContTargetPay());
+        //Платеж по добавочному взносу
+        HSSFCell addingPay = row.createCell(20);
+        addingPay.setCellValue(p.getAdditionallyPay());
+        //Платеж по долгам прошлых лет
+        HSSFCell oldPay = row.createCell(21);
+        oldPay.setCellValue(p.getOldContributePay());
+        //Платеж по пеням
+        HSSFCell finesPay = row.createCell(22);
+        finesPay.setCellValue(p.getFinesPay());
+        //Остаточные деньги
+        HSSFCell balancePay = row.createCell(23);
+        balancePay.setCellValue(p.getPay());
     }
 }
 

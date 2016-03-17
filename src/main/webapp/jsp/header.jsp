@@ -67,19 +67,17 @@
         }
         function openNewRent() {
             var now = new Date();
-            if (now.getMonth() == 3) {
-                $.ajax({
-                    method: "GET",
-                    url: "checkYearRent",
-                    data:{"year":now.getFullYear()},
-                    success: function(html) {
-                        $("#modalDiv").html(html);
-                    },
-                    error:function(xhr) {
-                        showSuccessMessage(xhr.responseText);
-                    }
-                });
-            }
+            $.ajax({
+                method: "GET",
+                url: "checkYearRent",
+                data:{"year":now.getFullYear()},
+                success: function(html) {
+                    $("#modalDiv").html(html);
+                },
+                error:function(xhr) {
+                    showSuccessMessage(xhr.responseText);
+                }
+            });
         }
 
         function updateFines() {
@@ -101,8 +99,7 @@
 
         $(document).ready(function () {
             var now = new Date();
-            if ($.cookie('day_sync') == null) {
-                openNewRent();
+            if ($.cookie('day_sync') == null) {               
                 updateFines();
             }
         })
@@ -138,16 +135,19 @@
                        role="button" aria-expanded="false"><span class="glyphicon glyphicon-stats"></span> Отчеты </a>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="<c:url value="/reportAllPerson"/>"><span class="glyphicon glyphicon-open-file"></span> Общий список</a>
+                            <a href="<c:url value="/reportAllPerson"/>"><span
+                                    class="glyphicon glyphicon-open-file"></span> Общий список</a>
                         </li>
                         <li>
-                            <a href="<c:url value="/reportBenefitsPerson"/>"><span class="glyphicon glyphicon-open-file"></span> Список льготников</a>
+                            <a href="<c:url value="/reportBenefitsPerson"/>"><span
+                                    class="glyphicon glyphicon-open-file"></span> Список льготников</a>
                         </li>
                         <li>
-                            <a href="<c:url value="/reportContribute"/>"><span class="glyphicon glyphicon-open-file"></span> Список должников</a>
+                            <a href="<c:url value="/reportContribute"/>"><span
+                                    class="glyphicon glyphicon-open-file"></span> Список должников</a>
                         </li>
                         <li>
-                             <a href="<c:url value="/reportOther"/>">Дополнительные отчеты</a>
+                            <a href="<c:url value="/reportOther"/>">Дополнительные отчеты</a>
                         </li>
                     </ul>
                 </li>
@@ -156,6 +156,10 @@
                        role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>
                         Администрирование </a>
                     <ul class="dropdown-menu" role="menu">
+                         <li>
+                            <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
+                                Создать новый период</a>
+                        </li>
                         <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/history.jsp'}">active</c:if>">
                             <a href="<c:url value="/historyPage"/>"><span class="glyphicon glyphicon-header"></span>
                                 История</a>

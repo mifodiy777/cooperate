@@ -57,7 +57,8 @@
             startDate: '01/01/2015',
             endDate: FromEndDate,
             language:'ru',
-            autoclose: true
+            autoclose: true,
+            linked:true
         })
                 .on('changeDate', function(selected) {
             startDate = new Date(selected.date.valueOf());
@@ -71,7 +72,8 @@
             startDate: startDate,
             endDate: ToEndDate,
             language:'ru',
-            autoclose: true
+            autoclose: true,
+            linked:true
         })
                 .on('changeDate', function(selected) {
             FromEndDate = new Date(selected.date.valueOf());

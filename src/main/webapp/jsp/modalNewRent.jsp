@@ -102,6 +102,8 @@
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Сохранить
                     </button>
+                     <button type="button" class="btn btn-default" data-dismiss="modal">
+                         <span class="glyphicon glyphicon-remove"></span> Закрыть</button>
 
                 </div>
             </form:form>
