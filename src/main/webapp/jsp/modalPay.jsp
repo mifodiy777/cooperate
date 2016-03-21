@@ -1,6 +1,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<security:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -50,6 +52,14 @@
             position: 'right'
         });
 
+        $("#datePayment").datepicker({
+            format: "dd.mm.yyyy",
+            startDate: '-10y',
+            endDate: "-0d",
+            language:'ru',
+            todayBtn:true
+        });
+
         $('#formModalPay').on('hidden.bs.modal', function () {
             $("#pay").tooltipster('hide');
         })
@@ -74,6 +84,17 @@
             <form:form modelAttribute="payment" id="paymentForm" method="post" action="savePayment">
                 <div class="modal-body">
                     <form:hidden path="garag.id" id="garagId"/>
+                    <c:if test="${isAdmin}">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="input-group">
+                                    <label for="datePayment" class="input-group-addon">Дата</label>
+                                    <form:input path="datePayment" id="datePayment"
+                                                cssClass="form-control dateRU"/>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="input-group">
@@ -89,7 +110,9 @@
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Оплатить
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Закрыть
+                    </button>
                 </div>
             </form:form>
         </div>

@@ -1,7 +1,7 @@
 package com.cooperate.controller;
 
 import com.cooperate.Utils;
-import com.cooperate.entity.Garag;
+import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.entity.Payment;
 import com.cooperate.gson.PaymentAdapter;
 import com.cooperate.service.GaragService;
@@ -15,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
@@ -38,6 +36,11 @@ public class PaymentController {
 
     @Autowired
     private JournalHistoryService historyService;
+
+      @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Calendar.class, new CalendarCustomEditor());
+    }
 
     @RequestMapping(value = "paymentsPage", method = RequestMethod.GET)
     public String getPaymentsPage(@RequestParam(required = false, value = "year") Integer year, ModelMap map) {

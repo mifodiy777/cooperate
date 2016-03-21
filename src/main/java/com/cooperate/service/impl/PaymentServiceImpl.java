@@ -80,10 +80,14 @@ public class PaymentServiceImpl implements PaymentService {
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
         if (!isCreateNewPeriod) {
-            Calendar now = Calendar.getInstance();
             //Назначили время
-            payment.setDatePayment(now);
-            payment.setYear(now.get(Calendar.YEAR));
+            if (payment.getDatePayment() == null) {
+                Calendar now = Calendar.getInstance();
+                payment.setDatePayment(now);
+                payment.setYear(now.get(Calendar.YEAR));
+            } else {
+                payment.setYear(payment.getDatePayment().get(Calendar.YEAR));
+            }
             //Назначили номер
             payment.setNumber(getMaxNumber());
             payment.setGarag(garag);
@@ -214,7 +218,7 @@ public class PaymentServiceImpl implements PaymentService {
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());
             Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +
-                    p.getPay() + p.getAdditionallyPay()+p.getOldContributePay();
+                    p.getPay() + p.getAdditionallyPay() + p.getOldContributePay();
             HSSFCell sumPayColumn = nextRow.createCell(5);
             sumPayColumn.setCellValue(sum);
             HSSFCell contributeColumn = nextRow.createCell(6);
