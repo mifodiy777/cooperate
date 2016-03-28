@@ -13,12 +13,12 @@
             submitHandler: function (form) {
                 $(form).ajaxSubmit({
                     success: function (html) {
-                        $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
+                        $("#listPerson").DataTable().ajax.reload(null, false);
                         if ($('#garagTable').length != 0) {
-                            $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
+                            $("#garagTable").DataTable().ajax.reload(null, false);
                         }
                         if ($('#membersTable').length != 0) {
-                            $("#membersTable").DataTable().ajax.url("members").load(null, false);
+                            $("#membersTable").DataTable().ajax.reload(null, false);
                         }
                         showSuccessMessage(html);
                         $("#editPanel").hide();
@@ -51,7 +51,7 @@
                 $(garag).parent().remove();
                 $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
                 if ($('#garagTable').length != 0) {
-                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + $("#seriesNumber").val()).load(null, false);
+                    $("#garagTable").DataTable().ajax.reload(null, false);
                 }
                 showSuccessMessage(html);
             });

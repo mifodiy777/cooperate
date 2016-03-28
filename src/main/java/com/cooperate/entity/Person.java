@@ -33,10 +33,6 @@ public class Person implements Serializable {
     private String telephone;
 
     @Expose
-    @Column(name = "additionalInformation")
-    private String additionalInformation;
-
-    @Expose
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
@@ -81,14 +77,6 @@ public class Person implements Serializable {
 
     public void setFatherName(String fatherName) {
         this.fatherName = fatherName;
-    }
-
-    public String getAdditionalInformation() {
-        return additionalInformation;
-    }
-
-    public void setAdditionalInformation(String additionalInformation) {
-        this.additionalInformation = additionalInformation;
     }
 
     public String getTelephone() {
@@ -142,8 +130,6 @@ public class Person implements Serializable {
 
         Person person = (Person) o;
 
-        if (additionalInformation != null ? !additionalInformation.equals(person.additionalInformation) : person.additionalInformation != null)
-            return false;
         if (address != null ? !address.equals(person.address) : person.address != null) return false;
         if (benefits != null ? !benefits.equals(person.benefits) : person.benefits != null) return false;
         if (fatherName != null ? !fatherName.equals(person.fatherName) : person.fatherName != null) return false;
@@ -164,7 +150,6 @@ public class Person implements Serializable {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (fatherName != null ? fatherName.hashCode() : 0);
         result = 31 * result + (telephone != null ? telephone.hashCode() : 0);
-        result = 31 * result + (additionalInformation != null ? additionalInformation.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (benefits != null ? benefits.hashCode() : 0);
         result = 31 * result + (garagList != null ? garagList.hashCode() : 0);

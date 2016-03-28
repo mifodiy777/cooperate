@@ -72,7 +72,7 @@
                 type: "post",
                 success: function (html) {
                     showSuccessMessage(html);
-                    $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
+                    $("#listPerson").DataTable().ajax.reload(null, false);
                     if ($("#id").val() == id) {
                         $("#editPanel").hide();
                         $("#personDiv").empty();

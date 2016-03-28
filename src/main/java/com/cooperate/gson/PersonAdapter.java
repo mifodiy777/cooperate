@@ -20,7 +20,7 @@ public class PersonAdapter implements JsonSerializer<Person> {
             jsonObject.addProperty("phone", src.getTelephone());
             jsonObject.addProperty("benefits", src.getBenefits());
             jsonObject.addProperty("address", src.getAddress().getAddr());
-            
+            jsonObject.addProperty("memberBoard", src.getMemberBoard());
         }
         return jsonObject;
     }

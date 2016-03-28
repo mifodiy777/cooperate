@@ -22,8 +22,7 @@
             submitHandler: function (form) {
                 $(form).ajaxSubmit({
                     success: function (html) {
-                        var series = $("#seriesNumber").val();
-                        $("#garagTable").DataTable().ajax.url("allGarag?setSeries=" + series).load(null, false);
+                        $("#garagTable").DataTable().ajax.reload( null, false );
                         showSuccessMessage(html);
                         $("#editPanel").hide();
                         $("#garagDiv").empty();
@@ -122,7 +121,6 @@
                         $("#lastName").val(person.lastName);
                         $("#name").val(person.name);
                         $("#fatherName").val(person.fatherName);
-                        $("#additionalInformation").val(person.additionalInformation);
                         $("#telephone").val(person.telephone);
                         $("input[name='person.address.id']").val(person.address.id);
                         $("input[name='person.address.city']").val(person.address.city);
@@ -130,7 +128,7 @@
                         $("input[name='person.address.home']").val(person.address.home);
                         $("input[name='person.address.apartment']").val(person.address.apartment);
                         $("input[name='person.benefits']").val(person.benefits);
-                        $("#memberBoard").prop("checked",person.memberBoard==true);
+                        $("#memberBoard").prop("checked", person.memberBoard == true);
                     });
                 });
             });
@@ -145,25 +143,6 @@
     }
 
 </script>
-<c:if test="${isAdmin && isOldGarag}">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h4 align="center">Внести старые долги</h4>
-
-            <div class="form-group input-group">
-                <label for="year_select" class="input-group-addon">Год</label>
-                <select id="year_select" class="form-control">
-                    <c:forEach items="${rents}" var="rent">
-                        <option value="${rent.yearRent}">${rent.yearRent}</option>
-                    </c:forEach>
-                </select>
-                    <span class="input-group-btn">
-                        <button onclick="setOldContribute()" class="btn btn-info">Внести</button>
-                    </span>
-            </div>
-        </div>
-    </div>
-</c:if>
 
 <form:form modelAttribute="garag" id="garagForm" method="post" action="saveGarag">
     <form:hidden path="id"/>
@@ -185,6 +164,14 @@
             <div class="input-group">
                 <label for="oldContribute" class="input-group-addon">Долг прошлых лет</label>
                 <form:input path="oldContribute" id="oldContribute" cssClass="form-control"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <label for="additionalInformation" class="input-group-addon">Дополнительная информация</label>
+                <form:input path="additionalInformation" id="additionalInformation" cssClass="form-control"/>
             </div>
         </div>
     </div>
@@ -210,10 +197,6 @@
                     <form:input path="person.fatherName" id="fatherName" cssClass="required form-control person"/>
                 </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label for="additionalInformation" class="input-group-addon">Дополнительная информация</label>
-            <form:input path="person.additionalInformation" id="additionalInformation" cssClass="form-control person"/>
         </div>
         <div class="input-group">
             <label for="telephone" class="input-group-addon">Телефон*</label>
@@ -279,7 +262,9 @@
     <div id="searchDivPerson">
 
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary" id="searchPersonBtn"><span class="glyphicon glyphicon-search"></span> Найти владельца</button>
+            <button type="button" class="btn btn-primary" id="searchPersonBtn"><span
+                    class="glyphicon glyphicon-search"></span> Найти владельца
+            </button>
         </div>
 
         <div class="row">
@@ -306,6 +291,25 @@
             </div>
         </div>
     </div>
+    <c:if test="${isAdmin && isOldGarag}">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h4 align="center">Внести старые долги</h4>
+
+                <div class="form-group input-group">
+                    <label for="year_select" class="input-group-addon">Год</label>
+                    <select id="year_select" class="form-control">
+                        <c:forEach items="${rents}" var="rent">
+                            <option value="${rent.yearRent}">${rent.yearRent}</option>
+                        </c:forEach>
+                    </select>
+                    <span class="input-group-btn">
+                        <button type="button" onclick="setOldContribute()" class="btn btn-info">Внести</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </c:if>
     <div id="personBtn" style="text-align: center; margin-top:20px" class="col-md-12">
         <button type="button" onclick="emptyGarag();"
                 class="btn btn-info btn-lg"><span class="glyphicon glyphicon-repeat"></span> Создать пустой гараж

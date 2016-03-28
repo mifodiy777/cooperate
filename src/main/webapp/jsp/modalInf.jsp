@@ -58,6 +58,9 @@
 
                 <h4>${fio} <c:if test="${garag.person.memberBoard}"><span
                         class="label label-warning">Член правления</span> </c:if></h4>
+                <c:if test="${not empty garag.additionalInformation}">
+                    <div class="alert alert-info"  role="alert">${garag.additionalInformation}</div>
+                </c:if>
                 <h4>Долги</h4>
                 <table class="table table-striped">
                     <thead>

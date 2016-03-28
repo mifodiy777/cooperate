@@ -47,6 +47,12 @@
             }
         });
 
+        $("#contributionForm input[type=text]").focusout(function() {
+            $("#contributionForm input[type=text]").each(function(key, value) {
+                $(value).val($(value).val().trim())
+            })
+        })
+
 
         $("#benefitsOn").on("click", function() {
             if ($("#benefitsOn:checked").val()) {
@@ -82,6 +88,10 @@
         });
 
     });
+
+    function setNextYear() {
+        $("#finesLastUpdate").val("01.01.${contribution.year+1}");
+    }
 
     function fullSetDebt() {
         $("#contribute").val(${max.contributeMax});
@@ -179,6 +189,15 @@
                             <label for="finesLastUpdate" class="input-group-addon">Дата обновления пеней</label>
                             <form:input path="finesLastUpdate" id="finesLastUpdate"
                                         cssClass="form-control dateRU"/>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <button type="button" class="btn btn-success btnNextYear" onclick="setNextYear()"
+                                    title="Установить дату пеней на начало следующего года">
+                                <span class="glyphicon glyphicon-tree-conifer"></span></button>
                         </div>
                     </div>
                 </div>
@@ -236,8 +255,12 @@
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Сохранить
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="fullSetDebt()"><span class="glyphicon glyphicon-signal"></span> Полностью</button>
-                    <button type="button" data-dismiss="modal" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Закрыть</button>
+                    <button type="button" class="btn btn-danger" onclick="fullSetDebt()"><span
+                            class="glyphicon glyphicon-signal"></span> Полностью
+                    </button>
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><span
+                            class="glyphicon glyphicon-remove"></span> Закрыть
+                    </button>
 
                 </div>
                 </form:form>

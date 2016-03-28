@@ -33,6 +33,10 @@ public class Garag implements Serializable {
     @JoinColumn(name = "id_person")
     private Person person;
 
+    @Expose
+    @Column(name = "additionalInformation")
+    private String additionalInformation;
+
 
     //Периоды платежные - долги
     @OneToMany(cascade = CascadeType.ALL)
@@ -98,6 +102,14 @@ public class Garag implements Serializable {
         this.oldContribute = oldContribute;
     }
 
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
+
     public List<Payment> getPayments() {
         return payments;
     }
@@ -122,6 +134,8 @@ public class Garag implements Serializable {
         Garag garag = (Garag) o;
 
         if (Float.compare(garag.oldContribute, oldContribute) != 0) return false;
+        if (additionalInformation != null ? !additionalInformation.equals(garag.additionalInformation) : garag.additionalInformation != null)
+            return false;
         if (contributions != null ? !contributions.equals(garag.contributions) : garag.contributions != null)
             return false;
         if (id != null ? !id.equals(garag.id) : garag.id != null) return false;
@@ -139,6 +153,7 @@ public class Garag implements Serializable {
         result = 31 * result + (series != null ? series.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (person != null ? person.hashCode() : 0);
+        result = 31 * result + (additionalInformation != null ? additionalInformation.hashCode() : 0);
         result = 31 * result + (contributions != null ? contributions.hashCode() : 0);
         result = 31 * result + (oldContribute != +0.0f ? Float.floatToIntBits(oldContribute) : 0);
         result = 31 * result + (payments != null ? payments.hashCode() : 0);

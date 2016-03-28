@@ -11,7 +11,12 @@
             "order": [
                 [ 0, 'asc' ]
             ],
-            "ajax": "allGarag?setSeries=${setSeries}",
+            "ajax": {
+                url:"allGarag",
+                data:{
+                    setSeries: "${setSeries}"
+                }
+            },
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'my' + aData.id);
             },
@@ -33,8 +38,12 @@
                     return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
+                    var vip = '';
                     if (full.person != null) {
-                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + '</a>'
+                        if (full.person.memberBoard) {
+                            vip = ' <span class="label label-warning">ЧП</span>';
+                        }
+                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + vip + '</a>'
                     }
                     return ""
                 }, 'title': 'ФИО'},
@@ -127,7 +136,7 @@
 
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=${setSeries}").load(null, false);
+                    $("#garagTable").DataTable().ajax.reload(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -152,7 +161,7 @@
                         $("#personDiv").empty();
                     }
                     showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.url("allGarag?setSeries=${setSeries}").load(null, false);
+                    $("#garagTable").DataTable().ajax.reload(null, false);
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
@@ -183,8 +192,6 @@
             <div id="personDiv"></div>
         </div>
     </div>
-    <input type="hidden" id="seriesNumber" value="${setSeries}">
-
     <div class="panel with-nav-tabs panel-primary">
         <div class="panel-heading">
             <ul class="nav nav-tabs nav-justified">

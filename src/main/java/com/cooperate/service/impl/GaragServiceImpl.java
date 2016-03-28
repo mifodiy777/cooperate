@@ -105,7 +105,7 @@ public class GaragServiceImpl implements GaragService {
         HSSFSheet sheet = workBook.createSheet("Список членов ГК");
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
-        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес", "Дополнительная информация", "Лготы"};
+        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес", "Льготы"};
         CellStyle headerStyle = workBook.createCellStyle();
         headerStyle.setWrapText(true);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -133,9 +133,6 @@ public class GaragServiceImpl implements GaragService {
                 sheet.setColumnWidth(i, (short) (50 * 256));
             }
             if (i == 5) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
-            }
-            if (i == 6) {
                 sheet.setColumnWidth(i, (short) (30 * 256));
             }
         }
@@ -155,9 +152,7 @@ public class GaragServiceImpl implements GaragService {
                 phoneCell.setCellValue(garag.getPerson().getTelephone());
                 HSSFCell addressCell = nextRow.createCell(4);
                 addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
-                HSSFCell additionlaCell = nextRow.createCell(5);
-                additionlaCell.setCellValue(garag.getPerson().getAdditionalInformation());
-                HSSFCell benefitsCell = nextRow.createCell(6);
+                HSSFCell benefitsCell = nextRow.createCell(5);
                 benefitsCell.setCellValue(garag.getPerson().getBenefits());
             }
             numberRow++;
@@ -344,7 +339,7 @@ public class GaragServiceImpl implements GaragService {
         HSSFWorkbook workBook = new HSSFWorkbook();
         CellStyle style = workBook.createCellStyle();
         style.setWrapText(true);
-        style.setAlignment(CellStyle.ALIGN_CENTER);       
+        style.setAlignment(CellStyle.ALIGN_CENTER);
         Font font = workBook.createFont();
         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         style.setFont(font);

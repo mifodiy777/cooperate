@@ -21,7 +21,12 @@
             "order": [
                 [ 0, 'desc' ]
             ],
-            "ajax": "payments?setYear=${setYear}",
+            "ajax": {
+                url:"payments",
+                data:{
+                    setYear:"${setYear}"
+                }
+            },
             "fnDrawCallback": function () {
                 $('a.deleteButton').off("click");
                 $('a.deleteButton').popConfirm({
@@ -65,7 +70,7 @@
                 type: "post",
                 success: function (html) {
                     showSuccessMessage(html);
-                    $("#paymentTable").DataTable().ajax.url("payments?setYear=${setYear}").load(null, false);
+                    $("#paymentTable").DataTable().ajax.reload( null, false );
                 },
                 error: function (xhr) {
                     if (xhr.status == 409) {
