@@ -91,6 +91,7 @@
 
     function setNextYear() {
         $("#finesLastUpdate").val("01.01.${contribution.year+1}");
+        $("#finesOn").prop("checked", true);
     }
 
     function fullSetDebt() {
