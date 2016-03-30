@@ -26,15 +26,19 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"data": "fio", 'title': 'ФИО'},
+                {"render": function(data, type, full) {
+                    var vip = '';
+                    if (full.memberBoard) {
+                        vip = ' <span class="label label-warning">ЧП</span>';
+                    }
+                    return '<a href=\"#\" onclick=\"editPerson(' + full.id + ')\">' + full.fio + vip + '</a>'
+                }, 'title': 'ФИО'},
                 {"data": "phone", 'title': 'Телефон'},
                 {"data": "address", 'title': 'Адрес'},
                 {"data": "benefits", 'title': 'Льготы'},
                 {"data": "garags[,<br>].garag", 'title': 'Гаражи'},
-                {'title': 'Действия', "render": function (data, type, full) {
-                    return "<a href=\"#\" class=\"btnTable  btn btn-primary btn-sm\" onclick=\"editPerson(" + full.id +
-                            ");\"><span class=\"glyphicon glyphicon-pencil\"/></span></a>" +
-                            "<a href=\"#\" class=\"btnTable deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
+                {'title': 'Удалить', "render": function (data, type, full) {
+                    return "<a href=\"#\" class=\"btnTable deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
                             "\" onclick=\"deletePerson('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
                 }
                 }

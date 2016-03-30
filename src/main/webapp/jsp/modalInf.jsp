@@ -106,7 +106,7 @@
                     </tr>
                 </table>
                 <h5>Долги прошлых лет: ${garag.oldContribute} руб.</h5>
-                <h4>Общий долг: ${contributionAll} руб.</h4>
+                <h3><b>Общий долг: ${contributionAll} руб.</b></h3>
                 <hr>
                 <h4>Платежи</h4>
                 <button id="openAddingCount" class="btn btn-primary" onclick="openAddingCount()">

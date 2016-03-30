@@ -41,6 +41,14 @@
             }
         });
 
+        $('#submitOldRent').popConfirm({
+            title: "Сохранить период?",
+            content: "",
+            placement: "bottom",
+            yesBtn: "Да",
+            noBtn: "Нет"
+        });
+
         $('#rentForm input').tooltipster({
             animation: 'slide',
             trigger: 'custom',
@@ -92,7 +100,7 @@
                     </div>
 
                     <div align="center">
-                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                        <button id="submitOldRent" type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok"></span>
                             Сохранить
                         </button>
                     </div>

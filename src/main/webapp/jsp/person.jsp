@@ -45,19 +45,28 @@
             position: 'top'
         });
 
-        $(".buttonDelete").click(function() {
-            var garag = this;
-            $.post("deleteGaragInPerson", {idGarag:this.id}, function(html) {
-                $(garag).parent().remove();
-                $("#listPerson").DataTable().ajax.url("allPerson").load(null, false);
-                if ($('#garagTable').length != 0) {
-                    $("#garagTable").DataTable().ajax.reload(null, false);
-                }
-                showSuccessMessage(html);
-            });
+        $(".deleteAssign").popConfirm({
+            title: "Вы хотите удалить назначение к этому гаражу?",
+            content: "",
+            placement: "right",
+            yesBtn: "Да",
+            noBtn: "Нет"
+        });
 
-        })
+
     });
+    
+    function deleteAssign(garag, id) {
+        $.post("deleteGaragInPerson", {idGarag:id}, function(html) {
+            console.log(garag);
+            $(garag).parent().parent().remove();
+            $("#listPerson").DataTable().ajax.reload(null, false);
+            if ($('#garagTable').length != 0) {
+                $("#garagTable").DataTable().ajax.reload(null, false);
+            }
+            showSuccessMessage(html);
+        });
+    }
 
 </script>
 
@@ -129,14 +138,21 @@
         </button>
     </div>
 </form:form>
-<div class="col-md-6">
-    <c:forEach items="${person.garagList}" var="garag" varStatus="index">
-        <div class="input-group garagRow">
-            <input type="hidden" name="garagList[${index.index}].id" value="<c:out value="${garag.id}"/>"/>
-            <h4><b>Гараж: </b><c:out value="${garag.fullName}"/>
-                <span id="${garag.id}" title="Удалить" class="glyphicon glyphicon-remove buttonDelete"></span>
-            </h4>
-
-        </div>
-    </c:forEach>
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <tbody>
+            <c:forEach items="${person.garagList}" var="garag">
+                <tr>
+                    <th><b>Гараж: </b><c:out value="${garag.fullName}"/></th>
+                    <td>
+                        <button class="btn btn-danger deleteAssign" onclick="deleteAssign(this,${garag.id})">
+                            <span class="glyphicon glyphicon-remove"></span></button>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
 </div>
+

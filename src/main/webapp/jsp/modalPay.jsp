@@ -60,6 +60,14 @@
             todayBtn:true
         });
 
+        $('#payBtn').popConfirm({
+            title: "Вы хотите произвести платеж?",
+            content: "",
+            placement: "bottom",
+            yesBtn: "Да",
+            noBtn: "Нет"
+        });
+
         $('#formModalPay').on('hidden.bs.modal', function () {
             $("#pay").tooltipster('hide');
         })
@@ -107,7 +115,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" align="center">
-                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                    <button id="payBtn" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
                         Оплатить
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal"><span

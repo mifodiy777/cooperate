@@ -31,4 +31,10 @@ jQuery.validator.addMethod("maxLandVal", function(value, element) {
     return this.optional(element) || check;
 }, "Пожалуйста, введите значение меньшее максимального");
 
+jQuery.validator.addMethod("maxContributeVal", function(value, element) {
+    var check = true;
+    check = parseInt(value) <= parseInt($("#memberBoardOnHide").val());
+    return this.optional(element) || check;
+}, "Пожалуйста, введите значение меньшее максимального");
+
 

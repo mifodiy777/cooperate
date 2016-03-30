@@ -43,6 +43,14 @@
             position: 'top'
         });
 
+        $('#submitNewRent').popConfirm({
+            title: "Сохранить период?",
+            content: "",
+            placement: "bottom",
+            yesBtn: "Да",
+            noBtn: "Нет"
+        });
+
 
         $("#rentForm").submit(function (e) {
             e.preventDefault();
@@ -72,7 +80,7 @@
                                 <label for="contributeMax" class="input-group-addon">Взнос*</label>
                                 <form:input path="contributeMax" id="contributeMax"
                                             cssClass="required form-control"/>
-                                 <span class="input-group-addon">руб.</span>
+                                <span class="input-group-addon">руб.</span>
                             </div>
                         </div>
                     </div>
@@ -82,7 +90,7 @@
                                 <label for="contLandMax" class="input-group-addon">За землю*</label>
                                 <form:input path="contLandMax" id="contLandMax"
                                             cssClass="required form-control"/>
-                                 <span class="input-group-addon">руб.</span>
+                                <span class="input-group-addon">руб.</span>
                             </div>
                         </div>
                     </div>
@@ -92,18 +100,20 @@
                                 <label for="contTargetMax" class="input-group-addon">Целевой взнос*</label>
                                 <form:input path="contTargetMax" id="contTargetMax"
                                             cssClass="required form-control"/>
-                                 <span class="input-group-addon">руб.</span>
+                                <span class="input-group-addon">руб.</span>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer" align="center">
-                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                    <button type="submit" class="btn btn-success" id="submitNewRent"><span
+                            class="glyphicon glyphicon-ok"></span>
                         Сохранить
                     </button>
-                     <button type="button" class="btn btn-default" data-dismiss="modal">
-                         <span class="glyphicon glyphicon-remove"></span> Закрыть</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span> Закрыть
+                    </button>
 
                 </div>
             </form:form>

@@ -8,6 +8,7 @@
             backdrop: "static"
         });
 
+
         $("#contributionForm").validate({
             submitHandler: function (form) {
                 $('#contributionForm input.number').each(function() {
@@ -30,9 +31,6 @@
                 });
             },
             rules:{
-                contribute:{
-                    max: ${max.contributeMax}
-                },
                 contTarget:{
                     max: ${max.contTargetMax}
                 }
@@ -52,6 +50,17 @@
                 $(value).val($(value).val().trim())
             })
         })
+
+
+        $("#memberBoardOn").on("change", function() {
+            if ($("#memberBoardOn").prop("checked")) {
+                $("#memberBoardOnHide").val(0);
+                $(".maxContribute").text("MAX 0 руб.");
+            } else {
+                $("#memberBoardOnHide").val(${max.contributeMax});
+                $(".maxContribute").text("MAX ${max.contributeMax} руб.");
+            }
+        });
 
 
         $("#benefitsOn").on("click", function() {
@@ -104,8 +113,7 @@
         }
         $("#finesLastUpdate").val("01.07.${contribution.year}");
         $("#finesOn").prop("checked", true);
-        if ($("#membersPerson").text().length != 0) {
-            $("#memberBoardOn").prop("checked", true);
+        if ($("#memberBoardOn").prop("checked")) {
             $("#contribute").val(0);
         }
 
@@ -135,13 +143,23 @@
                         <div class="input-group">
                             <label for="contribute" class="input-group-addon">Членский взнос</label>
                             <form:input path="contribute" id="contribute"
-                                        cssClass="number form-control"/>
+                                        cssClass="number form-control maxContributeVal"/>
                             <span class="input-group-addon">руб.</span>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <span class="maxValueCont">MAX ${max.contributeMax} руб.</span>
+                        <span class="maxValueCont maxContribute">
+                            <c:choose>
+                                <c:when test="${garag.person.memberBoard}">MAX 0 руб.</c:when>
+                                <c:otherwise>MAX ${max.contributeMax} руб.</c:otherwise>
+                            </c:choose>
+                          </span>
                     </div>
+                    <input type="hidden" id="memberBoardOnHide" value="
+                    <c:choose>
+                                <c:when test="${garag.person.memberBoard}">0</c:when>
+                                <c:otherwise>${max.contributeMax}</c:otherwise>
+                            </c:choose>">
                 </div>
                 <div class="row">
                     <div class="col-md-8">
@@ -153,13 +171,17 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                            <span class="maxValueCont maxLand">MAX <c:if
-                                    test="${contribution.benefitsOn}">${max.contLandMax/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${max.contLandMax}</c:if> руб.</span>
+                            <span class="maxValueCont maxLand">MAX
+                                <c:choose>
+                                    <c:when test="${contribution.benefitsOn}">${max.contLandMax/2}</c:when>
+                                    <c:otherwise>${max.contLandMax}</c:otherwise>
+                                </c:choose> руб.</span>
                     </div>
-                    <input type="hidden" id="benefitsOnHide" value="<c:if
-                                    test="${contribution.benefitsOn}">${max.contLandMax/2}</c:if><c:if
-                                    test="${!contribution.benefitsOn}">${max.contLandMax}</c:if>">
+                    <input type="hidden" id="benefitsOnHide" value="
+                    <c:choose>
+                                    <c:when test="${contribution.benefitsOn}">${max.contLandMax/2}</c:when>
+                                    <c:otherwise>${max.contLandMax}</c:otherwise>
+                                </c:choose>">
                 </div>
                 <div class="row">
                     <div class="col-md-8">
