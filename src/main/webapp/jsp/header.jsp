@@ -99,7 +99,7 @@
 
         $(document).ready(function () {
             var now = new Date();
-            if ($.cookie('day_sync') == null) {               
+            if ($.cookie('day_sync') == null) {
                 updateFines();
             }
         })
@@ -156,7 +156,7 @@
                        role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>
                         Администрирование </a>
                     <ul class="dropdown-menu" role="menu">
-                         <li>
+                        <li>
                             <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
                                 Создать новый период</a>
                         </li>
@@ -186,6 +186,10 @@
                 <li>
                     <a href="#" onclick="updateFines()"><span class="glyphicon glyphicon-refresh"></span>
                         Обновить</a>
+                </li>
+                <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/help.jsp'}">active</c:if>">
+                    <a href="<c:url value="/helpPage"/>"><span class="glyphicon glyphicon-question-sign"></span>
+                        Помощь</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

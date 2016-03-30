@@ -60,7 +60,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Введите суммы платежа за ${year} год</h4>
+                <h4 class="modal-title">Введите суммы взносов за ${year} год</h4>
             </div>
             <form:form modelAttribute="rent" id="rentForm" method="post" action="saveRent">
                 <div class="modal-body">

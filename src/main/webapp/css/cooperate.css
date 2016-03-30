@@ -11,11 +11,19 @@ input.file {
     z-index: 2;
 }
 
+.imgHelpDiv {
+    text-align: center;
+}
+
+.img_help {
+    max-width: 80%;
+
+}
+
 input[readonly] {
     background-color: white !important;
     cursor: text !important;
 }
-
 
 .input-group {
     margin: 10px;
@@ -82,8 +90,8 @@ body {
 
 }
 
-.btnNextYear{
-    height:34px;
+.btnNextYear {
+    height: 34px;
 }
 
 .carousel-inner {

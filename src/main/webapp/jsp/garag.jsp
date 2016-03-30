@@ -60,7 +60,6 @@
             }
         });
 
-
     });
 
     $("#garagForm").submit(function (e) {
@@ -90,6 +89,8 @@
         $(".person").each(function() {
             $(this).val('');
         });
+         $("#memberBoard").prop("checked", false);
+
     }
 
     function emptyGarag() {
@@ -150,13 +151,13 @@
     <div class="row">
         <div class="col-md-4">
             <div class="input-group">
-                <label for="series" class="input-group-addon">Ряд</label>
+                <label for="series" class="input-group-addon">Ряд*</label>
                 <form:input path="series" id="series" cssClass="required form-control"/>
             </div>
         </div>
         <div class="col-md-4">
             <div class="input-group">
-                <label for="number" class="input-group-addon">Номер</label>
+                <label for="number" class="input-group-addon">Номер*</label>
                 <form:input path="number" id="number" cssClass="required form-control"/>
             </div>
         </div>

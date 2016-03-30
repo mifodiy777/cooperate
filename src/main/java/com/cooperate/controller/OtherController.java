@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class HistoryController {
+public class OtherController {
 
     @Autowired
     private JournalHistoryService journalService;
@@ -20,4 +20,12 @@ public class HistoryController {
         map.addAttribute("history", journalService.getJournalHistorys());
         return "history";
     }
+
+    //Страница истории
+    @RequestMapping(value = "helpPage", method = RequestMethod.GET)
+    public String helpPage() {      
+        return "help";
+    }
+
+
 }
