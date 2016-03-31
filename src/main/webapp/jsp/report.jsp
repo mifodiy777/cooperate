@@ -45,7 +45,6 @@
     })
 
     function rangeDate() {
-        var startDate = new Date('01/01/2015');
         var FromEndDate = new Date();
         var ToEndDate = new Date();
 
@@ -54,11 +53,11 @@
         $('.from_date').datepicker({
             format: "dd.mm.yyyy",
             weekStart: 1,
-            startDate: '01/01/2015',
             endDate: FromEndDate,
             language:'ru',
             autoclose: true,
-            linked:true
+            todayHighlight:true,
+            todayBtn:'linked'
         })
                 .on('changeDate', function(selected) {
             startDate = new Date(selected.date.valueOf());
@@ -69,11 +68,11 @@
                 .datepicker({
             format: "dd.mm.yyyy",
             weekStart: 1,
-            startDate: startDate,
             endDate: ToEndDate,
             language:'ru',
             autoclose: true,
-            linked:true
+            todayHighlight:true,
+            todayBtn:'linked'
         })
                 .on('changeDate', function(selected) {
             FromEndDate = new Date(selected.date.valueOf());
@@ -114,7 +113,9 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group form-group">
-                                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-open-file"></span> Подготовить</button>
+                                            <button type="submit" class="btn btn-primary"><span
+                                                    class="glyphicon glyphicon-open-file"></span> Подготовить
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +147,9 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group form-group">
-                                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-open-file"></span> Подготовить</button>
+                                            <button type="submit" class="btn btn-primary"><span
+                                                    class="glyphicon glyphicon-open-file"></span> Подготовить
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

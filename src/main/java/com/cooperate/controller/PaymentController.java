@@ -44,8 +44,7 @@ public class PaymentController {
 
     @RequestMapping(value = "paymentsPage", method = RequestMethod.GET)
     public String getPaymentsPage(@RequestParam(required = false, value = "year") Integer year, ModelMap map) {
-        year = (year == null) ? Calendar.getInstance().get(Calendar.YEAR) : year;
-        map.addAttribute("setYear", year);
+        map.addAttribute("setYear", (year == null) ? Calendar.getInstance().get(Calendar.YEAR) : year);
         map.addAttribute("years", paymentService.findYears());
         map.addAttribute("rents", rentService.getRents());
         return "payments";

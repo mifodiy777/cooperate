@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
-import java.util.List;
 
 @Controller
 public class ContributionController {
@@ -62,7 +61,8 @@ public class ContributionController {
     //Добавление старых периодов
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "saveContribute", method = RequestMethod.POST)
-    public String saveContribute(Contribution contribute, @RequestParam("idGarag") Integer id,
+    public String saveContribute(Contribution contribute,
+                                 @RequestParam("idGarag") Integer id,
                                  ModelMap map, HttpServletResponse response) {
         Garag garag = garagService.getGarag(id);
         try {

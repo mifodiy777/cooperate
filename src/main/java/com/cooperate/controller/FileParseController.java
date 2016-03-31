@@ -1,9 +1,6 @@
 package com.cooperate.controller;
 
-import com.cooperate.entity.Garag;
-import com.cooperate.service.ContributionService;
 import com.cooperate.service.FileParseService;
-import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -25,12 +22,6 @@ public class FileParseController {
 
     @Autowired
     private JournalHistoryService historyService;
-
-    @Autowired
-    private ContributionService contributionService;
-
-    @Autowired
-    private GaragService garagService;
 
     //Страница конвертации
     @Secured("ROLE_ADMIN")

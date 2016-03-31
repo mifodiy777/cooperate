@@ -93,7 +93,9 @@
             startDate: '-10y',
             endDate: "-0d",
             language:'ru',
-            todayBtn:true
+            todayBtn:'linked',
+            todayHighlight:true
+
         });
 
     });

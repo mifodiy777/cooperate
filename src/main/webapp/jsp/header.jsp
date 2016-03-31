@@ -9,7 +9,6 @@
     <title>ГК №23</title>
     <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>">
     <link rel="stylesheet" href="<c:url value="/css/cooperate.css"/>" type="text/css">
-    <link type="text/css" href="<c:url value="/css/jquery-ui.min.css"/>" rel="stylesheet"/>
     <link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" type="text/css">
     <link type="text/css" href="<c:url value="/css/datepicker.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/dataTables.bootstrap.css"/>" rel="stylesheet"/>
@@ -18,7 +17,6 @@
     <link type="text/css" href="<c:url value="/css/bootstrap-modal.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/levelNav.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="<c:url value="/js/jquery.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/js/jquery-ui.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.validate.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.dataTables.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/validate.customMethod.js"/>"></script>
@@ -168,24 +166,22 @@
                             <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
                                 Члены правления</a>
                         </li>
+                        <li>
+                            <a href="#" onclick="updateFines()"><span class="glyphicon glyphicon-refresh"></span>
+                                Обновить</a>
+                        </li>
                         <c:if test="${isAdmin}">
                             <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/fileUploadPage.jsp'}">active</c:if>">
                                 <a href="<c:url value="/fileUploadPage"/>"><span
                                         class="glyphicon glyphicon-save"></span>
                                     Загрузка</a>
                             </li>
-                        </c:if>
-                        <c:if test="${isAdmin}">
                             <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/oldRent.jsp'}">active</c:if>">
                                 <a href="<c:url value="/oldRentPage"/>"><span class="glyphicon glyphicon-usd"></span>
                                     Внести прошлые начисления</a>
                             </li>
                         </c:if>
                     </ul>
-                </li>
-                <li>
-                    <a href="#" onclick="updateFines()"><span class="glyphicon glyphicon-refresh"></span>
-                        Обновить</a>
                 </li>
                 <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/help.jsp'}">active</c:if>">
                     <a href="<c:url value="/helpPage"/>"><span class="glyphicon glyphicon-question-sign"></span>
