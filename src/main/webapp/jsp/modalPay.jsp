@@ -16,10 +16,9 @@
         $("#paymentForm").validate({
             submitHandler: function (form) {
                 $(form).ajaxSubmit({
-                    success: function (html) {
+                    success: function (id) {
                         $('#formModalPay').modal('hide');
-                        showSuccessMessage(html);
-                        window.open('printNewOrder/${garag.id}', '_blank');
+                        window.open('printOrder/' + id, '_blank');
                     },
                     error: function (xhr) {
                         if (xhr.status == 409) {
@@ -115,7 +114,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" align="center">
-                    <button id="payBtn" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                    <button id="payBtn" type="submit" class="btn btn-success"><span
+                            class="glyphicon glyphicon-ok"></span>
                         Оплатить
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal"><span

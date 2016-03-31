@@ -3,9 +3,11 @@ package com.cooperate.editor;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.util.StringUtils;
 
 import java.beans.PropertyEditorSupport;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class CalendarCustomEditor extends PropertyEditorSupport {
@@ -21,11 +23,12 @@ public class CalendarCustomEditor extends PropertyEditorSupport {
 
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if (!StringUtils.hasText(text)) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date(new SimpleDateFormat("dd.MM.yyyy").parse(text).getTime()));
+            setValue(calendar);
+        } catch (ParseException e) {
             setValue(null);
-        } else {
-            DateTime dateTime = this.dateTimeFormatter.parseDateTime(text);
-            setValue(dateTime.toGregorianCalendar());
         }
     }
 }
