@@ -11,7 +11,7 @@ table, th, td {
     border-style: solid;
     border-width: 1px;
     border-collapse: collapse;
-    padding: 15px;
+    padding: 8px;
     text-align: center;
     overflow: hidden;
 }

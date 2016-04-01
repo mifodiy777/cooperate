@@ -108,9 +108,14 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         for (Contribution c : garag.getContributions()) {
-            Float reminder = payment.getPay() - c.getSumFixed();
-            //Если после платежа текущего периода остались деньги
+            if (payment.getPay() == 0) {
+                break;
+            }
+            if (c.getSumFixed() + c.getFines() == 0) {
+                continue;
+            }
             if (payment.getPay() >= c.getSumFixed()) {
+                Float reminder = c.getSumFixed();
                 payment.setContributePay(payment.getContributePay() + c.getContribute());
                 c.setContribute(0f);
                 payment.setContLandPay(payment.getContLandPay() + c.getContLand());
@@ -118,16 +123,18 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.setContTargetPay(payment.getContTargetPay() + c.getContTarget());
                 c.setContTarget(0f);
                 c.setFinesOn(false);
-                reminder -= c.getFines();
+                payment.setPay(payment.getPay() - reminder);
                 //Если взнос уплачен проверяем оплату по пеням.
-                if (reminder >= 0) {
-                    payment.setFinesPay(payment.getFinesPay() + c.getFines());
-                    c.setFines(0);
-                    payment.setPay(reminder);
-                } else {
-                    payment.setFinesPay(c.getFines() - (c.getFines() + reminder.intValue()));
-                    c.setFines(c.getFines() + reminder.intValue());
-                    payment.setPay(0);
+                if (payment.getPay() != 0) {
+                    if (c.getFines() >= 0 && payment.getPay() >= c.getFines()) {
+                        payment.setFinesPay(payment.getFinesPay() + c.getFines());
+                        payment.setPay(payment.getPay() - c.getFines());
+                        c.setFines(0);
+                    } else {
+                        payment.setFinesPay(Math.round(payment.getPay()));
+                        c.setFines(c.getFines() - payment.getFinesPay());
+                        payment.setPay(0);
+                    }
                 }
             } else {
                 if (c.getContribute() > payment.getPay()) {

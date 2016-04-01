@@ -29,34 +29,32 @@
     <tr>
         <th colspan="10">Долги</th>
     </tr>
-     <tr>
-        <th colspan="3">Долги прошлых лет</th>
-          <th colspan="7">${garag.oldContribute}</th>
+    <tr>       
+        <th colspan="10">Долги прошлых лет: ${garag.oldContribute} руб.</th>
     </tr>
     <tr>
         <th>Год</th>
-        <th>Членский взнос</th>
+        <th colspan="2">Членский взнос</th>
         <th>Аренда земли</th>
         <th>Целевой взнос</th>
-        <th>Пени</th>
-        <th colspan="5">Годовой долг</th>
+        <th colspan="2">Пени</th>
+        <th colspan="3">Годовой долг</th>
 
     </tr>
     <c:forEach items="${garag.contributions}" var="c">
         <c:if test="${(c.contribute+c.contLand+c.contTarget+c.fines) !=0}">
             <tr>
                 <td>${c.year}</td>
-                <td>${c.contribute} руб.</td>
+                <td colspan="2">${c.contribute} руб.</td>
                 <td>${c.contLand} руб.</td>
                 <td>${c.contTarget} руб.</td>
-                <td>${c.fines} руб.</td>
-                <td colspan="5">${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
+                <td colspan="2">${c.fines} руб.</td>
+                <td colspan="3">${c.contribute+c.contLand+c.contTarget+c.fines} руб.</td>
             </tr>
         </c:if>
     </c:forEach>
-    <tr>
-        <th colspan="5">Итого:</th>
-        <th colspan="5">${contributionAll} руб.</th>
+    <tr>        
+        <th colspan="10"> Итого: ${contributionAll} руб.</th>
     </tr>
     <tr>
         <th colspan="10">Оплаты</th>
@@ -74,23 +72,23 @@
         <th>Оставшиеся средства</th>
     </tr>
     <c:forEach items="${garag.payments}" var="p" varStatus="loop">
-            <tr>
-                <td><fmt:formatDate type="both" dateStyle="full"
-                                    value="${p.datePayment.time}"/></td>
-                <td>${p.number}</td>
-                <td><fmt:formatNumber type="number"
-                                      maxFractionDigits="2"
-                                      value="${p.pay+p.contributePay+p.contLandPay+p.contTargetPay+p.additionallyPay+p.finesPay+p.oldContributePay}"/>
-                    руб.
-                </td>
-                <td>${p.contributePay} руб.</td>
-                <td>${p.contLandPay} руб.</td>
-                <td>${p.contTargetPay} руб.</td>
-                <td>${p.additionallyPay} руб.</td>
-                <td>${p.finesPay} руб.</td>
-                <td>${p.oldContributePay} руб.</td>
-                <td>${p.pay} руб.</td>
-            </tr>
+        <tr>
+            <td><fmt:formatDate type="both" dateStyle="full"
+                                value="${p.datePayment.time}"/></td>
+            <td>${p.number}</td>
+            <td><fmt:formatNumber type="number"
+                                  maxFractionDigits="2"
+                                  value="${p.pay+p.contributePay+p.contLandPay+p.contTargetPay+p.additionallyPay+p.finesPay+p.oldContributePay}"/>
+                руб.
+            </td>
+            <td>${p.contributePay} руб.</td>
+            <td>${p.contLandPay} руб.</td>
+            <td>${p.contTargetPay} руб.</td>
+            <td>${p.additionallyPay} руб.</td>
+            <td>${p.finesPay} руб.</td>
+            <td>${p.oldContributePay} руб.</td>
+            <td>${p.pay} руб.</td>
+        </tr>
     </c:forEach>
     </tbody>
 
