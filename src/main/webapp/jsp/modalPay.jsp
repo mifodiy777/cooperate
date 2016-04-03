@@ -86,12 +86,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Введите сумму платежа</h4>
+                <h4 class="modal-title"><b>${garag.fullName}</b></h4>
             </div>
             <form:form modelAttribute="payment" id="paymentForm" method="post" action="savePayment">
                 <div class="modal-body">
                     <form:hidden path="garag.id" id="garagId"/>
-                    <c:if test="${isAdmin}">
+               <%--     <c:if test="${isAdmin}">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="input-group">
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                    </c:if>
+                    </c:if>--%>
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="input-group">

@@ -20,6 +20,11 @@ input.file {
 
 }
 
+div.addingInf{
+    color: red;
+    font-size: 12pt;
+}
+
 input[readonly] {
     background-color: white !important;
     cursor: text !important;
