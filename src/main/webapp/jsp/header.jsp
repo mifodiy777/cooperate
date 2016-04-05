@@ -32,11 +32,10 @@
     <script type="text/javascript" src="<c:url value="/js/bootstrap-modalmanager.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/formatted-numbers.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/de-date.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>
-
-
+    <script type="text/javascript" src="<c:url value="/js/cooperate.js"/>"></script>
     <script type="text/javascript">
-
         $(document).ajaxStart(function() {
             $('html').css({'cursor' : 'wait'});
         });
@@ -51,56 +50,12 @@
             }
         });
 
-        function showSuccessMessage(html) {
-            $("#messages").removeClass("alert-danger");
-            $("#messages").addClass("alert-info");
-            $("#messages").html(html).show(800).delay(4000).hide(1000);
-        }
-
-
-        function showErrorMessage(html) {
-            $("#messages").removeClass("alert-info");
-            $("#messages").addClass("alert-danger");
-            $("#messages").html(html).show(800).delay(4000).hide(1000);
-        }
-        function openNewRent() {
-            var now = new Date();
-            $.ajax({
-                method: "GET",
-                url: "checkYearRent",
-                data:{"year":now.getFullYear()},
-                success: function(html) {
-                    $("#modalDiv").html(html);
-                },
-                error:function(xhr) {
-                    showSuccessMessage(xhr.responseText);
-                }
-            });
-        }
-
-        function updateFines() {
-            var now = new Date();
-            $('#modalLoading').modal();
-            $.ajax({
-                method: "POST",
-                url: "updateFines",
-                success: function(html) {
-                    $('#modalLoading').modal('hide');
-                    showSuccessMessage(html);
-                },
-                error:function(xhr) {
-                    $('#modalLoading').modal('hide');
-                    showErrorMessage(xhr.responseText);
-                }
-            })
-        }
-
         $(document).ready(function () {
-            var now = new Date();
             if ($.cookie('day_sync') == null) {
                 updateFines();
             }
         })
+
     </script>
 </head>
 <div class="navbar navbar-custom navbar-static-top">
@@ -201,26 +156,18 @@
         </div>
     </div>
 </div>
-<c:if test="${isAdmin}">
-    <input type="hidden" id="role" value="1"/>
-</c:if>
-<c:if test="${!isAdmin}">
-    <input type="hidden" id="role" value="0"/>
-</c:if>
+<input type="hidden" id="roleAdmin" value="
+ <c:choose>
+    <c:when test="${isAdmin}">
+       true
+    </c:when>
+    <c:otherwise>
+       false
+    </c:otherwise>
+</c:choose>"/>
+
 <div id="messages" class="pull-right alert alert-info fade in " style="width: 20%; display: none"></div>
 <div id="modalDiv"></div>
-<div id="loadingDiv">
-    <div id="modalLoading" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="<c:url value="/images/ajax_blue_.gif"/>" id="loading-indicator"/>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="wrap">
 
 

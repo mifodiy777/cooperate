@@ -5,57 +5,36 @@
     $(function () {
         $.scrollUp();
 
-        var table = $('#membersTable').DataTable({
+        $('.cooperateTable').DataTable({
             "order": [
                 [0, 'asc']
             ],
             "ajax": "members",
             "fnCreatedRow": function (nRow, aData) {
-                $(nRow).attr('id', 'my' + aData.personId);
+                $(nRow).attr('id', 'personTR_' + aData.personId);
             },
             "columns": [
-                {
-                    "render": function (data, type, full) {
-                        return '<a href=\"#\" onclick=\"editPerson(' + full.personId + ')\">' + full.fio + '</a>'
+                {"render": function (data, type, full) {
+                        return '<a href=\"#\" onclick=\"editEntity(' + full.personId +',\'person\')\">' + full.fio + '</a>'
                     }, 'title': 'ФИО'
                 },
-                {"data": "phone", 'title': 'Телефон'},
-                {"data": "address", 'title': 'Адрес'},
-                {"data": "benefits", 'title': 'Льготы'}
+                {"data": "phone", 'title': 'Телефон', "searchable": false},
+                {"data": "address", 'title': 'Адрес', "searchable": false},
+                {"data": "benefits", 'title': 'Льготы', "searchable": false}
             ]
         });
 
     });
 
-    function editPerson(id) {
-        if ($("#id").val() == id) {
-            return null;
-        }
-        $("#editPanel").show();
-        $("#personDiv").load("person/" + id);
-        $("#addPersonButton").hide();
-    }
-
-    function closeForm(formName) {
-        $("#editPanel").hide();
-        $("#" + formName + "Div").empty();
-    }
-
 </script>
 <div class="container">
-    <div id="editPanel" class="panel panel-success" style="display:none">
-        <div id="typeDiv" class="panel-heading">
-        </div>
-        <div class="panel-body">
-            <div id="personDiv"></div>
-        </div>
-    </div>
+    <div id="formPanel"></div>
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Члены правления ГК</h4>
+            <h4 class="panel-title">Члены правления ГК</h4>
         </div>
         <div class="panel-body">
-            <table id="membersTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
+            <table id="membersTable" class="table table-striped table-bordered cooperateTable" cellspacing="0" width="100%"></table>
         </div>
     </div>
 </div>

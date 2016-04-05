@@ -74,7 +74,7 @@ public class RentServiceImpl implements RentService {
                 }
                 garagService.saveOrUpdate(garag);
                 for(Payment payment : paymentService.getPaymentOnGarag(garag)){
-                    paymentService.pay(payment,true);
+                    paymentService.pay(payment,true,"default");
                 }
             }
         }

@@ -21,7 +21,7 @@ public interface PaymentService {
 
     void delete(Integer id);
 
-    Payment pay(Payment payment,Boolean isNewPeriod);
+    Payment pay(Payment payment,Boolean isNewPeriod,String type);
 
     List<Payment> getPaymentOnGarag(Garag garag);
 

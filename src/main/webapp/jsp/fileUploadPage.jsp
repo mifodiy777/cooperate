@@ -7,7 +7,7 @@
 <div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Конвертация</h4>
+            <h4 class="panel-title">Конвертация</h4>
         </div>
         <div class="panel-body">
             <form id="uploadForm" method="POST" enctype="multipart/form-data"

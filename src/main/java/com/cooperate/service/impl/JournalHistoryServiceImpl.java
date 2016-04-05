@@ -35,7 +35,7 @@ public class JournalHistoryServiceImpl implements JournalHistoryService {
         jh.setEvented(event);
         journalHistoryDAO.save(jh);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 2);
+        cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 1);
         journalHistoryDAO.delete(journalHistoryDAO.getEventMoreTwoYear(cal));
     }
 }

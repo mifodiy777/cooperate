@@ -76,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService {
     //Метод платежа
     @Override
     @Transactional
-    public Payment pay(Payment payment, Boolean isCreateNewPeriod) {
+    public Payment pay(Payment payment, Boolean isCreateNewPeriod, String type) {
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
         if (!isCreateNewPeriod) {
@@ -92,6 +92,12 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setNumber(getMaxNumber());
             payment.setGarag(garag);
             payment.setFio(garag.getPerson().getFIO());
+        }
+        if (type.equals("adding")) {
+            payment.setAdditionallyPay(payment.getPay());
+            payment.setPay(0f);
+            payment.setDebtPastPay(garagService.sumContribution(payment.getGarag()));
+            return paymentDAO.save(payment);
         }
         int size = garag.getContributions().size();
         int i = 1;

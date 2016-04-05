@@ -7,7 +7,7 @@
 
         $.scrollUp();
 
-        var table = $('#garagTable').DataTable({
+       $('.cooperateTable').DataTable({
             "order": [
                 [ 0, 'asc' ]
             ],
@@ -18,7 +18,7 @@
                 }
             },
             "fnCreatedRow": function (nRow, aData) {
-                $(nRow).attr('id', 'my' + aData.id);
+                $(nRow).attr('id', 'garagTR_' + aData.id);
             },
             "fnDrawCallback": function () {
                 $('a.deleteButton').off("click");
@@ -35,7 +35,7 @@
             },
             "columns": [
                 {data:"number", "render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editGarag(' + full.id + ')\">' + full.number + '</a>'
+                    return '<a href=\"#\" onclick=\"editEntity(' + full.id +',\'garag\')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
                     var vip = '';
@@ -43,134 +43,33 @@
                         if (full.person.memberBoard) {
                             vip = ' <span class="label label-warning">ЧП</span>';
                         }
-                        return '<a href=\"#\" onclick=\"editPersonId(' + full.person.personId + ')\">' + full.person.fio + vip + '</a>'
+                        return '<a href=\"#\" onclick=\"editEntity(' + full.person.personId +',\'person\')\">' + full.person.fio + vip + '</a>'
                     }
                     return ""
-                }, 'title': 'ФИО'},
-                {"data":"person.phone","defaultContent": "", 'title': 'Телефон'},
-                {"data": "person.address","defaultContent": "",  'title': 'Адрес'},
-                {"data": "person.benefits","defaultContent": "",  'title': 'Льготы'},
-                {'title': 'Действия',className:"actionBtn","render": function (data, type, full) {
+                }, "searchable": false, 'title': 'ФИО'},
+                {"data":"person.phone","defaultContent": "","searchable": false, 'title': 'Телефон'},
+                {"data": "person.address","defaultContent": "","searchable": false,  'title': 'Адрес'},
+                {"data": "person.benefits","defaultContent": "","searchable": false,  'title': 'Льготы'},
+                {'title': 'Действия',"searchable": false,className:"actionBtn","render": function (data, type, full) {
                     var del = "";
-                    if ($("#role").val() == 1) {
-                        del = "<a href=\"#\" class=\"btnTable deleteButton  btn btn-danger btn-sm\" title=\"Удалить гараж\" data-placement=\"top\" id=\"deleteGarag_" + full.id +
-                                "\" onclick=\"deleteGarag('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
+                    if ($("#roleAdmin").val()) {
+                        del = '<a href="#" class="btnTable deleteButton  btn btn-danger btn-sm" title="Удалить гараж" data-placement="top" id="deleteGarag_' + full.id +
+                                '" onclick="deleteEntity(' + full.id + ',\'deleteGarag\');"><span class="glyphicon glyphicon-trash"/></span></a>'
                     }
                     var actionsBtn = "";
                     if (full.person != null) {
                         actionsBtn = "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
-                                ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +
+                                ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +",'default'" +
                                 ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a>" +
-                                "<a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"assignDelete(" + full.id +
-                                ");\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>";
+                                "<a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"deleteEntity(" + full.id +
+                                ',\'assignDelete\');\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>';
                     }
-
                     return actionsBtn + del;
                 }}
             ]
         });
 
     });
-
-    function closeForm(formName) {
-        $("#editPanel").hide();
-        $("#" + formName + "Div").empty();
-    }
-
-    function saveGarag() {
-        $("#editPanel").show();
-        $("#garagDiv").load('garag');
-        $("#addGaragButton").hide();
-    }
-
-    function infGarag(id) {
-        $.get("infModal", {"idGarag":id}, function(html) {
-            $("#modalDiv").html(html);
-        }).fail(function(xhr) {
-            if (xhr.status == 409) {
-                showErrorMessage(xhr.responseText);
-            }
-        })
-    }
-
-    function payGarag(id) {
-        $.get("payModal", {"idGarag":id}, function(html) {
-            $("#modalDiv").html(html);
-        }).fail(function(xhr) {
-            if (xhr.status == 409) {
-                showErrorMessage(xhr.responseText);
-            }
-        })
-    }
-
-    function editPersonId(id) {
-        if ($("#id").val() == id) {
-            return null;
-        }
-        $("#editPanel").show();
-        $("#personDiv").load("person/" + id);
-        $("#addGaragButton").hide();
-    }
-
-    function editGarag(id) {
-        if ($("#id").val() == id) {
-            return null;
-        }
-        $("#editPanel").show();
-        $("#garagDiv").load("garag/" + id);
-        $("#addGaragButton").hide();
-    }
-
-    function assignDelete(id) {
-        if (id == "") {
-            showErrorMessage("Не найден ID !");
-        } else {
-            $.ajax({
-                url: "assignDelete/" + id,
-                type: "post",
-                success: function (html) {
-                    if ($("#id").val() == id) {
-                        $("#editPanel").hide();
-                        $("#personDiv").empty();
-                        $("#garagDiv").empty();
-
-                    }
-                    showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.reload(null, false);
-                },
-                error: function (xhr) {
-                    if (xhr.status == 409) {
-                        showErrorMessage(xhr.responseText);
-                    }
-                }
-            });
-        }
-    }
-
-    function deleteGarag(id) {
-        if (id == "") {
-            showErrorMessage("Не найден ID !");
-        } else {
-            $.ajax({
-                url: "deleteGarag/" + id,
-                type: "post",
-                success: function (html) {
-                    if ($("#id").val() == id) {
-                        $("#editPanel").hide();
-                        $("#garagDiv").empty();
-                        $("#personDiv").empty();
-                    }
-                    showSuccessMessage(html);
-                    $("#garagTable").DataTable().ajax.reload(null, false);
-                },
-                error: function (xhr) {
-                    if (xhr.status == 409) {
-                        showErrorMessage(xhr.responseText);
-                    }
-                }
-            });
-        }
-    }
 
 
 </script>
@@ -180,18 +79,10 @@
     }
 </style>
 <div class="container">
-    <button id="addGaragButton" class="btn btn-success" onclick="saveGarag()">
+    <button class="btn btn-success addBtn" onclick="saveEntity('garag')">
         <span class="glyphicon glyphicon-plus"></span> Добавить гараж
     </button>
-    <div id="editPanel" class="panel panel-success" style="display:none">
-        <div id="typeDiv" class="panel-heading">
-
-        </div>
-        <div class="panel-body">
-            <div id="garagDiv"></div>
-            <div id="personDiv"></div>
-        </div>
-    </div>
+    <div id="formPanel"></div>
     <div class="panel with-nav-tabs panel-primary">
         <div class="panel-heading">
             <ul class="nav nav-tabs nav-justified">
@@ -210,7 +101,7 @@
             <h3>Список гаражей ${setSeries} ряда</h3>
             Общее количество: <span id="count" class="badge"></span>
             <br>
-            <table id="garagTable" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
+            <table class="table table-striped table-bordered cooperateTable" cellspacing="0" width="100%"></table>
         </div>
 
 

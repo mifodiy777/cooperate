@@ -7,10 +7,10 @@
 
         $.scrollUp();
 
-        var table = $('#listPerson').DataTable({
+        $('.cooperateTable').DataTable({
             "ajax": "allPerson",
             "fnCreatedRow": function (nRow, aData) {
-                $(nRow).attr('id', 'my' + aData.id);
+                $(nRow).attr('id', 'personTR_' + aData.id);
             },
             "fnDrawCallback": function () {
                 $('a.deleteButton').off("click");
@@ -31,15 +31,15 @@
                     if (full.memberBoard) {
                         vip = ' <span class="label label-warning">ЧП</span>';
                     }
-                    return '<a href=\"#\" onclick=\"editPerson(' + full.id + ')\">' + full.fio + vip + '</a>'
+                    return '<a href=\"#\" onclick=\"editEntity(' + full.id +',\'person\')\">'  + full.fio + vip + '</a>'
                 }, 'title': 'ФИО'},
-                {"data": "phone", 'title': 'Телефон'},
-                {"data": "address", 'title': 'Адрес'},
-                {"data": "benefits", 'title': 'Льготы'},
-                {"data": "garags[,<br>].garag", 'title': 'Гаражи'},
-                {'title': 'Удалить', "render": function (data, type, full) {
+                {"data": "phone", 'title': 'Телефон', "searchable": false},
+                {"data": "address", 'title': 'Адрес', "searchable": false},
+                {"data": "benefits", 'title': 'Льготы', "searchable": false},
+                {"data": "garags[,<br>].garag", 'title': 'Гаражи', "searchable": false},
+                {'title': 'Удалить', "searchable": false, "render": function (data, type, full) {
                     return "<a href=\"#\" class=\"btnTable deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
-                            "\" onclick=\"deletePerson('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
+                            '" onclick="deleteEntity(' + full.id + ',\'deletePerson\');\"><span class="glyphicon glyphicon-trash"/></span></a>'
                 }
                 }
             ]
@@ -47,62 +47,12 @@
 
     });
 
-    function closeForm(formName) {
-        $("#editPanel").hide();
-        $("#" + formName + "Div").empty();
-    }
-
-    function savePerson() {
-        $("#editPanel").show();
-        $("#personDiv").load('person');
-        $("#addPersonButton").hide();
-    }
-
-    function editPerson(id) {
-        if ($("#id").val() == id) {
-            return null;
-        }
-        $("#editPanel").show();
-        $("#personDiv").load("person/" + id);
-        $("#addPersonButton").hide();
-    }
-
-    function deletePerson(id) {
-        if (id == "") {
-            showErrorMessage("Не найден ID !");
-        } else {
-            $.ajax({
-                url: "deletePerson/" + id,
-                type: "post",
-                success: function (html) {
-                    showSuccessMessage(html);
-                    $("#listPerson").DataTable().ajax.reload(null, false);
-                    if ($("#id").val() == id) {
-                        $("#editPanel").hide();
-                        $("#personDiv").empty();
-                    }
-                },
-                error: function (xhr) {
-                    if (xhr.status == 409) {
-                        showErrorMessage(xhr.responseText);
-                    }
-                }
-            });
-        }
-    }
-
 </script>
 <div class="container">
-    <button id="addPersonButton" class="btn btn-success" onclick="savePerson()">
+    <button class="btn btn-success addBtn" onclick="saveEntity('person')">
         <span class="glyphicon glyphicon-plus"></span> Добавить владельца
     </button>
-    <div id="editPanel" class="panel panel-success" style="display:none">
-        <div id="typeDiv" class="panel-heading">
-        </div>
-        <div class="panel-body">
-            <div id="personDiv"></div>
-        </div>
-    </div>
+    <div id="formPanel"></div>
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4>Список членов ГК</h4>
@@ -110,7 +60,7 @@
         <br>
 
         <div class="panel-body">
-            <table id="listPerson" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
+            <table class="table table-striped table-bordered cooperateTable" cellspacing="0" width="100%"></table>
         </div>
     </div>
 

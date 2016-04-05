@@ -3,7 +3,6 @@ package com.cooperate.controller;
 import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
-import com.cooperate.entity.Payment;
 import com.cooperate.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,10 +26,7 @@ public class ContributionController {
 
     @Autowired
     private ContributionService contributionService;
-
-    @Autowired
-    private PaymentService paymentService;
-
+    
     @Autowired
     private JournalHistoryService journalService;
 
@@ -81,25 +77,6 @@ public class ContributionController {
             response.setStatus(409);
             return "error";
         }
-    }
-
-    //Сохранения дополнительных взносов
-    @RequestMapping(value = "saveAddingCount", method = RequestMethod.GET)
-    public String saveAddingCount(@RequestParam("id") Integer id,
-                                  @RequestParam("count") Float count, ModelMap map) {
-        Garag garag = garagService.getGarag(id);
-        Payment payment = new Payment();
-        payment.setNumber(paymentService.getMaxNumber());
-        payment.setYear(Calendar.getInstance().get(Calendar.YEAR));
-        payment.setFio(garag.getPerson().getFIO());
-        payment.setAdditionallyPay(count);
-        payment.setDatePayment(Calendar.getInstance());
-        payment.setGarag(garag);
-        payment.setDebtPastPay(garagService.sumContribution(garag));
-        paymentService.saveOrUpdate(payment);
-        journalService.event("Дополнительный взнос  для гаража " + garag.getName() + " уплачен");
-        map.put("message", "Дополнительный взнос  для гаража " + garag.getName() + " уплачен");
-        return "success";
     }
 
 }

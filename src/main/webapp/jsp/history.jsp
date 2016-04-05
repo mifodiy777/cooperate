@@ -24,7 +24,7 @@
 <div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>История</h4>
+            <h4 class="panel-title">История</h4>
         </div>
         <div class="panel-body">
             <table id="historyTable" class="table table-striped table-bordered">
@@ -37,7 +37,7 @@
                 <tbody>
                 <c:forEach items="${history}" var="h">
                     <tr>
-                        <td><fmt:formatDate type="both" dateStyle="short"
+                        <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short"
                                             value="${h.dateEvent.time}"/></td>
                         <td>${h.evented}</td>
                     </tr>

@@ -86,14 +86,14 @@
 <div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Отчеты</h4>
+            <h4 class="panel-title">Отчеты</h4>
         </div>
         <div class="panel-body ">
             <div class="row center">
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h3>Отчет по доходам</h3>
+                            <h4>Отчет по доходам</h4>
 
                             <form action="reportProfit" id="reportProfitForm" class="reportForm" method="post">
                                 <div class="row">
@@ -127,7 +127,7 @@
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h3>Отчет по платежам</h3>
+                            <h4>Отчет по платежам</h4>
 
                             <form action="reportPayments" id="reportPaymentsForm" class="reportForm" method="post">
                                 <div class="row">

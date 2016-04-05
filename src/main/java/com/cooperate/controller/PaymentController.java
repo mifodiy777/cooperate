@@ -60,17 +60,21 @@ public class PaymentController {
 
     //Модальное окно платежа
     @RequestMapping(value = "payModal", method = RequestMethod.GET)
-    public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
-        map.addAttribute("garag", garagService.getGarag(id));
-        map.addAttribute("payment", new Payment());
+    public String payModal(@RequestParam("idGarag") Integer id,
+                           @RequestParam("type") String type,
+                           ModelMap map) {
+        map.addAttribute("type", type);
+        Payment payment = new Payment();
+        payment.setGarag(garagService.getGarag(id));
+        map.addAttribute("payment", payment);
         return "modalPay";
     }
 
     //Сохранение платежа
     @RequestMapping(value = "savePayment", method = RequestMethod.POST)
     @ResponseBody
-    public Integer savePayment(Payment payment) {
-        payment = paymentService.pay(payment, false);
+    public Integer savePayment(Payment payment, @RequestParam("type") String type) {
+        payment = paymentService.pay(payment, false, type);
         historyService.event("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
         return payment.getId();
     }
@@ -98,5 +102,6 @@ public class PaymentController {
         map.put("message", "Платеж удален!");
         return "success";
     }
+
 
 }

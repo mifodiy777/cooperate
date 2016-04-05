@@ -67,7 +67,7 @@
 <div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Введите прошлые периоды</h4>
+            <h4 class="panel-title">Введите прошлые периоды</h4>
         </div>
         <div class="panel-body">
             <div class="col-md-4 col-md-offset-4">

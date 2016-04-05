@@ -17,7 +17,7 @@
         var now = new Date();
         $("#year").val(now.getFullYear());
 
-        var table = $('#paymentTable').DataTable({
+        $('#paymentTable').DataTable({
             "order": [
                 [ 0, 'desc' ]
             ],
@@ -42,13 +42,13 @@
             },
             "columns": [
                 {"data": "number", 'title': 'Платеж',className: "series"},
-                {"data": "datePay", 'title': 'Дата'},
-                {"data":"garag", 'title': 'Гараж'},
+                {"data": "datePay", 'title': 'Дата',type: 'de_date', targets: 1, "searchable": false},
+                {"data":"garag", 'title': 'Гараж', "searchable": false},
                 {"data": "fio", 'title': 'ФИО'},
-                {"data":"pay", 'title': 'Сумма'},
-                { 'title': 'Действия', "render": function (data, type, full) {
+                {"data":"pay", 'title': 'Сумма', "searchable": false},
+                { 'title': 'Действия', className:"dt-center", "searchable": false, "render": function (data, type, full) {
                     var del = "";
-                    if ($("#role").val() == 1) {
+                    if ($("#roleAdmin").val()) {
                         del = "<a href=\"#\" class=\"btnTable deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePayment_" + full.id +
                                 "\" onclick=\"deletePayment('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
                     }
@@ -62,23 +62,19 @@
     });
 
     function deletePayment(id) {
-        if (id == "") {
-            showErrorMessage("Не найден ID !");
-        } else {
-            $.ajax({
-                url: "deletePayment/" + id,
-                type: "post",
-                success: function (html) {
-                    showSuccessMessage(html);
-                    $("#paymentTable").DataTable().ajax.reload( null, false );
-                },
-                error: function (xhr) {
-                    if (xhr.status == 409) {
-                        showErrorMessage(xhr.responseText);
-                    }
+        $.ajax({
+            url: "deletePayment/" + id,
+            type: "post",
+            success: function (html) {
+                showSuccessMessage(html);
+                $("#paymentTable").DataTable().ajax.reload(null, false);
+            },
+            error: function (xhr) {
+                if (xhr.status == 409) {
+                    showErrorMessage(xhr.responseText);
                 }
-            });
-        }
+            }
+        });
     }
 
 

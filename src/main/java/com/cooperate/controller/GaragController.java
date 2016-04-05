@@ -52,6 +52,7 @@ public class GaragController {
     }
 
     //Список гаражей
+
     @RequestMapping(value = "allGarag", method = RequestMethod.GET)
     public ResponseEntity<String> getGarag(@RequestParam("setSeries") String series) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -61,6 +62,7 @@ public class GaragController {
     }
 
     //Добавление гаража
+
     @RequestMapping(value = "garag", method = RequestMethod.GET)
     public String addGaragForm(ModelMap map) {
         map.addAttribute("type", "Режим добавления гаража");
@@ -71,6 +73,7 @@ public class GaragController {
     }
 
     //Редактирование гаража
+
     @RequestMapping(value = "garag/{id}", method = RequestMethod.GET)
     public String editGaragForm(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("type", "Режим редактирования гаража");
@@ -82,27 +85,30 @@ public class GaragController {
 
 
     //Информационно модальное окно для гаража
-    @RequestMapping(value = "infModal", method = RequestMethod.GET)
+
+    @RequestMapping(value = "garagInf", method = RequestMethod.GET)
     public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
         map.addAttribute("fio", garag.getPerson().getFIO());
-        return "modalInf";
+        return "garagInf";
     }
 
     //Печатная форма информации по гаражу
-    @RequestMapping(value = "infGarag/{id}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "infPrint/{id}", method = RequestMethod.GET)
     public String infGarag(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
         map.addAttribute("fio", garag.getPerson().getFIO());
         map.addAttribute("now", Calendar.getInstance().getTime());
-        return "garagInf";
+        return "infPrint";
     }
 
     //Сохранения гаража
+
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
         if (garagService.existGarag(garag)) {
@@ -125,6 +131,7 @@ public class GaragController {
     }
 
     //Поиск имеющихся владельцев
+
     @RequestMapping(value = "searchPerson", method = RequestMethod.POST)
     public String searchPerson(@RequestParam("pattern") String pattern, ModelMap map) {
         List<Person> persons = personService.findByfio(pattern);
@@ -133,6 +140,7 @@ public class GaragController {
     }
 
     //Вывод владельца после поиска и внесение в форму данных
+
     @RequestMapping(value = "getPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPerson(@RequestParam("personId") Integer id) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -141,6 +149,7 @@ public class GaragController {
     }
 
     //Удаление гаража
+
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deleteGarag/{id}", method = RequestMethod.POST)
     public String deleteGarag(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
@@ -158,6 +167,7 @@ public class GaragController {
     }
 
     //Удалить у гаража владельца(Сам владелец сохраняется)
+
     @RequestMapping(value = "assignDelete/{id}", method = RequestMethod.POST)
     public String assignDelete(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {
@@ -181,12 +191,13 @@ public class GaragController {
     }
 
     //Пересччет долгов по пеням и включение пеней
+
     @RequestMapping(value = "updateFines", method = RequestMethod.POST)
     public String updateFines(ModelMap map, HttpServletResponse response) {
         try {
             contributionService.updateFines();
             contributionService.onFines();
-            Cookie day_sync =  new Cookie("day_sync", "checked");
+            Cookie day_sync = new Cookie("day_sync", "checked");
             response.addCookie(day_sync);
             map.put("message", "Данные успешно обнавленны!");
             return "success";
