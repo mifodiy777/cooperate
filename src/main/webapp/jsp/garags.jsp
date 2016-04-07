@@ -7,7 +7,7 @@
 
         $.scrollUp();
 
-       $('.cooperateTable').DataTable({
+        $('.cooperateTable').DataTable({
             "order": [
                 [ 0, 'asc' ]
             ],
@@ -35,7 +35,7 @@
             },
             "columns": [
                 {data:"number", "render": function(data, type, full) {
-                    return '<a href=\"#\" onclick=\"editEntity(' + full.id +',\'garag\')\">' + full.number + '</a>'
+                    return '<a href=\"#\" onclick=\"initTR(' + full.id + ');editEntity(' + full.id + ',\'garag\')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
                     var vip = '';
@@ -43,7 +43,7 @@
                         if (full.person.memberBoard) {
                             vip = ' <span class="label label-warning">ЧП</span>';
                         }
-                        return '<a href=\"#\" onclick=\"editEntity(' + full.person.personId +',\'person\')\">' + full.person.fio + vip + '</a>'
+                        return '<a href=\"#\" onclick=\"initTR(' + full.id + '); editEntity(' + full.person.personId + ',\'person\')\">' + full.person.fio + vip + '</a>'
                     }
                     return ""
                 }, "searchable": false, 'title': 'ФИО'},
@@ -59,10 +59,9 @@
                     var actionsBtn = "";
                     if (full.person != null) {
                         actionsBtn = "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
-                                ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a><a href=\"#\" class=\"btnTable  btn btn-success btn-sm\" title='Оплатить' onclick=\"payGarag(" + full.id +",'default'" +
-                                ");\"><span class=\"glyphicon glyphicon-shopping-cart\"/></span></a>" +
-                                "<a href=\"#\" class=\"btnTable deleteButton  btn btn-warning btn-sm\"  title=\"Удалить назначение\" data-placement=\"top\" onclick=\"deleteEntity(" + full.id +
-                                ',\'assignDelete\');\"><span class=\"glyphicon glyphicon-scissors\"/></span></a>';
+                                ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a>" +
+                                "<a href=\"#\" class=\"btnTable btn btn-primary btn-sm\"  title=\"Сменить владельца\" data-placement=\"top\" onclick=\"initTR(" + full.id + ");changePerson(" + full.id + "," + full.person.personId +
+                                ');"><span class=\"glyphicon glyphicon-transfer\"/></span></a>';
                     }
                     return actionsBtn + del;
                 }}

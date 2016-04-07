@@ -53,7 +53,7 @@
                         <c:set var="sumFines" scope="page" value="${sumFines+c.fines}"/>
                     </tr>
                 </c:if>
-            </c:forEach>
+            </c:forEach>           
             <tr>
                 <th>Итого:</th>
                 <th>${sumAll} руб.</th>
@@ -111,10 +111,10 @@
                 <button class="btn btn-success" type="button" onclick="payGarag(${garag.id},'default')">
                     <span class="glyphicon glyphicon-shopping-cart"></span> Оплатить
                 </button>
-                <button id="openAddingCount" class="btn btn-primary" onclick="payGarag(${garag.id},'adding')">
+                <button id="openAddingCount" class="btn btn-warning" onclick="payGarag(${garag.id},'adding')">
                     <span class="glyphicon glyphicon-shopping-cart"></span> Дополнительный взнос
                 </button>
-                <a href="infPrint/${garag.id}" target="_blank" class="btn btn-info"><span
+                <a href="infPrint/${garag.id}" target="_blank" class="btn btn-primary"><span
                         class="glyphicon glyphicon-print"></span>
                     Распечатать
                 </a>

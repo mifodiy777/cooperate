@@ -20,7 +20,7 @@ input.file {
 
 }
 
-div.addingInf{
+div.addingInf {
     color: red;
     font-size: 12pt;
 }
@@ -64,9 +64,40 @@ input[readonly] {
 }
 
 td.actionBtn {
-    min-width: 160px;
+    min-width: 120px;
     vertical-align: middle !important;
     white-space: nowrap !important;
+}
+
+td.deletePerson {
+    text-align: center;
+    min-width: 80px;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+}
+
+td.btnPayments {
+    text-align: center;
+}
+
+td.btnPayments>a {
+    margin: 4px;
+}
+
+.openPage {
+    cursor: pointer;
+}
+
+.openPage>img {
+    transition: all .1s ease-in-out;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.openPage:hover>img {
+    transform: scale(1.2);
+    text-align: center;
+
 }
 
 a.seriesLink {
@@ -104,8 +135,8 @@ body {
 }
 
 .buttonForm {
-    margin: 20px;
-    width: 150px;
+    margin: 0 5px;
+    width: 120px;
 }
 
 /* Background images are set within the HTML using inline CSS, not here */
@@ -401,6 +432,13 @@ td.series {
     font-weight: bold;
     vertical-align: middle !important;
     font-size: 14pt
+}
+
+.pay_style {
+    text-align: center;
+    vertical-align: middle !important;
+    font-size: 12pt;
+    font-weight: bold;
 }
 
 .footerMenu {

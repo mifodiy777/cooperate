@@ -24,8 +24,7 @@ Twitter: @markgdyr
 			animation: 'fade', // Fade, slide, none
 			animationInSpeed: 200, // Animation in speed (ms)
 			animationOutSpeed: 200, // Animation out speed (ms)
-			scrollText: '<span style="font-size:14pt" class="glyphicon glyphicon-chevron-up"></span>', // Text for element
-			scrollImg: false, // Set true to use image
+			scrollImg: true, // Set true to use image
 			activeOverlay: false // Set CSS color to display scrollUp active point, e.g '#00FFFF'
 		};
 

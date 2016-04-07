@@ -32,8 +32,6 @@
             }
         });
 
-        $("")
-
         $('#garagForm input').tooltipster({
             animation: 'slide',
             trigger: 'custom',
@@ -41,45 +39,14 @@
             position: 'top'
         });
 
-        $('#searchPerson').on('keyup keypress', function (e) {
-            if (e.which == 13) {
-                e.preventDefault();
-                loadPerson($(this).val());
-            }
+        searchPerson();
+
+        $("#garagForm").submit(function (e) {
+            e.preventDefault();
+            $(this).valid();
+            return false;
         });
-
     });
-
-    $("#garagForm").submit(function (e) {
-        e.preventDefault();
-        $(this).valid();
-        return false;
-    });
-
-    $("#searchPersonBtn").on("click", function() {
-        if ($("#searchFormDiv").css('display') == 'none') {
-            $("body").scrollTop(0);
-            $("#addFormPersonDiv").hide();
-            $("#searchFormDiv").show();
-            $("#searchPerson").focus();
-            $("#searchPersonBtn").val("Создать владельца");
-
-        } else {
-            $("#addFormPersonDiv").show();
-            $("#searchFormDiv").hide();
-            $("#lastName").focus();
-            $("#searchPersonBtn").val("Найти владельца");
-            $("#personResults").hide();
-        }
-    });
-
-    <c:if test="${isAdmin && isOldGarag}">
-    function setOldContribute() {
-        $.get('editContribute', {"idGarag":${garag.id}, "year":$("#year_select").val()}, function(html) {
-            $("#modalDiv").html(html);
-        });
-    }
-    </c:if>
 
 
 </script>
@@ -122,7 +89,7 @@
             <div id="addFormPersonDiv">
                 <div class="divider"><h4> Владелец: </h4></div>
                 <div class="row">
-                    <form:hidden path="person.id" cssClass="person"/>
+                    <form:hidden path="person.id" id="personId" cssClass="person"/>
                     <div class="col-md-4">
                         <div class="input-group">
                             <label for="lastName" class="input-group-addon">Фамилия*</label>
@@ -149,16 +116,16 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <form:hidden path="person.address.id" id="address.id" cssClass="form-control person"/>
+                        <form:hidden path="person.address.id" id="addressId" cssClass="form-control person"/>
                         <div class="input-group">
-                            <label for="address.city" class="input-group-addon">Город</label>
-                            <form:input path="person.address.city" id="address.city" cssClass="form-control person"/>
+                            <label for="city" class="input-group-addon">Город</label>
+                            <form:input path="person.address.city" id="city" cssClass="form-control person"/>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group">
-                            <label for="address.street" class="input-group-addon">Улица</label>
-                            <form:input path="person.address.street" id="address.street"
+                            <label for="street" class="input-group-addon">Улица</label>
+                            <form:input path="person.address.street" id="street"
                                         cssClass="form-control person"/>
                         </div>
                     </div>
@@ -167,14 +134,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="input-group">
-                            <label for="address.home" class="input-group-addon">Дом</label>
-                            <form:input path="person.address.home" id="address.home" cssClass="form-control person"/>
+                            <label for="home" class="input-group-addon">Дом</label>
+                            <form:input path="person.address.home" id="home" cssClass="form-control person"/>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group">
-                            <label for="address.apartment" class="input-group-addon">Квартира</label>
-                            <form:input path="person.address.apartment" id="address.apartment"
+                            <label for="apartment" class="input-group-addon">Квартира</label>
+                            <form:input path="person.address.apartment" id="apartment"
                                         cssClass="form-control person"/>
                         </div>
                     </div>
@@ -224,7 +191,7 @@
                                        data-original-title="Введите более 3 символов" onkeypress="hideTooltip();"
                                        onclick="hideTooltip();" class="form-control"/>
                                 <button type="button" id="buttonSearch"
-                                        onclick="loadPerson($('#searchPerson').val());"
+                                        onclick="loadOwner($('#searchPerson').val());"
                                         class="btn btn-warning buttonCheck">
                                     <span class="glyphicon glyphicon-search"></span> Найти
                                 </button>
@@ -251,7 +218,9 @@
                                 </c:forEach>
                             </select>
                     <span class="input-group-btn">
-                        <button type="button" onclick="setOldContribute()" class="btn btn-info">Внести</button>
+                        <button type="button" onclick="setOldContribute(${garag.id},$('#year_select').val())"
+                                class="btn btn-info">Внести
+                        </button>
                     </span>
                         </div>
                     </div>
@@ -268,12 +237,12 @@
                 </button>
             </div>
             <div style="text-align: center; margin-top:20px" class="col-md-12">
-                <button id="buttonAdd" class="btn btn-success">
+                <button id="buttonAdd" class="btn btn-success buttonForm">
                     <span class="glyphicon glyphicon-ok"></span> Сохранить
                 </button>
 
                 <button type="reset" onclick="closeForm('garag'); $('#addGaragButton').show();"
-                        class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Закрыть
+                        class="btn btn-danger buttonForm"><span class="glyphicon glyphicon-remove"></span> Закрыть
                 </button>
             </div>
 

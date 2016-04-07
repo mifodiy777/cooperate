@@ -10,8 +10,7 @@
                     success: function (html) {
                         $(".cooperateTable").DataTable().ajax.reload(null, false);
                         showSuccessMessage(html);
-                        $(".formPanel").empty();
-                        $(".addButton").show();
+                        closeForm();
                         return false;
                     }
                 });

@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface PersonService {
 
-    void saveOrUpdate(Person person);
+    Person saveOrUpdate(Person person);
 
     void delete(Integer id);
 

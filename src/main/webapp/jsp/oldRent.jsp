@@ -9,8 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp"/>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#rentForm input').val("");
+    $(document).ready(function () {       
 
         $("#rentForm").validate({
             submitHandler: function (form) {

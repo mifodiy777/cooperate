@@ -10,6 +10,32 @@ function showErrorMessage(html) {
     $("#messages").html(html).show(800).delay(4000).hide(1000);
 }
 
+function searchPerson() {
+    $('#searchPerson').on('keyup keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            loadOwner($(this).val());
+        }
+    });
+
+    $("#searchPersonBtn").on("click", function() {
+        if ($("#searchFormDiv").css('display') == 'none') {
+            $("body").scrollTop(0);
+            $("#addFormPersonDiv").hide();
+            $("#searchFormDiv").show();
+            $("#searchPerson").focus();
+            $("#searchPersonBtn").text("Создать владельца");
+
+        } else {
+            $("#addFormPersonDiv").show();
+            $("#searchFormDiv").hide();
+            $("#lastName").focus();
+            $("#searchPersonBtn").text("Найти владельца");
+            $("#personResults").hide();
+        }
+    });
+}
+
 function openNewRent() {
     var now = new Date();
     $.ajax({
@@ -38,7 +64,7 @@ function updateFines() {
     })
 }
 
-function loadPerson(pattern) {
+function loadOwner(pattern) {
     if (pattern.length > 3) {
         $.post("searchPerson", {pattern: pattern.trim()}).done(function (html) {
             $("#personResults").html(html).show();
@@ -47,20 +73,22 @@ function loadPerson(pattern) {
                 $.getJSON("getPerson", {personId:this.id}, function(person) {
                     $("#addFormPersonDiv").show();
                     $("#searchFormDiv").hide();
-                    $("#searchPersonBtn").val("Найти владельца");
+                    $("#searchPersonBtn").text("Найти владельца");
+                    $("#deleteOldPerson").prop("checked", false).trigger("change");                   
                     $("#personResults").hide();
-                    $("input[name='person.id']").val(person.id);
+                    $("#personId").val(person.id);
                     $("#lastName").val(person.lastName);
                     $("#name").val(person.name);
                     $("#fatherName").val(person.fatherName);
                     $("#telephone").val(person.telephone);
-                    $("input[name='person.address.id']").val(person.address.id);
-                    $("input[name='person.address.city']").val(person.address.city);
-                    $("input[name='person.address.street']").val(person.address.street);
-                    $("input[name='person.address.home']").val(person.address.home);
-                    $("input[name='person.address.apartment']").val(person.address.apartment);
-                    $("input[name='person.benefits']").val(person.benefits);
+                    $("#addressId").val(person.address.id);
+                    $("#city").val(person.address.city);
+                    $("#street").val(person.address.street);
+                    $("#home").val(person.address.home);
+                    $("#apartment").val(person.address.apartment);
+                    $("#benefits").val(person.benefits);
                     $("#memberBoard").prop("checked", person.memberBoard == true);
+                    $("#personId").trigger("change");
                 });
             });
         });
@@ -88,12 +116,17 @@ function emptyGarag() {
 
 }
 
+function setOldContribute(id, year) {
+    $.get('editContribute', {"idGarag":id, "year":year}, function(html) {
+        $("#modalDiv").html(html);
+    });
+}
+
 function infGarag(id) {
-    $("tr.info").removeClass("info");
     $("#formPanel").empty();
     $.get("garagInf", {"idGarag":id}, function(html) {
         $("#formPanel").html(html);
-        $("#garagTR_" + id).addClass("info");
+        initTR(id);
     }).fail(function(xhr) {
         if (xhr.status == 409) {
             showErrorMessage(xhr.responseText);
@@ -118,11 +151,15 @@ function saveEntity(entity) {
 }
 
 function editEntity(id, entity) {
-    $("tr.info").removeClass("info");
     $("#formPanel").empty();
     $("#formPanel").load(entity + "/" + id);
-    $("#" + entity + "TR_" + id).addClass("info");
     $(".addBtn").hide();
+}
+
+function initTR(id) {
+    $("tr.info").removeClass("info");
+    $("#garagTR_" + id).addClass("info");
+    $("#personTR_" + id).addClass("info");
 }
 
 function closeForm() {
@@ -149,6 +186,22 @@ function deleteEntity(id, entity) {
 
 }
 
+function deletePayment(id) {
+    $.ajax({
+        url: "deletePayment/" + id,
+        type: "post",
+        success: function (html) {
+            showSuccessMessage(html);
+            $("#paymentTable").DataTable().ajax.reload(null, false);
+        },
+        error: function (xhr) {
+            if (xhr.status == 409) {
+                showErrorMessage(xhr.responseText);
+            }
+        }
+    });
+}
+
 function deleteAssign(garag, id) {
     $.post("deleteGaragInPerson", {idGarag:id}, function(html) {
         $(garag).parent().parent().remove();
@@ -156,5 +209,107 @@ function deleteAssign(garag, id) {
         showSuccessMessage(html);
     });
 }
+
+function rangeDate() {
+    var FromEndDate = new Date();
+    var ToEndDate = new Date();
+
+    ToEndDate.setDate(ToEndDate.getDate());
+
+    $('.from_date').datepicker({
+        format: "dd.mm.yyyy",
+        weekStart: 1,
+        endDate: FromEndDate,
+        language:'ru',
+        autoclose: true,
+        todayHighlight:true,
+        todayBtn:'linked'
+    })
+            .on('changeDate', function(selected) {
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('.to_date').datepicker('setStartDate', startDate);
+    });
+    $('.to_date')
+            .datepicker({
+        format: "dd.mm.yyyy",
+        weekStart: 1,
+        endDate: ToEndDate,
+        language:'ru',
+        autoclose: true,
+        todayHighlight:true,
+        todayBtn:'linked'
+    })
+            .on('changeDate', function(selected) {
+        FromEndDate = new Date(selected.date.valueOf());
+        FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+        $('.from_date').datepicker('setEndDate', FromEndDate);
+    });
+
+}
+
+function changePerson(idGarag) {
+    $("#formPanel").load("changePerson/" + idGarag);
+    initTR(idGarag);
+    $(".addBtn").hide();
+}
+function openPage(href) {
+    location.href = href;
+}
+
+function messBuilder() {
+    if ($("#allChange").length != 0) {
+        $("#deleteOldPerson").prop("checked", false);
+    }
+    var idPastPerson = $("#idPastPerson").val();
+    var serchPerson = idPastPerson != $("#personId").val();
+    var delPerson = $("#deleteOldPerson").prop("checked");
+    var countGarag = $("input[name='changeGaragAll']").prop("checked");
+    setTextTip(serchPerson, delPerson, countGarag);
+    $("#personId").on("change", function() {
+        serchPerson = idPastPerson != $(this).val();
+        setTextTip(serchPerson, delPerson, countGarag);
+    });
+    $("#deleteOldPerson").on("change", function() {
+        delPerson = $(this).prop("checked");
+        setTextTip(serchPerson, delPerson, countGarag);
+    });
+    $("input[name='changeGaragAll']").on("change", function() {
+        countGarag = $("input[name='changeGaragAll']").prop("checked");
+        if (!countGarag && !serchPerson) {
+            $("#deleteOldPerson").prop("checked", "checked");
+            $("#deleteOldPerson").trigger("change");
+        }
+        setTextTip(serchPerson, delPerson, countGarag);
+    });
+}
+
+
+function setTextTip(selectOne, selectTwo, selectThee) {
+    var message = "Описание: ";
+    var changeField = " Измените значения полей или найдите владельца в базе! ";
+    var changePerson = " Новый владелец будет взят из базы! ";
+    var pastPersonDelete = " Прошлый владелец удалиться! ";
+    var pastPersonNotDelete = " Прошлый владелец не удалиться! ";
+    var changeOneGarag = " Владелец заменится только у текущего гаража! ";
+    var changeAllGarag = " Владелец заменится у всех гаражей! ";
+    if (selectOne) {
+        message += changePerson
+    } else {
+        message += changeField
+    }
+    if (selectTwo) {
+        message += pastPersonDelete
+    } else {
+        message += pastPersonNotDelete
+    }
+    if (selectThee) {
+        message += changeOneGarag
+    } else {
+        message += changeAllGarag
+    }
+    $("#alertPanel").show().text(message);
+}
+
 
 

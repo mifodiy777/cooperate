@@ -24,7 +24,7 @@
             <h4>ПО «Кооператив»</h4>
             <ul>
                 <li>Хранение информации о гаражах и их владельцах;</li>
-                <li>Проведение оплата по взносам членов кооператива;</li>
+                <li>Проведение оплат по взносам членов кооператива;</li>
                 <li>Хранение информации о долгах;</li>
                 <li>Автоматическое начисление пеней;</li>
                 <li>Формирование отчетов:
@@ -40,7 +40,7 @@
                 <li>Хранение списка членов правления;</li>
             </ul>
 
-            <p><b>При появление ошибок, вопросов свяжитесь с администратором системы</b></p>
+            <p><b>При появление ошибок и вопросов свяжитесь с администратором системы</b></p>
 
             <p>Администратор: Кузьмин Кирилл Андреевич</p>
 
@@ -138,35 +138,13 @@
         </div>
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="heading_5">
-        <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse_5" aria-expanded="false" aria-controls="collapse_5">
-                Редактирование гаража – пустого
-            </a>
-        </h4>
-    </div>
-    <div id="collapse_5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_5">
-        <div class="panel-body">
-            <ol>
-                <li>Нажмите на вкладку «Гаражи»</li>
-                <li>Найдите в таблице пустой гараж</li>
-                <li>Нажмите на номер гаража</li>
-                <li>Внесите данные.Создайте нового владелца или найдите владельца в базе</li>
-                <li>Внесите данные в остальные поля(не обязательно)</li>
-                <li>Нажмите кнопку «Сохранить»</li>
-                <li>При успешном выполнении появиться надпись «Гараж сохранен»</li>
-            </ol>
-        </div>
-    </div>
-</div>
+
 <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="heading_6">
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse_6" aria-expanded="false" aria-controls="collapse_6">
-                Редактирование гаража без изменения владельца
+                Редактирование гаража
             </a>
         </h4>
     </div>
@@ -192,7 +170,7 @@
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse_7" aria-expanded="false" aria-controls="collapse_7">
-                Редактирование гаража со сменой владельца, не имеющегося в базе
+                Смена владельца
             </a>
         </h4>
     </div>
@@ -201,118 +179,17 @@
             <ol>
                 <li>Нажмите на вкладку «Гаражи»</li>
                 <li>Найдите в таблице гараж</li>
-                <li>Нажмите на номер гаража</li>
-                <li>Нажмите на кнопку «Очистить форму владельца»</li>
-                <li>Заполните все поля отмеченные звездочкой</li>
-                <li>Номер гаража должен быть уникальным</li>
-                <li>Внесите данные в остальные поля(не обязательно)</li>
+                <li>Нажмите на кнопку <img src='<c:url value="/images/manual/changeBtn.png"/>'
+                                           alt="Смена владельца"></li>
+                </li>
+                <li>Выберите режимы смены владельца</li>
+                <li><b>Внимательно читайте описание</b></li>
                 <li>Нажмите кнопку «Сохранить»</li>
-                <li>При успешном выполнении появиться надпись «Гараж сохранен»</li>
-                <li>При необходимости удалите прошлого владельца<i>(владельцу не назначено ни одного гаража)</i></li>
-            </ol>
-        </div>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="heading_8">
-        <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse_8" aria-expanded="false" aria-controls="collapse_8">
-                Редактирование гаража со сменой владельца не имеющегося в базе<i>(владелец имеет только один гараж)</i>.
-            </a>
-        </h4>
-    </div>
-    <div id="collapse_8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_8">
-        <div class="panel-body">
-            <ol>
-                <li>Нажмите на вкладку «Гаражи»</li>
-                <li>Найдите в таблице гараж</li>
-                <li>Нажмите на ФИО владельца, проверти количество гаражей у этого владельца</li>
-                <li>Если гараж один, измените данные в этих полях</li>
-                <li>Нажмите кнопку «Сохранить»</li>
-                <li>При успешном выполнении появиться надпись «Владелец сохранен»</li>
-            </ol>
-        </div>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="heading_9">
-        <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse_9" aria-expanded="false" aria-controls="collapse_9">
-                Редактирование гаража со сменой владельца имеющегося в базе
-            </a>
-        </h4>
-    </div>
-    <div id="collapse_9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_9">
-        <div class="panel-body">
-            <ol>
-                <li>Нажмите на вкладку «Гаражи»</li>
-                <li>Найдите в таблице гараж</li>
-                <li>Нажмите на номер гаража</li>
-                <li>Нажмите на кнопку «Найти владельца»</li>
-                <li>Впишите ФИО владельца имеющегося в базе<i>(минимум 3 символа)</i></li>
-                <li>Нажмите на кнопку «Найти»</li>
-                <li>При появление списка владельцев нажмите на ФИО необходимого</li>
-                <li>В поля раздела «Владелец» должны автоматически вписаться данные выбранного владельца</li>
-                <li>Нажмите кнопку «Сохранить»</li>
-                <li>При успешном выполнении появиться надпись «Гараж сохранен»</li>
-                <li>При необходимости удалите прошлого владельца<i>(владельцу не назначено ни одного гаража)</i></li>
+                <li>При успешном выполнении появиться надпись «Владелец заменен!»</li>
             </ol>
             <div class="imgHelpDiv">
-                <img src='<c:url value="/images/manual/changePersonInGarag.png"/>'
-                     alt="Редактирование гаража со сменой владельца имеющегося в базе"
-                     class="img_help">
-            </div>
-        </div>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="heading_10">
-        <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse_10" aria-expanded="false" aria-controls="collapse_10">
-                Удаление владельца у гаража
-            </a>
-        </h4>
-    </div>
-    <div id="collapse_10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_10">
-        <div class="panel-body">
-            <ol>
-                <li>Нажмите на вкладку «Гаражи»</li>
-                <li>Найдите в таблице гараж</li>
-                <li>Нажмите кнопку «Ножницы»</li>
-                <li>Подтвердите действие</li>
-                <li>У этого гаража удалится владелец. Сам же владелец не удалится.</li>
-                <li>После этого этому гаражу можно будет создать нового владельца, либо найти уже имеющегося</li>
-                <li>При необходимости удалите прошлого владельца<i>(владельцу не назначено ни одного гаража)</i></li>
-            </ol>
-        </div>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="heading_11">
-        <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse_11" aria-expanded="false" aria-controls="collapse_11">
-                Удаление у владельца назначение к гаражу
-            </a>
-        </h4>
-    </div>
-    <div id="collapse_11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_11">
-        <div class="panel-body">
-            <ol>
-                <li>Нажмите на вкладку «Владельцы»</li>
-                <li>Найдите необходимого владельца, там же можно проверить наличие назначений у этого владельца</li>
-                <li>Нажмите на «ФИО»</li>
-                <li>Нажмите на крестики у гаража</li>
-                <li>Подтвердите действие
-                    <p>При этом у этих гаражей удалится назначение этому владельцу. Сами
-                        гаражи не удалятся</p></li>
-            </ol>
-            <div class="imgHelpDiv">
-                <img src='<c:url value="/images/manual/editPerson.png"/>'
-                     alt=" Удаление у владельца назначение к гаражу"
+                <img src='<c:url value="/images/manual/changePerson.png"/>'
+                     alt="Смена владельца"
                      class="img_help">
             </div>
         </div>
@@ -360,7 +237,8 @@
                 <li>Подтвердите действие</li>
                 <li>Гараж удалится, Вы увидите сообщение об успешном удаление</li>
                 <p style="color:red;"><b>Владелец при этом сохранится, у него просто удалится назначение</b></p>
-                <p style="color:red;"><b>Удалятся все долги и платежи этого владельца</b></p>
+
+                <p style="color:red;"><b>Удалятся все долги и платежи этого гаража</b></p>
             </ol>
         </div>
     </div>
@@ -381,8 +259,9 @@
                 <li>Найдите в таблице гараж</li>
                 <li>Нажмите на номер гаража</li>
                 <li>Если вы Администратор вы увидите раздел «Внесите старые долги»</li>
-                <li>Выберите необходимый год<i>Года появляются в зависимости от количества периодов,
-                    если период не создан – этого года в списке не будет</i>.
+                <li>Выберите необходимый год
+                    <i>"Года появляются в зависимости от количества периодов,
+                        если период не создан – этого года в списке не будет"</i>.
                 </li>
                 <li>В появившемся окне внесите данные по долгу не превышая максимальных значений взносов для выбранного
                     периода
@@ -452,7 +331,9 @@
             <ol>
                 <li>Нажмите на вкладку «Гаражи»</li>
                 <li>Найдите в таблице гараж</li>
-                <li>Нажмите на кнопку <img src='<c:url value="/images/manual/payBtn.png"/>' alt="Оплатить"></li>
+                <li>Нажмите на кнопку <img src='<c:url value="/images/manual/infGaragBtn.png"/>'
+                                           alt="Информации по гаражу"></li>
+                <li>Нажмите на кнопку "Оплатить"</li>
                 <li>Впишите сумму не менее 100 руб.</li>
                 <li>Нажмите «Оплатить»</li>
                 <li>Появится чек(отдельной вкладкой),распечатайте его «Ctrl + P»</li>
@@ -485,11 +366,7 @@
                 <li>Введите сумму</li>
                 <li>Появится чек(отдельной вкладкой), распечатайте его «Ctrl + P»</li>
                 <li>Закройте вкладку</li>
-            </ol>
-            <div class="imgHelpDiv">
-                <img src='<c:url value="/images/manual/addingPay.png"/>' alt="Оплата дополнительных взносов"
-                     class="img_help">
-            </div>
+            </ol>           
         </div>
     </div>
 </div>
@@ -660,7 +537,7 @@
             <ol>
                 <li>Нажмите на вкладку «Администрирование»</li>
                 <li>«История»
-                    <p style="color:red;"><b>Важно! Хранится в течении 2-х лет</b></p></li>
+                    <p style="color:red;"><b>Важно! Хранится в течении года</b></p></li>
 
             </ol>
 

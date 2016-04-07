@@ -83,6 +83,66 @@ public class GaragController {
         return "garag";
     }
 
+    //Смена владельца гаража
+
+    @RequestMapping(value = "changePerson/{id}", method = RequestMethod.GET)
+    public String changePerson(@PathVariable("id") Integer id, ModelMap map) {
+        Garag garag = garagService.getGarag(id);
+        map.addAttribute("garag", garag);
+        map.addAttribute("person", garag.getPerson());
+        return "changePerson";
+    }
+
+    /**
+     * Метод для замены владельца у гаража/гаражей
+     *
+     * @param garagId      id гаража
+     * @param oldPersonId  id прошлого владельца
+     * @param person       Владелец
+     * @param searchPerson Выполнялся ли поиск и замена владельца
+     * @param deletePerson Удалять ли предыдущего владельца
+     * @param oneGarag     Замена только ли у текущего гаража
+     * @param map          ModelMap
+     * @return сообщение об успешном выполнении замены владельца
+     */
+    @RequestMapping(value = "change", method = RequestMethod.POST)
+    public String changePerson(Person person,
+                               @RequestParam("garag") Integer garagId,
+                               @RequestParam("searchPerson") Boolean searchPerson,
+                               @RequestParam("deletePerson") Boolean deletePerson,
+                               @RequestParam("oldPerson") Integer oldPersonId,
+                               @RequestParam("countGarag") Boolean oneGarag, ModelMap map) {
+
+        Garag garag = garagService.getGarag(garagId);
+        if (!searchPerson && !deletePerson) {
+            person.setId(null);
+            person.getAddress().setId(null);
+        }
+        if (!oneGarag && deletePerson && !searchPerson) {
+            personService.saveOrUpdate(person);
+            journalService.event("Владелец заменен!(" + person.getFIO() + ")");
+            map.put("message", "Владелец заменен!");
+            return "success";
+        }
+        if (oneGarag) {
+            garag.setPerson(person);
+            garagService.saveOrUpdate(garag);
+        } else {
+            Person oldPerson = personService.getPerson(oldPersonId);
+            person = personService.saveOrUpdate(person);
+            for (Garag g : oldPerson.getGaragList()) {
+                g.setPerson(person);
+                garagService.saveOrUpdate(g);
+            }
+        }
+        if (searchPerson && deletePerson) {
+            personService.delete(oldPersonId);
+        }
+        journalService.event("Владелец заменен!(" + person.getFIO() + ")");
+        map.put("message", "Владелец заменен!");
+        return "success";
+    }
+
 
     //Информационно модальное окно для гаража
 
@@ -164,30 +224,6 @@ public class GaragController {
         }
         map.put("message", "Гараж удален!");
         return "success";
-    }
-
-    //Удалить у гаража владельца(Сам владелец сохраняется)
-
-    @RequestMapping(value = "assignDelete/{id}", method = RequestMethod.POST)
-    public String assignDelete(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
-        try {
-            Garag garag = garagService.getGarag(id);
-            if (garag.getPerson() != null) {
-                garag.setPerson(null);
-                garagService.saveOrUpdate(garag);
-                journalService.event("Назначение у гаража " + garag.getName() + " удалено!");
-                map.put("message", "Удалено назначение владельца!");
-                return "success";
-            } else {
-                map.put("message", "У гаража нет владельца!");
-                response.setStatus(409);
-                return "error";
-            }
-        } catch (DataIntegrityViolationException e) {
-            map.put("message", "Невозможно удалить!");
-            response.setStatus(409);
-            return "error";
-        }
     }
 
     //Пересччет долгов по пеням и включение пеней

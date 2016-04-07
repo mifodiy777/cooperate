@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="header.jsp"/>
 <header id="myCarousel" class="carousel slide">
     <!-- Indicators -->
@@ -26,35 +27,38 @@
         <span class="icon-next"></span>
     </a>
 </header>
-<div class="jumbotron">
-    <div class="container">
-        <h3>Система автоматизации ГК №23</h3>
-    </div>
-</div>
-
 <div class="container">
-    <div id="rent"></div>
+    <br>
+
     <div class="row footerMenu">
         <div class="col-md-4">
-            <h2>Гаражи</h2>
+            <div class="thumbnail openPage" onclick="openPage('garagPage')">
+                <img src="<c:url value="/images/garag.png"/>" alt="Гаражи">
 
-            <p>Общий список гаражей</p>
-
-            <p><a class="btn btn-primary" href="garagPage" role="button">Перейти »</a></p>
+                <div class="caption">
+                    <h3>Гаражи</h3>
+                    <p>Общий список гаражей</p>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
-            <h2>Владельцы</h2>
+            <div class="thumbnail openPage" onclick="openPage('persons')">
+                <img src="<c:url value="/images/man.png"/>" alt="Владельцы">
 
-            <p>Список членов ГК</p>
-
-            <p><a class="btn btn-primary" href="persons" role="button">Перейти »</a></p>
+                <div class="caption">
+                    <h3>Владельцы</h3>
+                    <p>Список членов ГК</p>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
-            <h2>Оплата</h2>
-
-            <p>Прием платежей членов ГК</p>
-
-            <p><a class="btn btn-primary" href="paymentsPage" role="button">Перейти »</a></p>
+            <div class="thumbnail openPage" onclick="openPage('paymentsPage')">
+                <img src="<c:url value="/images/pay.png"/>" alt="Платежи">
+                <div class="caption">
+                    <h3>Оплата</h3>
+                    <p>Список платежей членов ГК</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

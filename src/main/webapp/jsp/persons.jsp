@@ -31,14 +31,14 @@
                     if (full.memberBoard) {
                         vip = ' <span class="label label-warning">ЧП</span>';
                     }
-                    return '<a href=\"#\" onclick=\"editEntity(' + full.id +',\'person\')\">'  + full.fio + vip + '</a>'
+                    return '<a href=\"#\" onclick=\"initTR(' + full.id + ');editEntity(' + full.id + ',\'person\')\">' + full.fio + vip + '</a>'
                 }, 'title': 'ФИО'},
                 {"data": "phone", 'title': 'Телефон', "searchable": false},
                 {"data": "address", 'title': 'Адрес', "searchable": false},
                 {"data": "benefits", 'title': 'Льготы', "searchable": false},
                 {"data": "garags[,<br>].garag", 'title': 'Гаражи', "searchable": false},
-                {'title': 'Удалить', "searchable": false, "render": function (data, type, full) {
-                    return "<a href=\"#\" class=\"btnTable deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
+                {'title': 'Удалить', "searchable": false, className:"deletePerson", "render": function (data, type, full) {
+                    return "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
                             '" onclick="deleteEntity(' + full.id + ',\'deletePerson\');\"><span class="glyphicon glyphicon-trash"/></span></a>'
                 }
                 }

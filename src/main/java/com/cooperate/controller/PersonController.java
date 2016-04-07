@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class
-PersonController {
+        PersonController {
 
     @Autowired
     private PersonService personService;

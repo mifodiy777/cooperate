@@ -44,44 +44,6 @@
         });
     })
 
-    function rangeDate() {
-        var FromEndDate = new Date();
-        var ToEndDate = new Date();
-
-        ToEndDate.setDate(ToEndDate.getDate());
-
-        $('.from_date').datepicker({
-            format: "dd.mm.yyyy",
-            weekStart: 1,
-            endDate: FromEndDate,
-            language:'ru',
-            autoclose: true,
-            todayHighlight:true,
-            todayBtn:'linked'
-        })
-                .on('changeDate', function(selected) {
-            startDate = new Date(selected.date.valueOf());
-            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-            $('.to_date').datepicker('setStartDate', startDate);
-        });
-        $('.to_date')
-                .datepicker({
-            format: "dd.mm.yyyy",
-            weekStart: 1,
-            endDate: ToEndDate,
-            language:'ru',
-            autoclose: true,
-            todayHighlight:true,
-            todayBtn:'linked'
-        })
-                .on('changeDate', function(selected) {
-            FromEndDate = new Date(selected.date.valueOf());
-            FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
-            $('.from_date').datepicker('setEndDate', FromEndDate);
-        });
-
-    }
-
 </script>
 <div class="container">
     <div class="panel panel-primary">

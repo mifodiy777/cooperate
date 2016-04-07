@@ -17,7 +17,7 @@ public class PaymentAdapter implements JsonSerializer<Payment> {
         json.addProperty("datePay", src.getDatePay());
         json.addProperty("garag", src.getGarag().getFullName());
         json.addProperty("fio", src.getFio());
-        json.addProperty("pay", src.getSumPay());
+        json.addProperty("pay", src.getSumPay().intValue() + " руб.");
         return json;
     }
 }

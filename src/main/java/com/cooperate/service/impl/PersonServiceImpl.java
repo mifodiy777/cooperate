@@ -20,8 +20,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void saveOrUpdate(Person person) {
-        personDAO.save(person);
+    public Person saveOrUpdate(Person person) {
+        return personDAO.save(person);
     }
 
     @Override

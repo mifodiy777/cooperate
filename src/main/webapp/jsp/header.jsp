@@ -13,9 +13,10 @@
     <link type="text/css" href="<c:url value="/css/datepicker.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/dataTables.bootstrap.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/tooltipster.css"/>" rel="stylesheet"/>
-    <link type="text/css" href="<c:url value="/css/pill.css"/>" rel="stylesheet"/>
+    <link type="text/css" href="<c:url value="/css/image.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/bootstrap-modal.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/levelNav.css"/>" rel="stylesheet"/>
+     <link type="text/css" href="<c:url value="/css/magic-check.min.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="<c:url value="/js/jquery.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.validate.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.dataTables.min.js"/>"></script>
