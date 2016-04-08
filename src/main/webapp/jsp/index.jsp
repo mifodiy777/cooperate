@@ -13,9 +13,6 @@
             <!-- Set the first background image using inline CSS below. -->
             <div class="fill" style="background-image:url('images/background.jpg');
             background-size: 100%; background-repeat: no-repeat"></div>
-            <div class="carousel-caption">
-                <a class="btn btn-primary btn-lg" href="garagPage">Список гаражей</a>
-            </div>
         </div>
     </div>
 
@@ -55,7 +52,7 @@
             <div class="thumbnail openPage" onclick="openPage('paymentsPage')">
                 <img src="<c:url value="/images/pay.png"/>" alt="Платежи">
                 <div class="caption">
-                    <h3>Оплата</h3>
+                    <h3>Платежи</h3>
                     <p>Список платежей членов ГК</p>
                 </div>
             </div>

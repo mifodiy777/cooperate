@@ -82,7 +82,7 @@
                 </li>
                 <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/payments.jsp'}">active</c:if>">
                     <a href="<c:url value="/paymentsPage"/>"><span class="glyphicon glyphicon-credit-card"></span>
-                        Оплата</a>
+                        Платежи</a>
                 </li>
                 <li class="dropdown">
                     <a id="reportPageBtn" href="#" class="dropdown-toggle" data-toggle="dropdown"
