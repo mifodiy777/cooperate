@@ -137,8 +137,8 @@ public class PaymentServiceImpl implements PaymentService {
                         payment.setPay(payment.getPay() - c.getFines());
                         c.setFines(0);
                     } else {
-                        payment.setFinesPay(Math.round(payment.getPay()));
-                        c.setFines(c.getFines() - payment.getFinesPay());
+                        payment.setFinesPay(payment.getFinesPay() + Math.round(payment.getPay()));
+                        c.setFines(c.getFines() - Math.round(payment.getPay()));
                         payment.setPay(0);
                     }
                 }
