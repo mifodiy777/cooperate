@@ -2,15 +2,12 @@ package com.cooperate.service.impl;
 
 import com.cooperate.dao.ContributionDAO;
 import com.cooperate.entity.Contribution;
-import com.cooperate.entity.Garag;
-import com.cooperate.entity.Rent;
 import com.cooperate.service.ContributionService;
-import com.cooperate.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Calendar;
 
 @Service
 public class ContributionServiceImpl implements ContributionService {
@@ -43,6 +40,11 @@ public class ContributionServiceImpl implements ContributionService {
             if (sumContribute != 0) {
                 long days = getDays(calendar, c.getFinesLastUpdate());
                 Double finesDouble = (sumContribute * 0.001) * days;
+                int divDay = (finesDouble.intValue() % 50) / (int) Math.round(sumContribute * 0.001);
+                divDay = calendar.get(Calendar.DAY_OF_YEAR) - divDay;
+                if(divDay >= 0 && calendar.get(Calendar.DAY_OF_YEAR) > divDay){
+                    calendar.set(Calendar.DAY_OF_YEAR, divDay);
+                }
                 int fines = (finesDouble.intValue() / 50);
                 fines *= 50;
                 //Вычисляем сумму пени

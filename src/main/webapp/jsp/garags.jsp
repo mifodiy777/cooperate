@@ -34,7 +34,8 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {data:"number", "render": function(data, type, full) {
+                {data:"number","visible": false},
+                {data:"number","searchable": false, "render": function(data, type, full) {
                     return '<a href=\"#\" onclick=\"initTR(' + full.id + ');editEntity(' + full.id + ',\'garag\')\">' + full.number + '</a>'
                 },'title': 'Гараж',type: 'natural',className: "series"},
                 {"render": function(data, type, full) {
