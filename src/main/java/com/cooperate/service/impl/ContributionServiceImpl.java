@@ -1,7 +1,9 @@
 package com.cooperate.service.impl;
 
 import com.cooperate.dao.ContributionDAO;
+import com.cooperate.dao.RentDAO;
 import com.cooperate.entity.Contribution;
+import com.cooperate.entity.Rent;
 import com.cooperate.service.ContributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Autowired
     private ContributionDAO contributionDAO;
+
+    @Autowired
+    private RentDAO rentDAO;
 
     @Override
     @Transactional
@@ -73,7 +78,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     //Метод вычисленеия дней с последнего обновления пеней
-    public long getDays(Calendar calendar, Calendar lastUpdate) {
+    private long getDays(Calendar calendar, Calendar lastUpdate) {
         long today = calendar.getTimeInMillis();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, lastUpdate.get(Calendar.YEAR));
@@ -102,8 +107,24 @@ public class ContributionServiceImpl implements ContributionService {
         }
         //Включение пеней для должников не уплативших до 1 июля
         if (cal.get(Calendar.MONTH) == 6) {
+            Rent rent = rentDAO.findByYearRent(cal.get(Calendar.YEAR));
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR))) {
-                if (c.getSumFixed() != 0) {
+                Integer contr = 0;
+                Integer rentMax = 0;
+                if (!c.isMemberBoardOn()) {
+                    contr += c.getContribute().intValue();
+                    rentMax += Math.round(rent.getContributeMax());
+                }
+                if (c.isBenefitsOn()) {
+                    contr += c.getContLand().intValue() / 2;
+                    rentMax += Math.round(rent.getContLandMax()) / 2;
+                } else {
+                    contr += c.getContLand().intValue();
+                    rentMax += Math.round(rent.getContLandMax());
+                }
+                rentMax += Math.round(rent.getContTargetMax());
+                contr += c.getContTarget().intValue();
+                if (rentMax.equals(contr)) {
                     c.setFinesOn(true);
                     c.setFinesLastUpdate(cal);
                     contributionDAO.save(c);
