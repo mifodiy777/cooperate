@@ -109,22 +109,17 @@ public class ContributionServiceImpl implements ContributionService {
         if (cal.get(Calendar.MONTH) == 6) {
             Rent rent = rentDAO.findByYearRent(cal.get(Calendar.YEAR));
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR))) {
-                Integer contr = 0;
                 Integer rentMax = 0;
                 if (!c.isMemberBoardOn()) {
-                    contr += c.getContribute().intValue();
                     rentMax += Math.round(rent.getContributeMax());
                 }
                 if (c.isBenefitsOn()) {
-                    contr += c.getContLand().intValue() / 2;
                     rentMax += Math.round(rent.getContLandMax()) / 2;
                 } else {
-                    contr += c.getContLand().intValue();
                     rentMax += Math.round(rent.getContLandMax());
                 }
                 rentMax += Math.round(rent.getContTargetMax());
-                contr += c.getContTarget().intValue();
-                if (rentMax.equals(contr)) {
+                if (rentMax.equals(c.getSumFixed().intValue())) {
                     c.setFinesOn(true);
                     c.setFinesLastUpdate(cal);
                     contributionDAO.save(c);
