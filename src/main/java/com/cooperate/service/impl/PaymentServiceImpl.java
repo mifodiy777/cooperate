@@ -79,10 +79,10 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment pay(Payment payment, Boolean isCreateNewPeriod, String type) {
         //Получаем гараж
         Garag garag = garagService.getGarag(payment.getGarag().getId());
+        Calendar now = Calendar.getInstance();
         if (!isCreateNewPeriod) {
             //Назначили время
             if (payment.getDatePayment() == null) {
-                Calendar now = Calendar.getInstance();
                 payment.setDatePayment(now);
                 payment.setYear(now.get(Calendar.YEAR));
             } else {
@@ -165,6 +165,10 @@ public class PaymentServiceImpl implements PaymentService {
                     payment.setContTargetPay(payment.getContTargetPay() + payment.getPay());
                     c.setContTarget(c.getContTarget() - payment.getPay());
                     payment.setPay(0);
+                }
+                //Для текущего года при частичной оплате в любом месяце пени выключаются
+                if(c.getYear().equals(now.get(Calendar.YEAR))){
+                    c.setFinesOn(false);
                 }
             }
             contributionService.saveOrUpdate(c);
