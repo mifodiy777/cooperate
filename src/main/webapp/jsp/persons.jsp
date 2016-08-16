@@ -26,7 +26,7 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"render": function(data, type, full) {
+                {"render": function (data, type, full) {
                     var vip = '';
                     if (full.memberBoard) {
                         vip = ' <span class="label label-warning">ЧП</span>';
@@ -36,8 +36,14 @@
                 {"data": "phone", 'title': 'Телефон', "searchable": false},
                 {"data": "address", 'title': 'Адрес', "searchable": false},
                 {"data": "benefits", 'title': 'Льготы', "searchable": false},
-                {"data": "garags[,<br>].garag", 'title': 'Гаражи', "searchable": false},
-                {'title': 'Удалить', "searchable": false, className:"deletePerson", "render": function (data, type, full) {
+                {"data": "garags", 'title': 'Гаражи', "searchable": false, "render": function (data, type, full) {
+                    var linkGarag = "";
+                    data.forEach(function (item, i, arr) {
+                        linkGarag += "<a href='<c:url value="linkGarag"/>?id="+item.garagId+"' title='Найти гараж'>" + item.garag + "</a><br>"
+                    });
+                    return linkGarag;
+                }},
+                {'title': 'Удалить',"searchable": false,className: "deletePerson","render": function (data, type, full) {
                     return "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePerson_" + full.id +
                             '" onclick="deleteEntity(' + full.id + ',\'deletePerson\');\"><span class="glyphicon glyphicon-trash"/></span></a>'
                 }

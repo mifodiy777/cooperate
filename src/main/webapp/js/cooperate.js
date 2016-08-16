@@ -18,7 +18,7 @@ function searchPerson() {
         }
     });
 
-    $("#searchPersonBtn").on("click", function() {
+    $("#searchPersonBtn").on("click", function () {
         if ($("#searchFormDiv").css('display') == 'none') {
             $("body").scrollTop(0);
             $("#addFormPersonDiv").hide();
@@ -41,11 +41,11 @@ function openNewRent() {
     $.ajax({
         method: "GET",
         url: "checkYearRent",
-        data:{"year":now.getFullYear()},
-        success: function(html) {
+        data: {"year": now.getFullYear()},
+        success: function (html) {
             $("#modalDiv").html(html);
         },
-        error:function(xhr) {
+        error: function (xhr) {
             showSuccessMessage(xhr.responseText);
         }
     });
@@ -55,10 +55,10 @@ function updateFines() {
     $.ajax({
         method: "POST",
         url: "updateFines",
-        success: function(html) {
+        success: function (html) {
             showSuccessMessage(html);
         },
-        error:function(xhr) {
+        error: function (xhr) {
             showErrorMessage(xhr.responseText);
         }
     })
@@ -70,11 +70,11 @@ function loadOwner(pattern) {
             $("#personResults").html(html).show();
             $(".choosePerson").click(function (e) {
                 e.preventDefault();
-                $.getJSON("getPerson", {personId:this.id}, function(person) {
+                $.getJSON("getPerson", {personId: this.id}, function (person) {
                     $("#addFormPersonDiv").show();
                     $("#searchFormDiv").hide();
                     $("#searchPersonBtn").text("Найти владельца");
-                    $("#deleteOldPerson").prop("checked", false).trigger("change");                   
+                    $("#deleteOldPerson").prop("checked", false).trigger("change");
                     $("#personResults").hide();
                     $("#personId").val(person.id);
                     $("#lastName").val(person.lastName);
@@ -102,7 +102,7 @@ function hideTooltip() {
 }
 
 function resetPerson() {
-    $(".person").each(function() {
+    $(".person").each(function () {
         $(this).val('');
     });
     $("#memberBoard").prop("checked", false);
@@ -117,17 +117,17 @@ function emptyGarag() {
 }
 
 function setOldContribute(id, year) {
-    $.get('editContribute', {"idGarag":id, "year":year}, function(html) {
+    $.get('editContribute', {"idGarag": id, "year": year}, function (html) {
         $("#modalDiv").html(html);
     });
 }
 
 function infGarag(id) {
     $("#formPanel").empty();
-    $.get("garagInf", {"idGarag":id}, function(html) {
+    $.get("garagInf", {"idGarag": id}, function (html) {
         $("#formPanel").html(html);
         initTR(id);
-    }).fail(function(xhr) {
+    }).fail(function (xhr) {
         if (xhr.status == 409) {
             showErrorMessage(xhr.responseText);
         }
@@ -135,9 +135,9 @@ function infGarag(id) {
 }
 
 function payGarag(id, type) {
-    $.get("payModal", {"idGarag":id,"type":type}, function(html) {
+    $.get("payModal", {"idGarag": id, "type": type}, function (html) {
         $("#modalDiv").html(html);
-    }).fail(function(xhr) {
+    }).fail(function (xhr) {
         if (xhr.status == 409) {
             showErrorMessage(xhr.responseText);
         }
@@ -203,7 +203,7 @@ function deletePayment(id) {
 }
 
 function deleteAssign(garag, id) {
-    $.post("deleteGaragInPerson", {idGarag:id}, function(html) {
+    $.post("deleteGaragInPerson", {idGarag: id}, function (html) {
         $(garag).parent().parent().remove();
         $(".cooperateTable").DataTable().ajax.reload(null, false);
         showSuccessMessage(html);
@@ -220,31 +220,31 @@ function rangeDate() {
         format: "dd.mm.yyyy",
         weekStart: 1,
         endDate: FromEndDate,
-        language:'ru',
+        language: 'ru',
         autoclose: true,
-        todayHighlight:true,
-        todayBtn:'linked'
+        todayHighlight: true,
+        todayBtn: 'linked'
     })
-            .on('changeDate', function(selected) {
-        startDate = new Date(selected.date.valueOf());
-        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-        $('.to_date').datepicker('setStartDate', startDate);
-    });
+        .on('changeDate', function (selected) {
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('.to_date').datepicker('setStartDate', startDate);
+        });
     $('.to_date')
-            .datepicker({
-        format: "dd.mm.yyyy",
-        weekStart: 1,
-        endDate: ToEndDate,
-        language:'ru',
-        autoclose: true,
-        todayHighlight:true,
-        todayBtn:'linked'
-    })
-            .on('changeDate', function(selected) {
-        FromEndDate = new Date(selected.date.valueOf());
-        FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
-        $('.from_date').datepicker('setEndDate', FromEndDate);
-    });
+        .datepicker({
+            format: "dd.mm.yyyy",
+            weekStart: 1,
+            endDate: ToEndDate,
+            language: 'ru',
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: 'linked'
+        })
+        .on('changeDate', function (selected) {
+            FromEndDate = new Date(selected.date.valueOf());
+            FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+            $('.from_date').datepicker('setEndDate', FromEndDate);
+        });
 
 }
 
@@ -266,15 +266,15 @@ function messBuilder() {
     var delPerson = $("#deleteOldPerson").prop("checked");
     var countGarag = $("input[name='changeGaragAll']").prop("checked");
     setTextTip(serchPerson, delPerson, countGarag);
-    $("#personId").on("change", function() {
+    $("#personId").on("change", function () {
         serchPerson = idPastPerson != $(this).val();
         setTextTip(serchPerson, delPerson, countGarag);
     });
-    $("#deleteOldPerson").on("change", function() {
+    $("#deleteOldPerson").on("change", function () {
         delPerson = $(this).prop("checked");
         setTextTip(serchPerson, delPerson, countGarag);
     });
-    $("input[name='changeGaragAll']").on("change", function() {
+    $("input[name='changeGaragAll']").on("change", function () {
         countGarag = $("input[name='changeGaragAll']").prop("checked");
         if (!countGarag && !serchPerson) {
             $("#deleteOldPerson").prop("checked", "checked");

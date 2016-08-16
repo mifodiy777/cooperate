@@ -20,6 +20,7 @@ public class PersonPageAdapter implements JsonSerializer<Person> {
         for (Garag g : src.getGaragList()) {
             JsonObject garag = new JsonObject();
             garag.add("garag", new JsonPrimitive(g.getFullName()));
+            garag.add("garagId", new JsonPrimitive(g.getId()));
             garags.add(garag);
         }
         jsonObject.add("garags", garags);

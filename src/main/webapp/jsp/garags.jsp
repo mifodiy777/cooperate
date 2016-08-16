@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp"/>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -14,6 +15,9 @@
             "ajax": {
                 url:"allGarag",
                 data:{
+                    <c:if test="${garagId != null}">
+                    garag: "${garagId}",
+                    </c:if>
                     setSeries: "${setSeries}"
                 }
             },

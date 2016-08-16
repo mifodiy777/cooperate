@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,13 +52,28 @@ public class GaragController {
         return "garags";
     }
 
+    @RequestMapping(value = "linkGarag", method = RequestMethod.GET)
+    public String linkGarag(@RequestParam("id") Integer id, ModelMap map) {
+        Garag garag = garagService.getGarag(id);
+        map.addAttribute("setSeries", garag.getSeries());
+        map.addAttribute("series", garagService.getSeries());
+        map.addAttribute("garagId", garag.getId());
+        return "garags";
+    }
+
     //Список гаражей
 
     @RequestMapping(value = "allGarag", method = RequestMethod.GET)
-    public ResponseEntity<String> getGarag(@RequestParam("setSeries") String series) {
+    public ResponseEntity<String> getGarag(@RequestParam(required = false, value = "garag") Integer garag,
+                                           @RequestParam("setSeries") String series) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
+        if (garag != null) {
+            List<Garag> garags = new ArrayList<>();
+            garags.add(garagService.getGarag(garag));
+            return Utils.convertListToJson(gsonBuilder, garags);
+        }
         return Utils.convertListToJson(gsonBuilder, garagService.findBySeries(series));
     }
 
