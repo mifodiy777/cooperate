@@ -39,5 +39,20 @@ public class Utils {
         return new ResponseEntity<String>(gson.create().toJson(obj), responseHeaders, HttpStatus.OK);
     }
 
+     /**
+     * Метод парсит число в переданной строке.
+     *
+     * @param paramValue Строка, которую необходимо превратить в число.
+     * @return Число, если переданная строка являлась числом и null,
+     *         если переданную строку невозможно распарсить.
+     */
+    public static Integer parseInteger(String paramValue) {
+        try {
+            return Integer.valueOf(paramValue);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     
 }

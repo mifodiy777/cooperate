@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 
 @Entity
@@ -52,6 +52,11 @@ public class Garag implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "garag")
     @OrderBy("datePayment DESC")
     private List<Payment> payments;
+
+    //История изменений      
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "garag")
+    @OrderBy("dateRecord DESC")
+    private List<HistoryGarag> historyGarags;
 
     public Integer getId() {
         return id;
@@ -116,6 +121,14 @@ public class Garag implements Serializable {
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+    }
+
+    public List<HistoryGarag> getHistoryGarags() {
+        return historyGarags;
+    }
+
+    public void setHistoryGarags(List<HistoryGarag> historyGarags) {
+        this.historyGarags = historyGarags;
     }
 
     public String getName() {

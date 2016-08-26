@@ -53,7 +53,7 @@
                         <c:set var="sumFines" scope="page" value="${sumFines+c.fines}"/>
                     </tr>
                 </c:if>
-            </c:forEach>           
+            </c:forEach>
             <tr>
                 <th>Итого:</th>
                 <th>${sumAll} руб.</th>
@@ -106,22 +106,30 @@
                 </c:if>
             </c:forEach>
         </table>
-        <div class="row">
-            <div class="col-md-offset-6 col-md-6">
-                <button class="btn btn-success" type="button" onclick="payGarag(${garag.id},'default')">
-                    <span class="glyphicon glyphicon-shopping-cart"></span> Оплатить
-                </button>
-                <button id="openAddingCount" class="btn btn-warning" onclick="payGarag(${garag.id},'adding')">
-                    <span class="glyphicon glyphicon-shopping-cart"></span> Дополнительный взнос
-                </button>
-                <a href="infPrint/${garag.id}" target="_blank" class="btn btn-primary"><span
-                        class="glyphicon glyphicon-print"></span>
-                    Распечатать
-                </a>
-                <button type="button" class="btn btn-default" onclick="closeForm()"><span
-                        class="glyphicon glyphicon-remove"></span> Закрыть
+        <c:if test="${not empty garag.historyGarags }">
+            <div class="pull-left">
+                <button id="historyBtn" class="btn btn-info" type="button" onclick="getHistoryGarag(${garag.id}); return false">
+                    <span class="glyphicon glyphicon-time"></span> История
                 </button>
             </div>
+        </c:if>
+
+        <div class="pull-right">
+            <button class="btn btn-success" type="button" onclick="payGarag(${garag.id},'default')">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Оплатить
+            </button>
+            <button id="openAddingCount" class="btn btn-warning" onclick="payGarag(${garag.id},'adding')">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Дополнительный взнос
+            </button>
+            <a href="infPrint/${garag.id}" target="_blank" class="btn btn-primary"><span
+                    class="glyphicon glyphicon-print"></span>
+                Распечатать
+            </a>
+            <button type="button" class="btn btn-default" onclick="closeForm()"><span
+                    class="glyphicon glyphicon-remove"></span> Закрыть
+            </button>
         </div>
+
     </div>
 </div>
+<div id="reasonList"></div> 

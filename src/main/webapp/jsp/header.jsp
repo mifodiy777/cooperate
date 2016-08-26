@@ -34,7 +34,7 @@
     <script type="text/javascript" src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/formatted-numbers.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/de-date.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>   
     <script type="text/javascript" src="<c:url value="/js/cooperate.js"/>"></script>
     <script type="text/javascript">
         $(document).ajaxStart(function() {

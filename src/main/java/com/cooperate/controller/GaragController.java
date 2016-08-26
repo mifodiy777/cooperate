@@ -45,6 +45,10 @@ public class GaragController {
     @Autowired
     private RentService rentService;
 
+    @Autowired
+    private HistoryGaragService historyGaragService;
+
+
     @RequestMapping(value = "garagPage", method = RequestMethod.GET)
     public String getGaragsPage(@RequestParam(defaultValue = "1", value = "series") String series, ModelMap map) {
         map.addAttribute("setSeries", series);
@@ -70,7 +74,7 @@ public class GaragController {
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
         if (garag != null) {
-            List<Garag> garags = new ArrayList<>();
+            List<Garag> garags = new ArrayList<Garag>();
             garags.add(garagService.getGarag(garag));
             return Utils.convertListToJson(gsonBuilder, garags);
         }
@@ -127,26 +131,36 @@ public class GaragController {
                                @RequestParam("searchPerson") Boolean searchPerson,
                                @RequestParam("deletePerson") Boolean deletePerson,
                                @RequestParam("oldPerson") Integer oldPersonId,
-                               @RequestParam("countGarag") Boolean oneGarag, ModelMap map) {
-
+                               @RequestParam("countGarag") Boolean oneGarag,
+                               @RequestParam("reason") String reason, ModelMap map) {
+        //Дергаем текущий гараж
         Garag garag = garagService.getGarag(garagId);
+        // Если поиск не производился(т.е. новый владелец не из базы и удалять его не надо)
         if (!searchPerson && !deletePerson) {
+            //Очищаем id владельца
             person.setId(null);
+            //Очищаем адрес
             person.getAddress().setId(null);
         }
+        //Если гараж у данного владельца не один, владельца необходимо удалить, поиск 
         if (!oneGarag && deletePerson && !searchPerson) {
+            for (Garag g : garag.getPerson().getGaragList()) {
+                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
+            }
             personService.saveOrUpdate(person);
             journalService.event("Владелец заменен!(" + person.getFIO() + ")");
             map.put("message", "Владелец заменен!");
             return "success";
         }
         if (oneGarag) {
+            historyGaragService.saveReason(reason, garag.getPerson().getFIO(), garag);
             garag.setPerson(person);
             garagService.saveOrUpdate(garag);
         } else {
             Person oldPerson = personService.getPerson(oldPersonId);
             person = personService.saveOrUpdate(person);
             for (Garag g : oldPerson.getGaragList()) {
+                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
                 g.setPerson(person);
                 garagService.saveOrUpdate(g);
             }
@@ -193,6 +207,7 @@ public class GaragController {
                 Garag garagEdit = garagService.getGarag(garag.getId());
                 garag.setContributions(garagEdit.getContributions());
                 garag.setPayments(garagEdit.getPayments());
+                garag.setHistoryGarags(garagEdit.getHistoryGarags());
             }
             journalService.event("Гараж " + garag.getName() + " сохранен!");
             garagService.saveOrUpdate(garag);

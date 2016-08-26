@@ -7,21 +7,7 @@
 
         $("#personForm").validate({
             submitHandler: function (form) {
-                $(form).ajaxSubmit({
-                    data:{
-                        garag: ${garag.id},
-                        searchPerson: ($("#idPastPerson").val() != $("#personId").val()),
-                        deletePerson: $("#deleteOldPerson").prop("checked"),
-                        countGarag : $("input[name='changeGaragAll']").prop("checked"),
-                        oldPerson :$("#idPastPerson").val()
-                    },
-                    success: function (html) {
-                        $(".cooperateTable").DataTable().ajax.reload(null, false);
-                        showSuccessMessage(html);
-                        closeForm();
-                        return false;
-                    }
-                });
+                promtReason(form, '${garag.id}');
             },
             errorPlacement: function (error, element) {
                 $(element).tooltipster('update', $(error).text());
@@ -191,7 +177,7 @@
             <div style="text-align: center" class="col-md-12">
                 <button id="buttonAdd" type="submit" class="btn btn-success buttonForm">
                     <span class="glyphicon glyphicon-ok"></span> Сохранить
-                </button>                
+                </button>
                 <button type="reset" onclick="closeForm();" class="btn btn-danger buttonForm">
                     <span class="glyphicon glyphicon-remove"></span> Закрыть
                 </button>
@@ -199,6 +185,36 @@
         </form:form>
     </div>
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="promtModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#reason').val('')"
+                        aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Введите причину смены владельца?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="reason" name="reason" class=" form-control"/>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#reason').val('')">
+                    <span class="glyphicon glyphicon-remove"></span> Отмена
+                </button>
+                <button type="submit" class="btn btn-success" id="applyBtn">
+                    <span class="glyphicon glyphicon-ok"></span> Применить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 

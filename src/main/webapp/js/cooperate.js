@@ -225,26 +225,26 @@ function rangeDate() {
         todayHighlight: true,
         todayBtn: 'linked'
     })
-        .on('changeDate', function (selected) {
-            startDate = new Date(selected.date.valueOf());
-            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-            $('.to_date').datepicker('setStartDate', startDate);
-        });
+            .on('changeDate', function (selected) {
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('.to_date').datepicker('setStartDate', startDate);
+    });
     $('.to_date')
-        .datepicker({
-            format: "dd.mm.yyyy",
-            weekStart: 1,
-            endDate: ToEndDate,
-            language: 'ru',
-            autoclose: true,
-            todayHighlight: true,
-            todayBtn: 'linked'
-        })
-        .on('changeDate', function (selected) {
-            FromEndDate = new Date(selected.date.valueOf());
-            FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
-            $('.from_date').datepicker('setEndDate', FromEndDate);
-        });
+            .datepicker({
+        format: "dd.mm.yyyy",
+        weekStart: 1,
+        endDate: ToEndDate,
+        language: 'ru',
+        autoclose: true,
+        todayHighlight: true,
+        todayBtn: 'linked'
+    })
+            .on('changeDate', function (selected) {
+        FromEndDate = new Date(selected.date.valueOf());
+        FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+        $('.from_date').datepicker('setEndDate', FromEndDate);
+    });
 
 }
 
@@ -255,6 +255,33 @@ function changePerson(idGarag) {
 }
 function openPage(href) {
     location.href = href;
+}
+
+function getHistoryGarag(id) {
+    $("#reasonList").load("getHistoryGarag/" + id);
+}
+
+function deleteReason(id) {
+    $.ajax({
+        url: "deleteReason",
+        data:{
+            idReason:id
+        },
+        type: "post",
+        success: function (html) {
+            showSuccessMessage(html);
+            $("#histTR_" + id).remove();
+            if ($("[id^=histTR_]").size() == 0) {
+                $('#histGarag').modal('hide');
+                $('#historyBtn').parent().hide();
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status == 409) {
+                showErrorMessage(xhr.responseText);
+            }
+        }
+    });
 }
 
 function messBuilder() {
@@ -272,6 +299,12 @@ function messBuilder() {
     });
     $("#deleteOldPerson").on("change", function () {
         delPerson = $(this).prop("checked");
+        $("#oneChange").next('label').show();
+        if (delPerson && $("#allChange").length != 0) {
+            $("#oneChange").next('label').hide();
+            $("input[name='changeGaragAll']").prop("checked", "checked")
+            countGarag = $("input[name='changeGaragAll']").prop("checked");
+        }
         setTextTip(serchPerson, delPerson, countGarag);
     });
     $("input[name='changeGaragAll']").on("change", function () {
@@ -309,6 +342,43 @@ function setTextTip(selectOne, selectTwo, selectThee) {
         message += changeAllGarag
     }
     $("#alertPanel").show().text(message);
+}
+
+function promtReason(form, id) {
+    $('#promtModal').modal({
+        backdrop:"static",
+        keyboard:false,
+        show:true
+    });
+    $('#reason').on("focus", function() {
+        $('#reason').parent().removeClass("has-error");
+        $('#reason').parent().children(".help-block").empty();
+    });
+    $('#applyBtn').on("click", function() {
+        if ($('#reason').val().length > 3) {
+            $(form).ajaxSubmit({
+                data:{
+                    garag: id,
+                    searchPerson: ($("#idPastPerson").val() != $("#personId").val()),
+                    deletePerson: $("#deleteOldPerson").prop("checked"),
+                    countGarag : $("input[name='changeGaragAll']").prop("checked"),
+                    oldPerson :$("#idPastPerson").val(),
+                    reason:$('#reason').val()
+
+                },
+                success: function (html) {
+                    $('#promtModal').modal('hide');
+                    $(".cooperateTable").DataTable().ajax.reload(null, false);
+                    showSuccessMessage(html);
+                    closeForm();
+                    return false;
+                }
+            });
+        } else {
+            $('#reason').parent().addClass("has-error");
+            $('#reason').parent().children(".help-block").text("Введите минимум 4 символа");
+        }
+    })
 }
 
 
