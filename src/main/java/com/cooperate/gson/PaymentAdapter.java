@@ -9,7 +9,7 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 public class PaymentAdapter implements JsonSerializer<Payment> {
-    @Override
+
     public JsonElement serialize(Payment src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject json = new JsonObject();
         json.addProperty("id", src.getId());

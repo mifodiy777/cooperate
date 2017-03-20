@@ -32,41 +32,40 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private GaragService garagService;
 
-    @Override
+
     public List<Integer> findYears() {
         return paymentDAO.findYears();
     }
 
-    @Override
+
     @Transactional
     public Payment saveOrUpdate(Payment payment) {
         return paymentDAO.save(payment);
     }
 
 
-    @Override
+
     public List<Payment> findByYear(Integer year) {
         return paymentDAO.findByYear(year);
     }
 
-    @Override
+
     public Payment getPayment(Integer id) {
         return paymentDAO.getOne(id);
     }
 
-    @Override
+
     @Transactional
     public void delete(Integer id) {
         paymentDAO.delete(id);
     }
 
     //Возвращает платеж для определенного гаража с остатками денег
-    @Override
+
     public List<Payment> getPaymentOnGarag(Garag garag) {
         return paymentDAO.getPaymentOnGarag(garag.getId());
     }
 
-    @Override
     public Integer getMaxNumber() {
         Integer number = paymentDAO.getMaxValueNumber();
         number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
@@ -74,7 +73,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     //Метод платежа
-    @Override
     @Transactional
     public Payment pay(Payment payment, Boolean isCreateNewPeriod, String type) {
         //Получаем гараж
@@ -178,7 +176,7 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentDAO.save(payment);
     }
 
-    @Override
+
     public HSSFWorkbook reportPayments(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список платежей");

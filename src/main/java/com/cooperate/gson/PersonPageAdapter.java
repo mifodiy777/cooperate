@@ -7,7 +7,7 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 
 public class PersonPageAdapter implements JsonSerializer<Person> {
-    @Override
+
     public JsonElement serialize(Person src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject jsonObject = new JsonObject();

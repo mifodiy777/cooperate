@@ -30,7 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     UserDAO userDAO;
 
-    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.cooperate.entity.User user = userDAO.findByLogin(username.trim());

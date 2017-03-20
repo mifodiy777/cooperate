@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 
 public class PersonAdapter implements JsonSerializer<Person> {
 
-    @Override
+
     public JsonElement serialize(Person src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject jsonObject = new JsonObject();

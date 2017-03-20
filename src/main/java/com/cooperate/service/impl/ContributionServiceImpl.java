@@ -20,19 +20,19 @@ public class ContributionServiceImpl implements ContributionService {
     @Autowired
     private RentDAO rentDAO;
 
-    @Override
+
     @Transactional
     public void saveOrUpdate(Contribution contribution) {
         contributionDAO.save(contribution);
     }
 
-    @Override
+
     public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
         return contributionDAO.getContributionByGaragAndYear(garagId, year);
     }
 
     //Вычисление пени
-    @Override
+
     @Transactional
     public void updateFines() {
         Calendar calendar = Calendar.getInstance();
@@ -92,7 +92,7 @@ public class ContributionServiceImpl implements ContributionService {
         return (today - days) / (24 * 60 * 60 * 1000);
     }
 
-    @Override
+
     public void onFines() {
         Calendar cal = Calendar.getInstance();
         //Включение пеней для должников со следующего года

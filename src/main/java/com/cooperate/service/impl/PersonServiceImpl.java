@@ -18,40 +18,40 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDAO personDAO;
 
-    @Override
+
     @Transactional
     public Person saveOrUpdate(Person person) {
         return personDAO.save(person);
     }
 
-    @Override
+
     @Transactional
     public void delete(Integer id) {
         personDAO.delete(id);
     }
 
-    @Override
+
     public List<Person> getPersons() {
         return personDAO.findAll();
     }
 
-    @Override
+
     public List<Person> getMembers() {
         return personDAO.findByMemberBoard(true);
     }
 
-    @Override
+
     public Person getPerson(Integer id) {
         return personDAO.findOne(id);
     }
 
-    @Override
+
     //Список владельцев по ФИО
     public List<Person> findByfio(String fio) {
         return personDAO.findByPersonfio(fio);
     }
 
-    @Override
+
     //Определенный владелец по ФИО
     public Person getByFio(Person person) {
         return personDAO.findByLastNameAndNameAndFatherName(person.getLastName(),

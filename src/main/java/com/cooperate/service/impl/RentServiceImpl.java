@@ -27,24 +27,24 @@ public class RentServiceImpl implements RentService {
     @Autowired
     private PaymentService paymentService;
 
-    @Override
+
     @Transactional
     public void saveOrUpdate(Rent rent) {
         rentDAO.save(rent);
     }
 
-    @Override
+
     //Существует ли период начислений
     public Boolean checkRent(Integer year) {
         return rentDAO.countByYearRent(year) == 0;
     }
 
-    @Override
+
     public List<Rent> getRents() {
         return rentDAO.findAll();
     }
 
-    @Override
+
     @Transactional
     //Создание нового периода
     public void createNewPeriod(Rent rent) {
@@ -80,13 +80,13 @@ public class RentServiceImpl implements RentService {
         }
     }
 
-    @Override
+
     //Период начисления определенного года
     public Rent findByYear(Integer year) {
         return rentDAO.findByYearRent(year);
     }
 
-    @Override
+
     public List<Rent> findAll() {
         return rentDAO.findAll(sortByYearAsc());
     }

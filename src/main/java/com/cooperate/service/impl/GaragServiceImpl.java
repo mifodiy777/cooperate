@@ -58,27 +58,22 @@ public class GaragServiceImpl implements GaragService {
         return garagDAO.findAll();
     }
 
-    @Override
     public List<String> getSeries() {
         return garagDAO.getSeries();
     }
 
-    @Override
     public List<Garag> findBySeries(String series) {
         return garagDAO.findBySeries(series);
     }
 
-    @Override
     public List<Garag> getGaragForPersonBenefits() {
         return garagDAO.getGaragForPersonBenefits();
     }
 
-    @Override
     public Garag getGarag(Integer id) {
         return garagDAO.findOne(id);
     }
 
-    @Override
     //Общая сумма долга
     public Float sumContribution(Garag garag) {
         Float sum = garag.getOldContribute();
@@ -88,7 +83,6 @@ public class GaragServiceImpl implements GaragService {
         return sum;
     }
 
-    @Override
     //Существует ли гараж
     public Boolean existGarag(Garag garag) {
         if (garag.getId() == null) {
@@ -98,8 +92,6 @@ public class GaragServiceImpl implements GaragService {
         }
     }
 
-
-    @Override
     public HSSFWorkbook reportAll() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список членов ГК");
@@ -160,7 +152,6 @@ public class GaragServiceImpl implements GaragService {
         return workBook;
     }
 
-    @Override
     public HSSFWorkbook reportBenefitsPerson() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список льготников ГК");
@@ -215,7 +206,6 @@ public class GaragServiceImpl implements GaragService {
         return workBook;
     }
 
-    @Override
     public HSSFWorkbook reportContribute() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список должников ГК");
@@ -334,7 +324,6 @@ public class GaragServiceImpl implements GaragService {
     }
 
 
-    @Override
     public HSSFWorkbook reportProfit(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
         CellStyle style = workBook.createCellStyle();

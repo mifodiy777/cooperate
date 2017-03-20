@@ -15,19 +15,19 @@ public class JournalHistoryServiceImpl implements JournalHistoryService {
     @Autowired
     private JournalHistoryDAO journalHistoryDAO;
 
-    @Override
+
     public List<JournalHistory> getJournalHistorys() {
         return journalHistoryDAO.findAll();
     }
 
-    @Override
+
     @Transactional
     public void delete(Integer id) {
         journalHistoryDAO.delete(id);
     }
 
     //Запись события
-    @Override
+
     @Transactional
     public void event(String event) {
         JournalHistory jh = new JournalHistory();
