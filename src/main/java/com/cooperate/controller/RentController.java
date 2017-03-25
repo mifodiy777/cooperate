@@ -1,11 +1,9 @@
 package com.cooperate.controller;
 
 import com.cooperate.entity.Rent;
-import com.cooperate.service.GaragService;
 import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +46,6 @@ public class RentController {
     }
 
     //Страница с вводом старого начисления
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "oldRentPage", method = RequestMethod.GET)
     public String oldRentPage(ModelMap map) {
         map.addAttribute("rent", new Rent());
@@ -56,7 +53,6 @@ public class RentController {
     }
 
     //Сохранения старого начисления
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "saveOldRent", method = RequestMethod.POST)
     public String saveOldRent(Rent rent, ModelMap map, HttpServletResponse response) {
         if (rentService.checkRent(rent.getYearRent())) {

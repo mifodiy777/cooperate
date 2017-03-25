@@ -1,8 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<security:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
-<security:authentication property="principal" var="user"/>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -144,29 +141,9 @@
                         Помощь</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a style="cursor:default"> <c:out value="${user.username}"/> </a>
-                </li>
-                <li>
-                    <a href="<c:url value="/j_spring_security_logout"/>" title="Выйти">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                    </a>
-                </li>
-            </ul>
         </div>
     </div>
 </div>
-<input type="hidden" id="roleAdmin" value="
- <c:choose>
-    <c:when test="${isAdmin}">
-       true
-    </c:when>
-    <c:otherwise>
-       false
-    </c:otherwise>
-</c:choose>"/>
-
 <div id="messages" class="pull-right alert alert-info fade in " style="width: 20%; display: none"></div>
 <div id="modalDiv"></div>
 <div id="wrap">

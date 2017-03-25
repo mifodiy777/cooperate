@@ -3,10 +3,12 @@ package com.cooperate.controller;
 import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
-import com.cooperate.service.*;
+import com.cooperate.service.ContributionService;
+import com.cooperate.service.GaragService;
+import com.cooperate.service.JournalHistoryService;
+import com.cooperate.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -26,7 +28,7 @@ public class ContributionController {
 
     @Autowired
     private ContributionService contributionService;
-    
+
     @Autowired
     private JournalHistoryService journalService;
 
@@ -39,7 +41,6 @@ public class ContributionController {
     }
 
     //Форма добавления старых периодов
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "editContribute", method = RequestMethod.GET)
     public String editContributeForm(@RequestParam("idGarag") Integer id,
                                      @RequestParam("year") Integer year, ModelMap map) {
@@ -55,7 +56,6 @@ public class ContributionController {
     }
 
     //Добавление старых периодов
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "saveContribute", method = RequestMethod.POST)
     public String saveContribute(Contribution contribute,
                                  @RequestParam("idGarag") Integer id,

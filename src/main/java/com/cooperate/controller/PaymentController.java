@@ -12,7 +12,6 @@ import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -87,7 +86,6 @@ public class PaymentController {
     }
 
     //Удаление платежа
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deletePayment/{id}", method = RequestMethod.POST)
     public String deletePayment(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {

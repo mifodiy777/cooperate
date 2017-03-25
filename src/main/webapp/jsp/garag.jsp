@@ -1,8 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<security:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
-<security:authentication property="principal" var="user"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -205,7 +202,7 @@
                 </div>
             </div>
         </div>
-        <c:if test="${isAdmin && isOldGarag}">
+        <c:if test="${isOldGarag}">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <h4 align="center">Внести старые долги</h4>

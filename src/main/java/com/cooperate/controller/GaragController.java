@@ -6,10 +6,10 @@ import com.cooperate.entity.Person;
 import com.cooperate.gson.PersonAdapter;
 import com.cooperate.service.*;
 import com.google.gson.GsonBuilder;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,11 +48,14 @@ public class GaragController {
     @Autowired
     private HistoryGaragService historyGaragService;
 
+    private static final Logger logger = Logger.getLogger(GaragController.class);
+
 
     @RequestMapping(value = "garagPage", method = RequestMethod.GET)
     public String getGaragsPage(@RequestParam(defaultValue = "1", value = "series") String series, ModelMap map) {
         map.addAttribute("setSeries", series);
         map.addAttribute("series", garagService.getSeries());
+        logger.error("Страница гаражей загружена");
         return "garags";
     }
 
@@ -241,7 +244,6 @@ public class GaragController {
 
     //Удаление гаража
 
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deleteGarag/{id}", method = RequestMethod.POST)
     public String deleteGarag(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {

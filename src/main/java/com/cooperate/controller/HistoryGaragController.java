@@ -5,7 +5,6 @@ import com.cooperate.service.GaragService;
 import com.cooperate.service.HistoryGaragService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +34,8 @@ public class HistoryGaragController {
     }
 
     //Удаление гаража
-
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "deleteReason", method = RequestMethod.POST)
-    public String deleteReason(@RequestParam("idReason") Integer idReason,                               
+    public String deleteReason(@RequestParam("idReason") Integer idReason,
                                ModelMap map, HttpServletResponse response) {
         try {
             historyGaragService.delete(idReason);

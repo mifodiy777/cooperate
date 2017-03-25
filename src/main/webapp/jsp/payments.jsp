@@ -19,12 +19,12 @@
 
         $('#paymentTable').DataTable({
             "order": [
-                [ 0, 'desc' ]
+                [0, 'desc']
             ],
             "ajax": {
-                url:"payments",
-                data:{
-                    setYear:"${setYear}"
+                url: "payments",
+                data: {
+                    setYear: "${setYear}"
                 }
             },
             "fnDrawCallback": function () {
@@ -41,22 +41,24 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {"data": "number", 'title': 'Платеж',className: "series"},
-                {"data": "datePay", 'title': 'Дата',type: 'de_date', targets: 1, "searchable": false},
-                {"data":"garag", 'title': 'Гараж', "searchable": false},
+                {"data": "number", 'title': 'Платеж', className: "series"},
+                {"data": "datePay", 'title': 'Дата', type: 'de_date', targets: 1, "searchable": false},
+                {"data": "garag", 'title': 'Гараж', "searchable": false},
                 {"data": "fio", 'title': 'ФИО'},
-                {"data":"pay", 'title': 'Сумма',className: "pay_style", "searchable": false},
-                { 'title': 'Действия', className:"btnPayments", "searchable": false, "render": function (data, type, full) {
-                    var del = "";
-                    if ($("#roleAdmin").val()) {
-                        del = "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePayment_" + full.id +
-                                "\" onclick=\"deletePayment('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
-                    }
-                    return "<a href=\"printOrder/" + full.id +
+                {"data": "pay", 'title': 'Сумма', className: "pay_style", "searchable": false},
+                {
+                    'title': 'Действия',
+                    className: "btnPayments",
+                    "searchable": false,
+                    "render": function (data, type, full) {
+                        var del = "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deletePayment_" + full.id +
+                            "\" onclick=\"deletePayment('" + full.id + "');\"><span class=\"glyphicon glyphicon-trash\"/></span></a>"
+                        return "<a href=\"printOrder/" + full.id +
                             "\" class=\"btn btn-info btn-sm\" target=\"_blank\"><span class=\"glyphicon glyphicon-print\"/></span></a>" + del;
 
 
-                }}
+                    }
+                }
             ]
         });
     });

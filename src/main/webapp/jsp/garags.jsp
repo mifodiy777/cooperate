@@ -10,11 +10,11 @@
 
         $('.cooperateTable').DataTable({
             "order": [
-                [ 0, 'asc' ]
+                [0, 'asc']
             ],
             "ajax": {
-                url:"allGarag",
-                data:{
+                url: "allGarag",
+                data: {
                     <c:if test="${garagId != null}">
                     garag: "${garagId}",
                     </c:if>
@@ -38,38 +38,44 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
-                {data:"number","visible": false},
-                {data:"number","searchable": false, "render": function(data, type, full) {
+                {data: "number", "visible": false},
+                {
+                    data: "number", "searchable": false, "render": function (data, type, full) {
                     return '<a href=\"#\" onclick=\"initTR(' + full.id + ');editEntity(' + full.id + ',\'garag\')\">' + full.number + '</a>'
-                },'title': 'Гараж',type: 'natural',className: "series"},
-                {"render": function(data, type, full) {
-                    var vip = '';
-                    if (full.person != null) {
-                        if (full.person.memberBoard) {
-                            vip = ' <span class="label label-warning">ЧП</span>';
+                }, 'title': 'Гараж', type: 'natural', className: "series"
+                },
+                {
+                    "render": function (data, type, full) {
+                        var vip = '';
+                        if (full.person != null) {
+                            if (full.person.memberBoard) {
+                                vip = ' <span class="label label-warning">ЧП</span>';
+                            }
+                            return '<a href=\"#\" onclick=\"initTR(' + full.id + '); editEntity(' + full.person.personId + ',\'person\')\">' + full.person.fio + vip + '</a>'
                         }
-                        return '<a href=\"#\" onclick=\"initTR(' + full.id + '); editEntity(' + full.person.personId + ',\'person\')\">' + full.person.fio + vip + '</a>'
-                    }
-                    return ""
-                }, "searchable": false, 'title': 'ФИО'},
-                {"data":"person.phone","defaultContent": "","searchable": false, 'title': 'Телефон'},
-                {"data": "person.address","defaultContent": "","searchable": false,  'title': 'Адрес'},
-                {"data": "person.benefits","defaultContent": "","searchable": false,  'title': 'Льготы'},
-                {'title': 'Действия',"searchable": false,className:"actionBtn","render": function (data, type, full) {
-                    var del = "";
-                    if ($("#roleAdmin").val()) {
-                        del = '<a href="#" class="btnTable deleteButton  btn btn-danger btn-sm" title="Удалить гараж" data-placement="top" id="deleteGarag_' + full.id +
-                                '" onclick="deleteEntity(' + full.id + ',\'deleteGarag\');"><span class="glyphicon glyphicon-trash"/></span></a>'
-                    }
-                    var actionsBtn = "";
-                    if (full.person != null) {
-                        actionsBtn = "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
+                        return ""
+                    }, "searchable": false, 'title': 'ФИО'
+                },
+                {"data": "person.phone", "defaultContent": "", "searchable": false, 'title': 'Телефон'},
+                {"data": "person.address", "defaultContent": "", "searchable": false, 'title': 'Адрес'},
+                {"data": "person.benefits", "defaultContent": "", "searchable": false, 'title': 'Льготы'},
+                {
+                    'title': 'Действия',
+                    "searchable": false,
+                    className: "actionBtn",
+                    "render": function (data, type, full) {
+                        var del = '<a href="#" class="btnTable deleteButton  btn btn-danger btn-sm" title="Удалить гараж" data-placement="top" id="deleteGarag_' + full.id +
+                            '" onclick="deleteEntity(' + full.id + ',\'deleteGarag\');"><span class="glyphicon glyphicon-trash"/></span></a>'
+                        var actionsBtn = "";
+                        if (full.person != null) {
+                            actionsBtn = "<a href=\"#\" class=\"btnTable btn btn-info btn-sm\" title='Информация' onclick=\"infGarag(" + full.id +
                                 ");\"><span class=\"glyphicon glyphicon-comment\"/></span></a>" +
                                 "<a href=\"#\" class=\"btnTable btn btn-primary btn-sm\"  title=\"Сменить владельца\" data-placement=\"top\" onclick=\"initTR(" + full.id + ");changePerson(" + full.id + "," + full.person.personId +
                                 ');"><span class=\"glyphicon glyphicon-transfer\"/></span></a>';
+                        }
+                        return actionsBtn + del;
                     }
-                    return actionsBtn + del;
-                }}
+                }
             ]
         });
 

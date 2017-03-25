@@ -3,7 +3,6 @@ package com.cooperate.controller;
 import com.cooperate.service.FileParseService;
 import com.cooperate.service.JournalHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,6 @@ public class FileParseController {
     private JournalHistoryService historyService;
 
     //Страница конвертации
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "fileUploadPage", method = RequestMethod.GET)
     public ModelAndView getFileUploadPage() {
         return new ModelAndView("fileUploadPage");
@@ -32,7 +30,6 @@ public class FileParseController {
 
 
     //Конвертация
-    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam(value = "benefits", defaultValue = "false") Boolean benefits,
