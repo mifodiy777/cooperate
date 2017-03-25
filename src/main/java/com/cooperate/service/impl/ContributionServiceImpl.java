@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 
+/**
+ * Сервис для работы с периодами долгов(Contribution).
+ */
 @Service
 public class ContributionServiceImpl implements ContributionService {
 
@@ -20,27 +23,35 @@ public class ContributionServiceImpl implements ContributionService {
     @Autowired
     private RentDAO rentDAO;
 
-
+    /**
+     * Метод сохранения долгов определенного года
+     * @param contribution период долга
+     */
     @Transactional
     public void saveOrUpdate(Contribution contribution) {
         contributionDAO.save(contribution);
     }
 
-
+    /**
+     * Получение определенного долгового периода для определенного гаража.
+     * @param garagId Id гаража
+     * @param year год долгового периода
+     * @return долговой период
+     */
     public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
         return contributionDAO.getContributionByGaragAndYear(garagId, year);
     }
 
-    //Вычисление пени
-
+    /**
+     * Метод обновления пеней(fines) для всех гаражей с включенным режимом начисления пеней(finesOn)
+      */
     @Transactional
     public void updateFines() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();// текущая дата
         //Получаем список долгов с включенным режимом пени
         for (Contribution c : contributionDAO.findByFinesOn(true)) {
-            //Находим сумму долга
-            Float sumContribute = c.getSumFixed();
-            //ВЫчисляем кол-во дней с последнего обновления.
+            Float sumContribute = c.getSumFixed(); //Находим сумму долга
+            //Вычисляем кол-во дней с последнего обновления.
             //Первая дата должна устанавливаться при включении режима пеней
             if (sumContribute != 0) {
                 long days = getDays(calendar, c.getFinesLastUpdate());
@@ -71,9 +82,9 @@ public class ContributionServiceImpl implements ContributionService {
                     }
                 }
             } else {
-                c.setFinesOn(false);
+                c.setFinesOn(false); // если сумма долга равна 0, то режим начисления пеней выключается.
             }
-            contributionDAO.save(c);
+            contributionDAO.save(c); //сохраняем долговой период
         }
     }
 
