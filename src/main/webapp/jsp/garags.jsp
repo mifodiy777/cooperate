@@ -88,7 +88,7 @@
         font-size: 15px
     }
 </style>
-<div class="container">
+<div class="container-fluid">
     <button class="btn btn-success addBtn" onclick="saveEntity('garag')">
         <span class="glyphicon glyphicon-plus"></span> Добавить гараж
     </button>

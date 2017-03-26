@@ -64,7 +64,7 @@
     });
 
 </script>
-<div class="container">
+<div class="container-fluid">
     <input type="hidden" id="setYear" value="${setYear}">
 
     <div class="panel with-nav-tabs panel-primary">

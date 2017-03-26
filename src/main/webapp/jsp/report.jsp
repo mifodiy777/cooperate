@@ -45,7 +45,7 @@
     })
 
 </script>
-<div class="container">
+<div class="container-fluid">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">Отчеты</h4>

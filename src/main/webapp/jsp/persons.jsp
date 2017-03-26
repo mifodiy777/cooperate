@@ -54,7 +54,7 @@
     });
 
 </script>
-<div class="container">
+<div class="container-fluid">
     <button class="btn btn-success addBtn" onclick="saveEntity('person')">
         <span class="glyphicon glyphicon-plus"></span> Добавить владельца
     </button>

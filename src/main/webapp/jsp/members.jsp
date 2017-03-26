@@ -27,7 +27,7 @@
     });
 
 </script>
-<div class="container">
+<div class="container-fluid">
     <div id="formPanel"></div>
     <div class="panel panel-primary">
         <div class="panel-heading">
