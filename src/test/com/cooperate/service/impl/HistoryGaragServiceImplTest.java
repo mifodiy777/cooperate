@@ -22,6 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Тестирование сервиса - история гаража
  * Created by Кирилл on 22.03.2017.
  */
 public class HistoryGaragServiceImplTest {

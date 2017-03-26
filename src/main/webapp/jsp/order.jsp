@@ -51,7 +51,7 @@
     </tr>
     <tr>
         <td colspan="3" class="sign">
-            Подпись платильщика:
+            Подпись плательщика:
         </td>
         <td colspan="3" class="sign">
             Подпись кассира:
@@ -99,7 +99,7 @@
     </tr>
     <tr>
         <td colspan="3" class="sign">
-            Подпись платильщика:
+            Подпись плательщика:
         </td>
         <td colspan="3" class="sign">
             Подпись кассира:

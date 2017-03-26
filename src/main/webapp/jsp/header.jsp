@@ -13,7 +13,7 @@
     <link type="text/css" href="<c:url value="/css/image.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/bootstrap-modal.css"/>" rel="stylesheet"/>
     <link type="text/css" href="<c:url value="/css/levelNav.css"/>" rel="stylesheet"/>
-     <link type="text/css" href="<c:url value="/css/magic-check.min.css"/>" rel="stylesheet"/>
+    <link type="text/css" href="<c:url value="/css/magic-check.min.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="<c:url value="/js/jquery.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.validate.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/jquery.dataTables.min.js"/>"></script>
@@ -31,15 +31,15 @@
     <script type="text/javascript" src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/formatted-numbers.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/de-date.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>   
+    <script type="text/javascript" src="<c:url value="/js/locale/bootstrap-datepicker.ru.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/cooperate.js"/>"></script>
     <script type="text/javascript">
-        $(document).ajaxStart(function() {
-            $('html').css({'cursor' : 'wait'});
+        $(document).ajaxStart(function () {
+            $('html').css({'cursor': 'wait'});
         });
 
-        $(document).ajaxStop(function() {
-            $('html').css({'cursor' : 'default'});
+        $(document).ajaxStop(function () {
+            $('html').css({'cursor': 'default'});
         });
 
         $.extend($.fn.dataTable.defaults, {
@@ -123,17 +123,10 @@
                             <a href="#" onclick="updateFines()"><span class="glyphicon glyphicon-refresh"></span>
                                 Обновить</a>
                         </li>
-                        <c:if test="${isAdmin}">
-                            <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/fileUploadPage.jsp'}">active</c:if>">
-                                <a href="<c:url value="/fileUploadPage"/>"><span
-                                        class="glyphicon glyphicon-save"></span>
-                                    Загрузка</a>
-                            </li>
-                            <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/oldRent.jsp'}">active</c:if>">
-                                <a href="<c:url value="/oldRentPage"/>"><span class="glyphicon glyphicon-usd"></span>
-                                    Внести прошлые начисления</a>
-                            </li>
-                        </c:if>
+                        <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/oldRent.jsp'}">active</c:if>">
+                            <a href="<c:url value="/oldRentPage"/>"><span class="glyphicon glyphicon-usd"></span>
+                                Внести прошлые начисления</a>
+                        </li>
                     </ul>
                 </li>
                 <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/help.jsp'}">active</c:if>">
@@ -146,6 +139,5 @@
 </div>
 <div id="messages" class="pull-right alert alert-info fade in " style="width: 20%; display: none"></div>
 <div id="modalDiv"></div>
-<div id="wrap">
 
 
