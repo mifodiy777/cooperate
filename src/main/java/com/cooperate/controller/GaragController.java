@@ -265,7 +265,7 @@ public class GaragController {
     public String updateFines(ModelMap map, HttpServletResponse response) {
         try {
             contributionService.updateFines();
-            contributionService.onFines();
+            contributionService.onFines(Calendar.getInstance());
             Cookie day_sync = new Cookie("day_sync", "checked");
             response.addCookie(day_sync);
             map.put("message", "Данные успешно обнавленны!");

@@ -1,9 +1,8 @@
 package com.cooperate.service;
 
 import com.cooperate.entity.Contribution;
-import com.cooperate.entity.Garag;
 
-import java.util.List;
+import java.util.Calendar;
 
 public interface ContributionService {
 
@@ -15,7 +14,7 @@ public interface ContributionService {
 
 
 
-    void onFines();
+    void onFines(Calendar cel);
 
 
 

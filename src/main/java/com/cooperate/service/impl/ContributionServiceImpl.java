@@ -104,22 +104,21 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
 
-    public void onFines() {
-        Calendar cal = Calendar.getInstance();
+    public void onFines(Calendar now) {
         //Включение пеней для должников со следующего года
-        if (cal.get(Calendar.MONTH) == 0) {
-            for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR) - 1)) {
+        if (now.get(Calendar.MONTH) == 0) {
+            for (Contribution c : contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR) - 1)) {
                 if (c.getSumFixed() != 0) {
                     c.setFinesOn(true);
-                    c.setFinesLastUpdate(cal);
+                    c.setFinesLastUpdate(now);
                     contributionDAO.save(c);
                 }
             }
         }
         //Включение пеней для должников не уплативших до 1 июля
-        if (cal.get(Calendar.MONTH) == 6) {
-            Rent rent = rentDAO.findByYearRent(cal.get(Calendar.YEAR));
-            for (Contribution c : contributionDAO.findByFinesOnAndYear(false, cal.get(Calendar.YEAR))) {
+        if (now.get(Calendar.MONTH) == 6) {
+            Rent rent = rentDAO.findByYearRent(now.get(Calendar.YEAR));
+            for (Contribution c : contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR))) {
                 Integer rentMax = 0;
                 if (!c.isMemberBoardOn()) {
                     rentMax += Math.round(rent.getContributeMax());
@@ -132,7 +131,7 @@ public class ContributionServiceImpl implements ContributionService {
                 rentMax += Math.round(rent.getContTargetMax());
                 if (rentMax.equals(c.getSumFixed().intValue())) {
                     c.setFinesOn(true);
-                    c.setFinesLastUpdate(cal);
+                    c.setFinesLastUpdate(now);
                     contributionDAO.save(c);
                 }
 

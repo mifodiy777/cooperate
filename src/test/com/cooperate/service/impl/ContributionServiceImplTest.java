@@ -1,7 +1,9 @@
 package com.cooperate.service.impl;
 
 import com.cooperate.dao.ContributionDAO;
+import com.cooperate.dao.RentDAO;
 import com.cooperate.entity.Contribution;
+import com.cooperate.entity.Rent;
 import com.cooperate.service.ContributionService;
 import org.joda.time.DateTime;
 import org.mockito.InjectMocks;
@@ -10,8 +12,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -30,6 +34,9 @@ public class ContributionServiceImplTest {
 
     @Mock
     private ContributionDAO contributionDAO;
+
+    @Mock
+    private RentDAO rentDAO;
 
 
     @BeforeClass
@@ -153,7 +160,7 @@ public class ContributionServiceImplTest {
         given(contributionDAO.findByFinesOn(true)).willReturn(list);
         given(spyContribution.getSumFixed()).willReturn(1000f);
         DateTime dt = DateTime.now();
-        spyContribution.setFinesLastUpdate( dt.minusDays(1060).toGregorianCalendar());
+        spyContribution.setFinesLastUpdate(dt.minusDays(1060).toGregorianCalendar());
         spyContribution.setFines(0);
         contributionService.updateFines();
         Calendar lastUpdate = Calendar.getInstance();
@@ -164,9 +171,78 @@ public class ContributionServiceImplTest {
         verify(contributionDAO).save(spyContribution);
     }
 
+    /**
+     * Тестирование метода включения режима начисления пеней после нового года
+     *
+     * @throws Exception
+     */
     @Test
-    public void testOnFines() throws Exception {
+    public void testOnFinesJanuary() throws Exception {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.MONTH, 0);
+        Contribution contributionSpy = spy(new Contribution());
+        List<Contribution> list = new ArrayList<>();
+        list.add(contributionSpy);
+        given(contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR) - 1)).willReturn(list);
+        contributionSpy.setContribute(1000f);
+        contributionService.onFines(now);
+        verify(contributionSpy).setFinesOn(true);
+        verify(contributionSpy).setFinesLastUpdate(now);
+        verify(contributionDAO).save(contributionSpy);
+    }
 
+    /**
+     * Тестирование метода включения режима начисления пеней после июля месяца текущего года
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testOnFinesJulyBenefitTrue() throws Exception {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.MONTH, 6);
+        Rent rent = new Rent();
+        rent.setContributeMax(900f);
+        rent.setContLandMax(200f);
+        given(rentDAO.findByYearRent(now.get(Calendar.YEAR))).willReturn(rent);
+        List<Contribution> list = new ArrayList<>();
+        Contribution contributionSpy = spy(new Contribution());
+        list.add(contributionSpy);
+        given(contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR))).willReturn(list);
+        contributionSpy.setMemberBoardOn(false);
+        contributionSpy.setBenefitsOn(true);
+        contributionSpy.setContribute(900f);
+        contributionSpy.setContLand(100f);
+        contributionService.onFines(now);
+        verify(contributionSpy).setFinesOn(true);
+        verify(contributionSpy).setFinesLastUpdate(now);
+        verify(contributionDAO).save(contributionSpy);
+    }
+
+    /**
+     * Тестирование метода включения режима начисления пеней после июля месяца текущего года
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testOnFinesJulyBenefitFalse() throws Exception {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.MONTH, 6);
+        Rent rent = new Rent();
+        rent.setContributeMax(900f);
+        rent.setContLandMax(200f);
+        given(rentDAO.findByYearRent(now.get(Calendar.YEAR))).willReturn(rent);
+        List<Contribution> list = new ArrayList<>();
+        Contribution contributionSpy = spy(new Contribution());
+        list.add(contributionSpy);
+        given(contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR))).willReturn(list);
+        contributionSpy.setMemberBoardOn(false);
+        contributionSpy.setBenefitsOn(false);
+        contributionSpy.setContribute(900f);
+        contributionSpy.setContLand(200f);
+        contributionService.onFines(now);
+        verify(contributionSpy).setFinesOn(true);
+        verify(contributionSpy).setFinesLastUpdate(now);
+        verify(contributionDAO).save(contributionSpy);
     }
 
 }
