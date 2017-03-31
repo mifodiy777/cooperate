@@ -5,11 +5,11 @@ import com.cooperate.entity.HistoryGarag;
 
 public interface HistoryGaragService {
 
-    public HistoryGarag getHistoryGarag(Integer id);
+    HistoryGarag getHistoryGarag(Integer id);
 
-    public HistoryGarag saveReason(String reason, String fio, Garag garag);
+    HistoryGarag saveReason(String reason, String fio, Garag garag);
 
-    public void delete(Integer id);
+    void delete(Integer id);
 
 
 }

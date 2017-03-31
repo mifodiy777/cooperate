@@ -1,9 +1,7 @@
 package com.cooperate.service;
 
 import com.cooperate.entity.Garag;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -19,23 +17,12 @@ public interface GaragService {
 
     List<String> getSeries();
 
-    public List<Garag> findBySeries(String series);
-
-    List<Garag> getGaragForPersonBenefits();
+    List<Garag> findBySeries(String series);
 
     Garag getGarag(Integer id);
 
     Boolean existGarag(Garag garag);
 
     Float sumContribution(Garag garag);  
-
-    HSSFWorkbook reportAll();
-
-    HSSFWorkbook reportBenefitsPerson();
-
-    HSSFWorkbook reportContribute();
-
-    HSSFWorkbook reportProfit(Calendar start, Calendar end);
-
 
 }

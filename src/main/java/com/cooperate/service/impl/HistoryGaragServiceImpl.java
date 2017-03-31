@@ -16,18 +16,18 @@ public class HistoryGaragServiceImpl implements HistoryGaragService {
     @Autowired
     private HistoryGaragDAO historyGaragDAO;
 
-
+    @Override
     public HistoryGarag getHistoryGarag(Integer id) {
         return historyGaragDAO.getOne(id);
     }
 
-
+    @Override
     @Transactional
     public HistoryGarag saveReason(String reason, String fio, Garag garag) {
         return historyGaragDAO.save(new HistoryGarag(Calendar.getInstance(), fio, reason, garag));
     }
 
-
+    @Override
     @Transactional
     public void delete(Integer id) {
         historyGaragDAO.delete(id);

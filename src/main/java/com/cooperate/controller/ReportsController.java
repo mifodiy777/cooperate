@@ -1,10 +1,7 @@
 package com.cooperate.controller;
 
 import com.cooperate.editor.CalendarCustomEditor;
-import com.cooperate.service.GaragService;
-import com.cooperate.service.JournalHistoryService;
-import com.cooperate.service.PaymentService;
-import com.cooperate.service.RentService;
+import com.cooperate.service.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +26,7 @@ import java.util.Date;
 public class ReportsController {
 
     @Autowired
-    private GaragService garagService;
+    private ReportService reportService;
 
     @Autowired
     private PaymentService paymentService;
@@ -57,7 +54,7 @@ public class ReportsController {
     //Отчет - общий список гаражей
     @RequestMapping(method = RequestMethod.GET, value = "reportAllPerson")
     public String reportAllPerson(HttpServletResponse response, ModelMap map) {
-        HSSFWorkbook workBook = garagService.reportAll();
+        HSSFWorkbook workBook = reportService.reportAll();
         String filename = "Общий список";
         String URLEncodedFileName;
         try {
@@ -88,7 +85,7 @@ public class ReportsController {
     //Отчет -  список льготников
     @RequestMapping(method = RequestMethod.GET, value = "reportBenefitsPerson")
     public String reportBenefitsPerson(HttpServletResponse response, ModelMap map) {
-        HSSFWorkbook workBook = garagService.reportBenefitsPerson();
+        HSSFWorkbook workBook = reportService.reportBenefitsPerson();
         String filename = "Список льготников";
         String URLEncodedFileName;
         try {
@@ -119,7 +116,7 @@ public class ReportsController {
     //Отчет -  список должников
     @RequestMapping(method = RequestMethod.GET, value = "reportContribute")
     public String reportContribute(HttpServletResponse response, ModelMap map) {
-        HSSFWorkbook workBook = garagService.reportContribute();
+        HSSFWorkbook workBook = reportService.reportContribute();
         String filename = "Список должников";
         String URLEncodedFileName;
         try {
@@ -156,7 +153,7 @@ public class ReportsController {
                                HttpServletResponse response, ModelMap map) throws IOException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
-        HSSFWorkbook workBook = garagService.reportProfit(dateStart, dateEnd);
+        HSSFWorkbook workBook = reportService.reportProfit(dateStart, dateEnd);
         String filename = "Отчет по доходам";
         String URLEncodedFileName;
         try {
@@ -165,7 +162,7 @@ public class ReportsController {
             return null;
         }
         String resultFileName = URLEncodedFileName.replace('+', ' ');
-        resultFileName +="(" + dateFormat.format(dateStart.getTime()) + "-" + dateFormat.format(dateEnd.getTime()) + ").xls";
+        resultFileName += "(" + dateFormat.format(dateStart.getTime()) + "-" + dateFormat.format(dateEnd.getTime()) + ").xls";
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + resultFileName + "\"");
         try {
@@ -189,7 +186,7 @@ public class ReportsController {
                                  HttpServletResponse response, ModelMap map) throws IOException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
-        HSSFWorkbook workBook = paymentService.reportPayments(dateStart, dateEnd);
+        HSSFWorkbook workBook = reportService.reportPayments(dateStart, dateEnd);
         String filename = "Отчет по платежам";
         String URLEncodedFileName;
         try {

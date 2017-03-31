@@ -80,14 +80,6 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void testGetMaxNumber() throws Exception {
-        given(paymentDAO.getMaxValueNumber()).willReturn(100);
-        assertEquals(101, paymentService.getMaxNumber().intValue());
-        given(paymentDAO.getMaxValueNumber()).willReturn(null);
-        assertEquals(1, paymentService.getMaxNumber().intValue());
-    }
-
-    @Test
     public void testPay() throws Exception {
 
     }

@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 /**
- * Created by Кирилл on 25.03.2017.
+ * Created by Кирилл on 31.03.2017.
  */
 public class GaragServiceImplTest {
     @BeforeMethod
@@ -40,11 +40,6 @@ public class GaragServiceImplTest {
     }
 
     @Test
-    public void testGetGaragForPersonBenefits() throws Exception {
-
-    }
-
-    @Test
     public void testGetGarag() throws Exception {
 
     }
@@ -56,41 +51,6 @@ public class GaragServiceImplTest {
 
     @Test
     public void testExistGarag() throws Exception {
-
-    }
-
-    @Test
-    public void testReportAll() throws Exception {
-
-    }
-
-    @Test
-    public void testReportBenefitsPerson() throws Exception {
-
-    }
-
-    @Test
-    public void testReportContribute() throws Exception {
-
-    }
-
-    @Test
-    public void testReportProfit() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateHeader() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateFooter() throws Exception {
-
-    }
-
-    @Test
-    public void testCalculatePayment() throws Exception {
 
     }
 

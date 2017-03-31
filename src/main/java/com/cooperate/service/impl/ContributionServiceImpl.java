@@ -25,8 +25,10 @@ public class ContributionServiceImpl implements ContributionService {
 
     /**
      * Метод сохранения долгов определенного года
+     *
      * @param contribution период долга
      */
+    @Override
     @Transactional
     public void saveOrUpdate(Contribution contribution) {
         contributionDAO.save(contribution);
@@ -34,17 +36,20 @@ public class ContributionServiceImpl implements ContributionService {
 
     /**
      * Получение определенного долгового периода для определенного гаража.
+     *
      * @param garagId Id гаража
-     * @param year год долгового периода
+     * @param year    год долгового периода
      * @return долговой период
      */
+    @Override
     public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
         return contributionDAO.getContributionByGaragAndYear(garagId, year);
     }
 
     /**
      * Метод обновления пеней(fines) для всех гаражей с включенным режимом начисления пеней(finesOn)
-      */
+     */
+    @Override
     @Transactional
     public void updateFines() {
         Calendar calendar = Calendar.getInstance();// текущая дата
@@ -103,7 +108,7 @@ public class ContributionServiceImpl implements ContributionService {
         return (today - days) / (24 * 60 * 60 * 1000);
     }
 
-
+    @Override
     public void onFines(Calendar now) {
         //Включение пеней для должников со следующего года
         if (now.get(Calendar.MONTH) == 0) {

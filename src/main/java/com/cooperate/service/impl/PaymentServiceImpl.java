@@ -32,47 +32,39 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private GaragService garagService;
 
-
     public List<Integer> findYears() {
         return paymentDAO.findYears();
     }
 
-
+    @Override
     @Transactional
     public Payment saveOrUpdate(Payment payment) {
         return paymentDAO.save(payment);
     }
 
-
-
+    @Override
     public List<Payment> findByYear(Integer year) {
         return paymentDAO.findByYear(year);
     }
 
-
+    @Override
     public Payment getPayment(Integer id) {
         return paymentDAO.getOne(id);
     }
 
-
+    @Override
     @Transactional
     public void delete(Integer id) {
         paymentDAO.delete(id);
     }
 
     //Возвращает платеж для определенного гаража с остатками денег
-
     public List<Payment> getPaymentOnGarag(Garag garag) {
         return paymentDAO.getPaymentOnGarag(garag.getId());
     }
 
-    public Integer getMaxNumber() {
-        Integer number = paymentDAO.getMaxValueNumber();
-        number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
-        return number;
-    }
-
     //Метод платежа
+    @Override
     @Transactional
     public Payment pay(Payment payment, Boolean isCreateNewPeriod, String type) {
         //Получаем гараж
@@ -165,7 +157,7 @@ public class PaymentServiceImpl implements PaymentService {
                     payment.setPay(0);
                 }
                 //Для текущего года при частичной оплате в любом месяце пени выключаются
-                if(c.getYear().equals(now.get(Calendar.YEAR))){
+                if (c.getYear().equals(now.get(Calendar.YEAR))) {
                     c.setFinesOn(false);
                 }
             }
@@ -176,129 +168,10 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentDAO.save(payment);
     }
 
-
-    public HSSFWorkbook reportPayments(Calendar start, Calendar end) {
-        HSSFWorkbook workBook = new HSSFWorkbook();
-        HSSFSheet sheet = workBook.createSheet("Список платежей");
-        sheet.setActive(true);
-        HSSFRow row = sheet.createRow(0);
-        String[] hatCells = new String[]{"№", "Счет", "Дата", "Гараж", "ФИО", "Сумма", "Членский взнос",
-                "Аренда земли", "Целевой взнос", "Пени", "Доп.взнос", "Долги прошлых лет", "Остаток"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
-        for (int i = 0; i < hatCells.length; i++) {
-            HSSFCell cell = row.createCell(i);
-            cell.setCellValue(hatCells[i]);
-            cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (12 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i >= 5) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
-            }
-        }
-        int numberRow = 1;
-        //При выборе например 18 числа будет выборка всех платеже по 19.01.01 00:00:00
-        end.set(Calendar.DAY_OF_MONTH, end.get(Calendar.DAY_OF_MONTH) + 1);
-        for (Payment p : paymentDAO.findByDateBetween(start, end)) {
-            HSSFRow nextRow = sheet.createRow(numberRow);
-            HSSFCell countCell = nextRow.createCell(0);
-            countCell.setCellValue(numberRow);
-            HSSFCell numberCell = nextRow.createCell(1);
-            numberCell.setCellValue(p.getNumber());
-            Date dt = p.getDatePayment().getTime();
-            DateFormat ndf = new SimpleDateFormat("dd/MM/yyyy");
-            String dateFull = ndf.format(dt);
-            HSSFCell datePay = nextRow.createCell(2);
-            datePay.setCellValue(dateFull);
-            HSSFCell garagCell = nextRow.createCell(3);
-            garagCell.setCellValue(p.getGarag().getName());
-            HSSFCell fioCell = nextRow.createCell(4);
-            fioCell.setCellValue(p.getFio());
-            Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +
-                    p.getPay() + p.getAdditionallyPay() + p.getOldContributePay();
-            HSSFCell sumPayColumn = nextRow.createCell(5);
-            sumPayColumn.setCellValue(sum);
-            HSSFCell contributeColumn = nextRow.createCell(6);
-            contributeColumn.setCellValue(p.getContributePay());
-            HSSFCell landColumn = nextRow.createCell(7);
-            landColumn.setCellValue(p.getContLandPay());
-            HSSFCell tagetColumn = nextRow.createCell(8);
-            tagetColumn.setCellValue(p.getContTargetPay());
-            HSSFCell finesColumn = nextRow.createCell(9);
-            finesColumn.setCellValue(p.getFinesPay());
-            HSSFCell addingColumn = nextRow.createCell(10);
-            addingColumn.setCellValue(p.getAdditionallyPay());
-            HSSFCell oldContributeColumn = nextRow.createCell(11);
-            oldContributeColumn.setCellValue(p.getOldContributePay());
-            HSSFCell reminderColumn = nextRow.createCell(12);
-            reminderColumn.setCellValue(p.getPay());
-            numberRow++;
-        }
-
-        if (numberRow != 1) {
-            CellStyle footerStyle = workBook.createCellStyle();
-            footerStyle.setWrapText(true);
-            footerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            footerStyle.setBorderTop(CellStyle.BORDER_MEDIUM);
-            Font fontFooter = workBook.createFont();
-            fontFooter.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-            footerStyle.setFont(fontFooter);
-            HSSFRow resumeRow = sheet.createRow(numberRow);
-            HSSFCell resume = resumeRow.createCell(4);
-            resume.setCellValue("Итого:");
-            resume.setCellStyle(footerStyle);
-            HSSFCell allContributeResume = resumeRow.createCell(5);
-            allContributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allContributeResume.setCellFormula("SUM(F2:F" + numberRow + ")");
-            allContributeResume.setCellStyle(footerStyle);
-            HSSFCell contributeResume = resumeRow.createCell(6);
-            contributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributeResume.setCellFormula("SUM(G2:G" + numberRow + ")");
-            contributeResume.setCellStyle(footerStyle);
-            HSSFCell landResume = resumeRow.createCell(7);
-            landResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landResume.setCellFormula("SUM(H2:H" + numberRow + ")");
-            landResume.setCellStyle(footerStyle);
-            HSSFCell tagetResume = resumeRow.createCell(8);
-            tagetResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            tagetResume.setCellFormula("SUM(I2:I" + numberRow + ")");
-            tagetResume.setCellStyle(footerStyle);
-            HSSFCell finesResume = resumeRow.createCell(9);
-            finesResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            finesResume.setCellFormula("SUM(J2:J" + numberRow + ")");
-            finesResume.setCellStyle(footerStyle);
-            HSSFCell addingResume = resumeRow.createCell(10);
-            addingResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            addingResume.setCellFormula("SUM(K2:K" + numberRow + ")");
-            addingResume.setCellStyle(footerStyle);
-            HSSFCell oldResume = resumeRow.createCell(11);
-            oldResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            oldResume.setCellFormula("SUM(L2:L" + numberRow + ")");
-            oldResume.setCellStyle(footerStyle);
-            HSSFCell reminderResume = resumeRow.createCell(12);
-            reminderResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            reminderResume.setCellFormula("SUM(M2:M" + numberRow + ")");
-            reminderResume.setCellStyle(footerStyle);
-        }
-        return workBook;
+    private Integer getMaxNumber() {
+        Integer number = paymentDAO.getMaxValueNumber();
+        number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
+        return number;
     }
 }
 

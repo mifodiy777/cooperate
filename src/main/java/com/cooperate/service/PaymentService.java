@@ -15,8 +15,6 @@ public interface PaymentService {
 
     List<Payment> findByYear(Integer year);
     
-    HSSFWorkbook reportPayments(Calendar start, Calendar end);
-
     Payment getPayment(Integer id);
 
     void delete(Integer id);
@@ -24,7 +22,5 @@ public interface PaymentService {
     Payment pay(Payment payment,Boolean isNewPeriod,String type);
 
     List<Payment> getPaymentOnGarag(Garag garag);
-
-    Integer getMaxNumber();
 
 }

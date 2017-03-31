@@ -11,4 +11,5 @@ public interface JournalHistoryService {
     void delete(Integer id);
 
     void event(String event);
+
 }
