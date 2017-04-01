@@ -93,7 +93,9 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    //Метод вычисленеия дней с последнего обновления пеней
+    /**
+     * Метод вычисленеия количества дней с даты последнего обновления пеней
+     */
     private long getDays(Calendar calendar, Calendar lastUpdate) {
         long today = calendar.getTimeInMillis();
         Calendar cal = Calendar.getInstance();
@@ -108,6 +110,10 @@ public class ContributionServiceImpl implements ContributionService {
         return (today - days) / (24 * 60 * 60 * 1000);
     }
 
+    /**
+     * Метод включения режима начисления пеней
+     * @param now Текущая дата
+     */
     @Override
     public void onFines(Calendar now) {
         //Включение пеней для должников со следующего года

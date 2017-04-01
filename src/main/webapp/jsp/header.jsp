@@ -111,10 +111,6 @@
                             <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
                                 Создать новый период</a>
                         </li>
-                        <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/history.jsp'}">active</c:if>">
-                            <a href="<c:url value="/historyPage"/>"><span class="glyphicon glyphicon-header"></span>
-                                История</a>
-                        </li>
                         <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
                             <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
                                 Члены правления</a>
@@ -130,7 +126,7 @@
                     </ul>
                 </li>
                 <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/help.jsp'}">active</c:if>">
-                    <a href="<c:url value="/helpPage"/>"><span class="glyphicon glyphicon-question-sign"></span>
+                    <a href="<c:url value="jsp/help.jsp"/>"><span class="glyphicon glyphicon-question-sign"></span>
                         Помощь</a>
                 </li>
             </ul>

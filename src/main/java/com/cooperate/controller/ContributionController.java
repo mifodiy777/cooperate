@@ -5,8 +5,8 @@ import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
 import com.cooperate.service.ContributionService;
 import com.cooperate.service.GaragService;
-import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.RentService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -30,10 +30,9 @@ public class ContributionController {
     private ContributionService contributionService;
 
     @Autowired
-    private JournalHistoryService journalService;
-
-    @Autowired
     private RentService rentService;
+
+    private final Logger logger = Logger.getLogger(ContributionController.class);
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -68,7 +67,7 @@ public class ContributionController {
                 garag.getContributions().add(contribute);
                 garagService.saveOrUpdate(garag);
             }
-            journalService.event("Долг для гаража " + garag.getName() + " за " +
+            logger.info("Долг для гаража " + garag.getName() + " за " +
                     contribute.getYear() + " год назначен");
             map.put("message", "Долг за " + contribute.getYear() + " год введен успешно");
             return "success";

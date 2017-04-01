@@ -5,10 +5,10 @@ import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.entity.Payment;
 import com.cooperate.gson.PaymentAdapter;
 import com.cooperate.service.GaragService;
-import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PaymentService;
 import com.cooperate.service.RentService;
 import com.google.gson.GsonBuilder;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,7 @@ public class PaymentController {
     @Autowired
     private GaragService garagService;
 
-    @Autowired
-    private JournalHistoryService historyService;
+    private final Logger logger = Logger.getLogger(PaymentController.class);
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -74,7 +73,7 @@ public class PaymentController {
     @ResponseBody
     public Integer savePayment(Payment payment, @RequestParam("type") String type) {
         payment = paymentService.pay(payment, false, type);
-        historyService.event("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
+        logger.info("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
         return payment.getId();
     }
 
@@ -91,7 +90,7 @@ public class PaymentController {
         try {
             String garag = paymentService.getPayment(id).getGarag().getName();
             paymentService.delete(id);
-            historyService.event("Платеж к гаражу " + garag + " удален!");
+            logger.info("Платеж к гаражу " + garag + " удален!");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить платеж");
             response.setStatus(409);

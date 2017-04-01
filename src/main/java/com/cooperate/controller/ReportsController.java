@@ -2,6 +2,7 @@ package com.cooperate.controller;
 
 import com.cooperate.editor.CalendarCustomEditor;
 import com.cooperate.service.*;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,8 +35,7 @@ public class ReportsController {
     @Autowired
     private RentService rentService;
 
-    @Autowired
-    private JournalHistoryService journalService;
+    private final Logger logger = Logger.getLogger(ReportsController.class);
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -74,7 +74,7 @@ public class ReportsController {
             workBook.write(os);
             os.flush();
             os.close();
-            journalService.event("Сформирован отчет  - Общий список ");
+            logger.info("Сформирован отчет  - Общий список ");
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
@@ -105,7 +105,7 @@ public class ReportsController {
             workBook.write(os);
             os.flush();
             os.close();
-            journalService.event("Сформирован отчет  - Список льготников ");
+            logger.info("Сформирован отчет  - Список льготников ");
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
@@ -136,7 +136,7 @@ public class ReportsController {
             workBook.write(os);
             os.flush();
             os.close();
-            journalService.event("Сформирован отчет  - Список должников ");
+            logger.info("Сформирован отчет  - Список должников ");
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
@@ -170,7 +170,7 @@ public class ReportsController {
             workBook.write(os);
             os.flush();
             os.close();
-            journalService.event("Сформирован отчет  - ДОХОДЫ ");
+            logger.info("Сформирован отчет  - ДОХОДЫ ");
         } catch (IOException e) {
             map.put("message", "Ошибка отправки отчета");
             response.setStatus(409);
@@ -203,7 +203,7 @@ public class ReportsController {
             workBook.write(os);
             os.flush();
             os.close();
-            journalService.event("Сформирован отчет  - ПЛАТЕЖИ ");
+            logger.info("Сформирован отчет  - ПЛАТЕЖИ ");
         } catch (IOException e) {
             map.put("message", "Ошибка отправки отчета");
             response.setStatus(409);

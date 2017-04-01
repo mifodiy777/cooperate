@@ -1,8 +1,8 @@
 package com.cooperate.controller;
 
 import com.cooperate.entity.Rent;
-import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.RentService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,8 +18,7 @@ public class RentController {
     @Autowired
     private RentService rentService;
 
-    @Autowired
-    private JournalHistoryService historyService;
+    private final Logger logger = Logger.getLogger(RentController.class);
 
     //Проверка на существование такого начисления
     @RequestMapping(value = "checkYearRent", method = RequestMethod.GET)
@@ -40,7 +39,7 @@ public class RentController {
     public String saveRent(Rent rent, ModelMap map) {
         rentService.saveOrUpdate(rent);
         rentService.createNewPeriod(rent);
-        historyService.event("Создан новый период-" + rent.getYearRent());
+        logger.info("Создан новый период-" + rent.getYearRent());
         map.put("message", "Сумма оплаты за " + rent.getYearRent() + " год введена!");
         return "success";
     }
@@ -57,7 +56,7 @@ public class RentController {
     public String saveOldRent(Rent rent, ModelMap map, HttpServletResponse response) {
         if (rentService.checkRent(rent.getYearRent())) {
             rentService.saveOrUpdate(rent);
-            historyService.event("Создан старый период-" + rent.getYearRent());
+            logger.info("Создан старый период-" + rent.getYearRent());
             map.put("message", "Начисление за " + rent.getYearRent() + " сохранено!");
             return "success";
         } else {

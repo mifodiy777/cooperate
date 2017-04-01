@@ -6,9 +6,9 @@ import com.cooperate.entity.Person;
 import com.cooperate.gson.PersonAdapter;
 import com.cooperate.gson.PersonPageAdapter;
 import com.cooperate.service.GaragService;
-import com.cooperate.service.JournalHistoryService;
 import com.cooperate.service.PersonService;
 import com.google.gson.GsonBuilder;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class
-        PersonController {
+public class PersonController {
 
     @Autowired
     private PersonService personService;
@@ -32,8 +31,7 @@ public class
     @Autowired
     private GaragService garagService;
 
-    @Autowired
-    private JournalHistoryService historyService;
+    private final Logger logger = Logger.getLogger(PersonController.class);
 
     @RequestMapping(value = "persons", method = RequestMethod.GET)
     public ModelAndView getPersonsPage() {
@@ -71,7 +69,7 @@ public class
     @RequestMapping(value = "savePerson", method = RequestMethod.POST)
     public String savePerson(Person person, ModelMap map) {
         personService.saveOrUpdate(person);
-        historyService.event("Владелец сохранен!(" + person.getFIO() + ")");
+        logger.info("Владелец сохранен!(" + person.getFIO() + ")");
         map.put("message", "Владелец сохранен!");
         return "success";
     }
@@ -92,7 +90,7 @@ public class
             Garag garag = garagService.getGarag(idGarag);
             garag.setPerson(null);
             garagService.saveOrUpdate(garag);
-            historyService.event("Удален гараж у владельца(" + garag.getName() + ")");
+            logger.info("Удален гараж у владельца(" + garag.getName() + ")");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как гараж используется!");
             response.setStatus(409);
@@ -111,7 +109,7 @@ public class
                 garagService.saveOrUpdate(garag);
             }
             Person person = personService.getPerson(id);
-            historyService.event("Владелец удаленн(" + person.getFIO() + ")");
+            logger.info("Владелец удаленн(" + person.getFIO() + ")");
             personService.delete(id);
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как владелец используется!");

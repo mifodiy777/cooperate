@@ -3,6 +3,7 @@ package com.cooperate.controller;
 import com.cooperate.entity.Garag;
 import com.cooperate.service.GaragService;
 import com.cooperate.service.HistoryGaragService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ public class HistoryGaragController {
     @Autowired
     private GaragService garagService;
 
+    private final Logger logger = Logger.getLogger(HistoryGaragController.class);
 
     //Информационно модальное окно для история изменений владельцев гаража
 
