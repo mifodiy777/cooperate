@@ -65,7 +65,7 @@ public class ContributionController {
                 contributionService.saveOrUpdate(contribute);
             } else {
                 garag.getContributions().add(contribute);
-                garagService.saveOrUpdate(garag);
+                garagService.save(garag);
             }
             logger.info("Долг для гаража " + garag.getName() + " за " +
                     contribute.getYear() + " год назначен");

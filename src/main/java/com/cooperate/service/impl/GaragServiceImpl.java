@@ -3,6 +3,7 @@ package com.cooperate.service.impl;
 import com.cooperate.dao.CustomDAO;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.entity.*;
+import com.cooperate.exception.ExistGaragException;
 import com.cooperate.service.GaragService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,42 @@ public class GaragServiceImpl implements GaragService {
     private CustomDAO customDAO;
 
     /**
-     * Метод сохранения гаражей в базе
+     * Метод добавления и редактирования гаражей в базе
      *
      * @param garag Гараж с заполненными данными
      * @return Сохраненный гараж с заполненным id
      */
     @Override
     @Transactional
-    public Garag saveOrUpdate(Garag garag) {
+    public Garag saveOrUpdate(Garag garag) throws ExistGaragException {
+        //Редактирование гаража
+        if (!existGarag(garag)) {
+            if (garag.getId() != null) {
+                //todo перенести данную логику в биндер
+                Garag garagEdit = getGarag(garag.getId());
+                garag.setContributions(garagEdit.getContributions());
+                garag.setPayments(garagEdit.getPayments());
+                garag.setHistoryGarags(garagEdit.getHistoryGarags());
+            }
+            if (garag.getId() == null && garag.getPerson() != null && garag.getPerson().getId() != null) {
+                Person p = garag.getPerson();
+                garag.setPerson(null);
+                Garag getGarag = garagDAO.save(garag);
+                getGarag.setPerson(p);
+                return garagDAO.save(getGarag);
+            }
+            return garagDAO.save(garag);
+        }
+        throw new ExistGaragException();
+    }
+
+    /**
+     * @param garag
+     * @return
+     */
+    @Override
+    @Transactional
+    public Garag save(Garag garag) {
         if (garag.getId() == null && garag.getPerson() != null) {
             if (garag.getPerson().getId() != null) {
                 Person p = garag.getPerson();
@@ -114,9 +143,9 @@ public class GaragServiceImpl implements GaragService {
      * @param garag Гараж
      * @return true - гараж существует
      */
-    @Override
+
     //todo менял метод - проверить
-    public Boolean existGarag(Garag garag) {
+    private Boolean existGarag(Garag garag) {
         if (garag.getId() == null) {
             return garagDAO.countBySeriesAndNumber(garag.getSeries(), garag.getNumber()) != 0;
         } else {

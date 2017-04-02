@@ -89,7 +89,7 @@ public class PersonController {
         try {
             Garag garag = garagService.getGarag(idGarag);
             garag.setPerson(null);
-            garagService.saveOrUpdate(garag);
+            garagService.save(garag);
             logger.info("Удален гараж у владельца(" + garag.getName() + ")");
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как гараж используется!");
@@ -106,7 +106,7 @@ public class PersonController {
         try {
             for (Garag garag : personService.getPerson(id).getGaragList()) {
                 garag.setPerson(null);
-                garagService.saveOrUpdate(garag);
+                garagService.save(garag);
             }
             Person person = personService.getPerson(id);
             logger.info("Владелец удаленн(" + person.getFIO() + ")");

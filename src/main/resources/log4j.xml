@@ -2,12 +2,12 @@
 <!DOCTYPE log4j:configuration SYSTEM "/log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-    <appender name="file" class="org.apache.log4j.RollingFileAppender">
+    <appender name="history" class="org.apache.log4j.RollingFileAppender">
         <param name="append" value="false"/>
         <param name="maxFileSize" value="2MB"/>
         <param name="maxBackupIndex" value="5"/>
         <!-- For Tomcat -->
-        <param name="file" value="${catalina.home}/logs/cooperate.log"/>
+        <param name="file" value="${catalina.home}/logs/history.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                    value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
@@ -23,12 +23,11 @@
 
     <logger name="com.cooperate.controller">
         <level value="INFO"/>
-        <appender-ref ref="file"/>
+        <appender-ref ref="history"/>
     </logger>
 
     <root>
         <level value="ERROR"/>
-        <appender-ref ref="file"/>
         <appender-ref ref="console"/>
     </root>
 
