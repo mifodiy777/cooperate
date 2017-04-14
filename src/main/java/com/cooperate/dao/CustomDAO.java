@@ -1,5 +1,6 @@
 package com.cooperate.dao;
 
+import com.cooperate.entity.Garag;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface CustomDAO {
 
     Float getSumContribution(Integer id);
+
+    Boolean existGarag(Garag garag);
 }

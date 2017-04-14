@@ -43,7 +43,12 @@ public class ContributionServiceImpl implements ContributionService {
      */
     @Override
     public Contribution getContributionByGaragAndYear(Integer garagId, Integer year) {
-        return contributionDAO.getContributionByGaragAndYear(garagId, year);
+        Contribution contribution = contributionDAO.getContributionByGaragAndYear(garagId, year);
+        if (contribution == null) {
+            contribution = new Contribution();
+            contribution.setYear(year);
+        }
+        return contribution;
     }
 
     /**
@@ -112,6 +117,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     /**
      * Метод включения режима начисления пеней
+     *
      * @param now Текущая дата
      */
     @Override

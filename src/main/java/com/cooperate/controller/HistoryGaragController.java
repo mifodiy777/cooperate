@@ -32,6 +32,7 @@ public class HistoryGaragController {
     public String historyModalGarag(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("garag", garag);
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "historyGarag";
     }
 
@@ -41,14 +42,12 @@ public class HistoryGaragController {
                                ModelMap map, HttpServletResponse response) {
         try {
             historyGaragService.delete(idReason);
+            map.put("message", "Запись о смене владельца удалена!");
+            return "success";
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить!");
             response.setStatus(409);
             return "error";
         }
-        map.put("message", "Запись о смене владельца удалена!");
-        return "success";
     }
-
-
 }

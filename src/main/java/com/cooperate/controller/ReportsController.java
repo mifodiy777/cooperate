@@ -75,11 +75,11 @@ public class ReportsController {
             os.flush();
             os.close();
             logger.info("Сформирован отчет  - Общий список ");
+            return null;
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
         }
-        return null;
     }
 
     //Отчет -  список льготников
@@ -106,11 +106,11 @@ public class ReportsController {
             os.flush();
             os.close();
             logger.info("Сформирован отчет  - Список льготников ");
+            return null;
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
         }
-        return null;
     }
 
     //Отчет -  список должников
@@ -137,11 +137,11 @@ public class ReportsController {
             os.flush();
             os.close();
             logger.info("Сформирован отчет  - Список должников ");
+            return null;
         } catch (IOException e) {
             map.addAttribute("errMessage", "Ошибка отправки отчета");
             return "error";
         }
-        return null;
     }
 
 
@@ -171,12 +171,13 @@ public class ReportsController {
             os.flush();
             os.close();
             logger.info("Сформирован отчет  - ДОХОДЫ ");
+            return null;
         } catch (IOException e) {
             map.put("message", "Ошибка отправки отчета");
             response.setStatus(409);
             return "error";
         }
-        return null;
+
     }
 
     //Отчет по платежам
@@ -204,12 +205,13 @@ public class ReportsController {
             os.flush();
             os.close();
             logger.info("Сформирован отчет  - ПЛАТЕЖИ ");
+            return null;
         } catch (IOException e) {
             map.put("message", "Ошибка отправки отчета");
             response.setStatus(409);
             return "error";
         }
-        return null;
+
     }
 
 }

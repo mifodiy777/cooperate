@@ -42,6 +42,7 @@ public class PersonController {
     public ResponseEntity<String> getPersons() {
         GsonBuilder gson = new GsonBuilder();
         gson.registerTypeAdapter(Person.class, new PersonPageAdapter());
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gson, personService.getPersons());
     }
 
@@ -55,6 +56,7 @@ public class PersonController {
         GsonBuilder gson = new GsonBuilder();
         gson.excludeFieldsWithoutExposeAnnotation();
         gson.registerTypeAdapter(Person.class, new PersonAdapter());
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gson, personService.getMembers());
     }
 
@@ -71,6 +73,7 @@ public class PersonController {
         personService.saveOrUpdate(person);
         logger.info("Владелец сохранен!(" + person.getFIO() + ")");
         map.put("message", "Владелец сохранен!");
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "success";
     }
 
@@ -78,6 +81,7 @@ public class PersonController {
     public String editPersonForm(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("type", "Режим редактирования владельца");
         map.addAttribute("person", personService.getPerson(id));
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "person";
     }
 
@@ -91,13 +95,13 @@ public class PersonController {
             garag.setPerson(null);
             garagService.save(garag);
             logger.info("Удален гараж у владельца(" + garag.getName() + ")");
+            map.put("message", "Назначение удаленно!");
+            return "success";
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как гараж используется!");
             response.setStatus(409);
             return "error";
         }
-        map.put("message", "Назначение удаленно!");
-        return "success";
     }
 
 
@@ -111,14 +115,12 @@ public class PersonController {
             Person person = personService.getPerson(id);
             logger.info("Владелец удаленн(" + person.getFIO() + ")");
             personService.delete(id);
+            map.put("message", "Владелец удален!");
+            return "success";
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить, так как владелец используется!");
             response.setStatus(409);
             return "error";
         }
-        map.put("message", "Владелец удален!");
-        return "success";
     }
-
-
 }

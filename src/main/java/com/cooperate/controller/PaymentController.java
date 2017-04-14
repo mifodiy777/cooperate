@@ -45,6 +45,7 @@ public class PaymentController {
         map.addAttribute("setYear", (year == null) ? Calendar.getInstance().get(Calendar.YEAR) : year);
         map.addAttribute("years", paymentService.findYears());
         map.addAttribute("rents", rentService.getRents());
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "payments";
     }
 
@@ -53,6 +54,7 @@ public class PaymentController {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.registerTypeAdapter(Payment.class, new PaymentAdapter());
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gsonBuilder, paymentService.findByYear(year));
     }
 
@@ -65,6 +67,7 @@ public class PaymentController {
         Payment payment = new Payment();
         payment.setGarag(garagService.getGarag(id));
         map.addAttribute("payment", payment);
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "modalPay";
     }
 
@@ -74,6 +77,7 @@ public class PaymentController {
     public Integer savePayment(Payment payment, @RequestParam("type") String type) {
         payment = paymentService.pay(payment, false, type);
         logger.info("Оплата по гаражу:" + payment.getGarag().getName() + " произведена");
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return payment.getId();
     }
 
@@ -81,6 +85,7 @@ public class PaymentController {
     @RequestMapping(value = "printOrder/{id}", method = RequestMethod.GET)
     public String printOrder(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("pay", paymentService.getPayment(id));
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "order";
     }
 
@@ -91,14 +96,12 @@ public class PaymentController {
             String garag = paymentService.getPayment(id).getGarag().getName();
             paymentService.delete(id);
             logger.info("Платеж к гаражу " + garag + " удален!");
+            map.put("message", "Платеж удален!");
+            return "success";
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно удалить платеж");
             response.setStatus(409);
             return "error";
         }
-        map.put("message", "Платеж удален!");
-        return "success";
     }
-
-
 }

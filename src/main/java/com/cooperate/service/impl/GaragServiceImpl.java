@@ -34,10 +34,9 @@ public class GaragServiceImpl implements GaragService {
     @Transactional
     public Garag saveOrUpdate(Garag garag) throws ExistGaragException {
         //Редактирование гаража
-        if (!existGarag(garag)) {
+        if (!customDAO.existGarag(garag)) {
             if (garag.getId() != null) {
-                //todo перенести данную логику в биндер
-                Garag garagEdit = getGarag(garag.getId());
+                Garag garagEdit = garagDAO.findOne(garag.getId());
                 garag.setContributions(garagEdit.getContributions());
                 garag.setPayments(garagEdit.getPayments());
                 garag.setHistoryGarags(garagEdit.getHistoryGarags());
@@ -135,22 +134,6 @@ public class GaragServiceImpl implements GaragService {
     @Override
     public Float sumContribution(Garag garag) {
         return customDAO.getSumContribution(garag.getId());
-    }
-
-    /**
-     * Метод определения существования гаража в базе
-     *
-     * @param garag Гараж
-     * @return true - гараж существует
-     */
-
-    //todo менял метод - проверить
-    private Boolean existGarag(Garag garag) {
-        if (garag.getId() == null) {
-            return garagDAO.countBySeriesAndNumber(garag.getSeries(), garag.getNumber()) != 0;
-        } else {
-            return garagDAO.countBySeriesAndNumberAndIdNot(garag.getSeries(), garag.getNumber(), garag.getId()) != 0;
-        }
     }
 
 }

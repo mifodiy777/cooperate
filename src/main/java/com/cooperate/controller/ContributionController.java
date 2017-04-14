@@ -39,22 +39,31 @@ public class ContributionController {
         binder.registerCustomEditor(Calendar.class, new CalendarCustomEditor());
     }
 
-    //Форма добавления старых периодов
+    /**
+     * Форма добавления старых периодов
+     * @param id ID Гаража
+     * @param year год периода
+     * @param map ModelMap
+     * @return страница modalEditContribute.jsp
+     */
     @RequestMapping(value = "editContribute", method = RequestMethod.GET)
     public String editContributeForm(@RequestParam("idGarag") Integer id,
                                      @RequestParam("year") Integer year, ModelMap map) {
-        Contribution contribution = contributionService.getContributionByGaragAndYear(id, year);
-        if (contribution == null) {
-            contribution = new Contribution();
-            contribution.setYear(year);
-        }
-        map.addAttribute("contribution", contribution);
+        map.addAttribute("contribution", contributionService.getContributionByGaragAndYear(id, year));
         map.addAttribute("garag", garagService.getGarag(id));
         map.addAttribute("max", rentService.findByYear(year));
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "modalEditContribute";
     }
 
-    //Добавление старых периодов
+    /**
+     * Добавление старых периодов
+     * @param contribute Период
+     * @param id ID Гаража
+     * @param map ModelMap
+     * @param response Response
+     * @return
+     */
     @RequestMapping(value = "saveContribute", method = RequestMethod.POST)
     public String saveContribute(Contribution contribute,
                                  @RequestParam("idGarag") Integer id,
@@ -69,7 +78,7 @@ public class ContributionController {
             }
             logger.info("Долг для гаража " + garag.getName() + " за " +
                     contribute.getYear() + " год назначен");
-            map.put("message", "Долг за " + contribute.getYear() + " год введен успешно");
+            map.put("message", "Долг за " + contribute.getYear() + " год введен успешно!");
             return "success";
         } catch (DataIntegrityViolationException e) {
             map.put("message", "Невозможно сохранить долг");

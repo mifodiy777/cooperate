@@ -41,6 +41,7 @@ public class RentController {
         rentService.createNewPeriod(rent);
         logger.info("Создан новый период-" + rent.getYearRent());
         map.put("message", "Сумма оплаты за " + rent.getYearRent() + " год введена!");
+        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "success";
     }
 
