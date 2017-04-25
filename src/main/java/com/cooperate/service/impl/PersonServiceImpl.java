@@ -33,7 +33,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<Person> getPersons(String fio) {
         if (fio != null && !fio.isEmpty()) {
-            personDAO.findByPersonfio(fio);
+            return personDAO.findByPersonfio(fio);
         }
         return personDAO.findTop30By();
     }

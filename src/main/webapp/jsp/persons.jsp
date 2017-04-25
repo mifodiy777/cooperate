@@ -9,7 +9,7 @@
 
         $.scrollUp();
 
-       var table = $('.cooperateTable').DataTable({
+        $('.cooperateTable').DataTable({
             "searching": false,
             "paging": false,
             "ajax": {
@@ -71,15 +71,16 @@
         $('#search-field').keypress(function (e) {
             if (e.which == 13) {
                 var input = $(this).val();
-                if (input.length > 4) {
+                if (input.length > 0) {
                     fio = input;
-                    table.ajax.reload(null, false);
+                    $(".cooperateTable").DataTable().ajax.reload(null, false);
                 }
                 console.log(new Date() + " fio = " + fio);
             }
         })
 
     });
+
 
 </script>
 <div class="container-fluid">
@@ -95,7 +96,7 @@
 
         <div class="panel-body">
             <div class="form-group input-group-lg pull-right">
-                <input id="search-field" name="search" class="form-control" placeholder="ПОИСК...">
+                <input id="search-field" name="search" class="form-control" placeholder="Введите ФИО и нажмите Enter">
             </div>
             <table class="table table-striped table-bordered cooperateTable" cellspacing="0" width="100%"></table>
         </div>
