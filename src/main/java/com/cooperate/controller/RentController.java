@@ -45,25 +45,4 @@ public class RentController {
         return "success";
     }
 
-    //Страница с вводом старого начисления
-    @RequestMapping(value = "oldRentPage", method = RequestMethod.GET)
-    public String oldRentPage(ModelMap map) {
-        map.addAttribute("rent", new Rent());
-        return "oldRent";
-    }
-
-    //Сохранения старого начисления
-    @RequestMapping(value = "saveOldRent", method = RequestMethod.POST)
-    public String saveOldRent(Rent rent, ModelMap map, HttpServletResponse response) {
-        if (rentService.checkRent(rent.getYearRent())) {
-            rentService.saveOrUpdate(rent);
-            logger.info("Создан старый период-" + rent.getYearRent());
-            map.put("message", "Начисление за " + rent.getYearRent() + " сохранено!");
-            return "success";
-        } else {
-            map.put("message", "Начисление данного года уже существует !");
-            response.setStatus(409);
-            return "error";
-        }
-    }
 }

@@ -5,10 +5,19 @@
 
     $(document).ready(function () {
 
+        var fio = "";
+
         $.scrollUp();
 
-        $('.cooperateTable').DataTable({
-            "ajax": "allPerson",
+       var table = $('.cooperateTable').DataTable({
+            "searching": false,
+            "paging": false,
+            "ajax": {
+                "url": "allPerson",
+                data: function (d) {
+                    d.fio = fio;
+                }
+            },
             "fnCreatedRow": function (nRow, aData) {
                 $(nRow).attr('id', 'personTR_' + aData.id);
             },
@@ -59,6 +68,17 @@
             ]
         });
 
+        $('#search-field').keypress(function (e) {
+            if (e.which == 13) {
+                var input = $(this).val();
+                if (input.length > 4) {
+                    fio = input;
+                    table.ajax.reload(null, false);
+                }
+                console.log(new Date() + " fio = " + fio);
+            }
+        })
+
     });
 
 </script>
@@ -74,6 +94,9 @@
         <br>
 
         <div class="panel-body">
+            <div class="form-group input-group-lg pull-right">
+                <input id="search-field" name="search" class="form-control" placeholder="ПОИСК...">
+            </div>
             <table class="table table-striped table-bordered cooperateTable" cellspacing="0" width="100%"></table>
         </div>
     </div>

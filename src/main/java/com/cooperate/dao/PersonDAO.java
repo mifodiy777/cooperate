@@ -25,4 +25,6 @@ public interface PersonDAO extends JpaRepository<Person, Integer> {
 
     List<Person> findByMemberBoard(Boolean memberBoard);
 
+    List<Person> findTop30By();
+
 }

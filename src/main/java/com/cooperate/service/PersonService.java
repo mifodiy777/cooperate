@@ -13,7 +13,7 @@ public interface PersonService {
 
     void delete(Integer id);
 
-    List<Person> getPersons();
+    List<Person> getPersons(String fio);
 
     List<Person> getMembers();
 

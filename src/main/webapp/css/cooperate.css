@@ -200,6 +200,10 @@ footer {
     right: 30;
 }
 
+#search-field{
+    width: 300px;
+}
+
 /*for bootstrap*/
 .navbar-custom {
     background-color: #5cb85c;

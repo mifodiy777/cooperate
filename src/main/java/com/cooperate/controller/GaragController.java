@@ -314,22 +314,4 @@ public class GaragController {
             return "error";
         }
     }
-
-    //Пересччет долгов по пеням и включение пеней
-
-    @RequestMapping(value = "updateFines", method = RequestMethod.POST)
-    public String updateFines(ModelMap map, HttpServletResponse response) {
-        try {
-            contributionService.updateFines();
-            contributionService.onFines(Calendar.getInstance());
-            Cookie day_sync = new Cookie("day_sync", "checked");
-            response.addCookie(day_sync);
-            map.put("message", "Данные успешно обнавленны!");
-            return "success";
-        } catch (DataIntegrityViolationException e) {
-            map.put("message", "Данные не обновились! Обратитесь к администратору ");
-            response.setStatus(409);
-            return "error";
-        }
-    }
 }

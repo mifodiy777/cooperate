@@ -39,11 +39,11 @@ public class PersonController {
     }
 
     @RequestMapping(value = "allPerson", method = RequestMethod.GET)
-    public ResponseEntity<String> getPersons() {
+    public ResponseEntity<String> getPersons(@RequestParam("fio") String fio) {
         GsonBuilder gson = new GsonBuilder();
         gson.registerTypeAdapter(Person.class, new PersonPageAdapter());
         //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
-        return Utils.convertListToJson(gson, personService.getPersons());
+        return Utils.convertListToJson(gson, personService.getPersons(fio));
     }
 
     @RequestMapping(value = "membersPage", method = RequestMethod.GET)

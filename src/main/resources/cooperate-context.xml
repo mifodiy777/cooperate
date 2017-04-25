@@ -53,4 +53,8 @@
                       entity-manager-factory-ref="emf"
                       transaction-manager-ref="jpaTransactionManager"/>
 
+    <bean id="init" class="com.cooperate.InitFines">
+        <constructor-arg ref="contributionServiceImpl"/>
+    </bean>
+
 </beans>

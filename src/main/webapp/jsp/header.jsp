@@ -48,12 +48,6 @@
             }
         });
 
-        $(document).ready(function () {
-            if ($.cookie('day_sync') == null) {
-                updateFines();
-            }
-        })
-
     </script>
 </head>
 <div class="navbar navbar-custom navbar-static-top">
@@ -102,29 +96,17 @@
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a id="adminPageBtn" href="#" class="dropdown-toggle" data-toggle="dropdown"
-                       role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>
-                        Администрирование </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
-                                Создать новый период</a>
-                        </li>
-                        <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
-                            <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
-                                Члены правления</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="updateFines()"><span class="glyphicon glyphicon-refresh"></span>
-                                Обновить</a>
-                        </li>
-                        <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/oldRent.jsp'}">active</c:if>">
-                            <a href="<c:url value="/oldRentPage"/>"><span class="glyphicon glyphicon-usd"></span>
-                                Внести прошлые начисления</a>
-                        </li>
-                    </ul>
+                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
+                    <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
+                        Члены правления</a>
                 </li>
+                <li>
+                    <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
+                        Новый период</a>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
                 <li class=" <c:if test="${pageContext.request.servletPath eq '/jsp/help.jsp'}">active</c:if>">
                     <a href="<c:url value="jsp/help.jsp"/>"><span class="glyphicon glyphicon-question-sign"></span>
                         Помощь</a>

@@ -51,8 +51,12 @@ public class PersonServiceImplTest {
 
     @Test
     public void testGetPersons() throws Exception {
-        service.getPersons();
-        verify(personDAO).findAll();
+        String fio = null;
+        service.getPersons(fio);
+        verify(personDAO).findTop30By();
+        fio = "fio";
+        service.getPersons(fio);
+        verify(personDAO).findByPersonfio(fio);
     }
 
     @Test

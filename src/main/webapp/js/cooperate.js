@@ -51,19 +51,6 @@ function openNewRent() {
     });
 }
 
-function updateFines() {
-    $.ajax({
-        method: "POST",
-        url: "updateFines",
-        success: function (html) {
-            showSuccessMessage(html);
-        },
-        error: function (xhr) {
-            showErrorMessage(xhr.responseText);
-        }
-    })
-}
-
 function loadOwner(pattern) {
     if (pattern.length > 3) {
         $.post("searchPerson", {pattern: pattern.trim()}).done(function (html) {

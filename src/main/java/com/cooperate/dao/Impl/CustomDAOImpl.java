@@ -2,6 +2,7 @@ package com.cooperate.dao.Impl;
 
 import com.cooperate.dao.CustomDAO;
 import com.cooperate.entity.Garag;
+import com.cooperate.entity.Person;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -55,6 +56,5 @@ public class CustomDAOImpl implements CustomDAO {
         predicates.add(builder.equal(root.get("number"), garag.getNumber()));
         cq.where(predicates.toArray(new Predicate[]{}));
         return em.createQuery(cq).getSingleResult() > 0;
-
     }
 }
