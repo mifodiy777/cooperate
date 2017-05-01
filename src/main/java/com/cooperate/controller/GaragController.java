@@ -8,7 +8,9 @@ import com.cooperate.gson.PersonAdapter;
 import com.cooperate.service.*;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +29,6 @@ import java.util.List;
  * Контороллер по работе с гаражами
  * Created by Кирилл on 25.07.2015.
  */
-
 @Controller
 public class GaragController {
 
@@ -44,9 +44,6 @@ public class GaragController {
     @Autowired
     private RentService rentService;
 
-    @Autowired
-    private HistoryGaragService historyGaragService;
-
     private static final Logger logger = Logger.getLogger(GaragController.class);
 
     /**
@@ -58,10 +55,14 @@ public class GaragController {
      */
     @RequestMapping(value = "garagPage", method = RequestMethod.GET)
     public String getGaragsPage(@RequestParam(defaultValue = "1", value = "series") String series, ModelMap map) {
-        map.addAttribute("setSeries", series); //ряд
-        map.addAttribute("series", garagService.getSeries()); //список рядов для nav-tabs
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
-        return "garags";
+        map.addAttribute("setSeries", series); //ряд, по умолчанию выбирается ряд "1"
+        try {
+            map.addAttribute("series", garagService.getSeries()); //список рядов для nav-tabs
+            return "garags";
+        } catch (DataAccessResourceFailureException e) {
+            map.addAttribute("textError", "Ошибка базы данных, проверте подключение к БД");
+            return "errorPage";
+        }
     }
 
     /**
@@ -76,10 +77,14 @@ public class GaragController {
     public String linkGarag(@RequestParam("id") Integer id, @RequestParam("series") String series,
                             ModelMap map) {
         map.addAttribute("setSeries", series);// ряд
-        map.addAttribute("series", garagService.getSeries()); //список рядов для nav-tabs
-        map.addAttribute("garagId", id); // id выбранного гаража
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
-        return "garags";
+        try {
+            map.addAttribute("series", garagService.getSeries()); //список рядов для nav-tabs
+            map.addAttribute("garagId", id); // id выбранного гаража
+            return "garags";
+        } catch (DataAccessResourceFailureException e) {
+            map.addAttribute("textError", "Ошибка базы данных, проверте подключение к БД");
+            return "errorPage";
+        }
     }
 
     /**
@@ -97,11 +102,8 @@ public class GaragController {
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
         if (garag != null) {
-            List<Garag> garags = new ArrayList<Garag>();
-            garags.add(garagService.getGarag(garag));
-            return Utils.convertListToJson(gsonBuilder, garags);
+            return Utils.convertObjectToJson(gsonBuilder, garagService.getGarag(garag));
         }
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gsonBuilder, garagService.findBySeries(series));
     }
 
@@ -112,12 +114,11 @@ public class GaragController {
      * @return garag.jsp
      */
     @RequestMapping(value = "garag", method = RequestMethod.GET)
-    public String addGaragForm(ModelMap map) {
+    public String addGaragForm(ModelMap map, HttpServletResponse response) {
         map.addAttribute("type", "Режим добавления гаража");
         map.addAttribute("isOldGarag", false); //создание гаража
         map.addAttribute("rents", rentService.getRents()); // список периодов системы
         map.addAttribute("garag", new Garag());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "garag";
     }
 
@@ -134,7 +135,6 @@ public class GaragController {
         map.addAttribute("isOldGarag", true); //редактирование гаража
         map.addAttribute("rents", rentService.findAll());
         map.addAttribute("garag", garagService.getGarag(id));
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "garag";
     }
 
@@ -149,8 +149,7 @@ public class GaragController {
     public String changePerson(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("garag", garag);
-        map.addAttribute("person", garag.getPerson());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
+        map.addAttribute("person", garag.getPerson()); //для Spring формы требуется отдельная подгрузка аттрибута
         return "changePerson";
     }
 
@@ -163,6 +162,7 @@ public class GaragController {
      * @param searchPerson Выполнялся ли поиск и замена владельца
      * @param deletePerson Удалять ли предыдущего владельца
      * @param oneGarag     Замена только ли у текущего гаража
+     * @param reason       Описание  причины смены владельца
      * @param map          ModelMap
      * @return сообщение об успешном выполнении замены владельца
      */
@@ -174,45 +174,9 @@ public class GaragController {
                                @RequestParam("oldPerson") Integer oldPersonId,
                                @RequestParam("countGarag") Boolean oneGarag,
                                @RequestParam("reason") String reason, ModelMap map) {
-        //todo переделать, перенести в сервис
-        //Дергаем текущий гараж
-        Garag garag = garagService.getGarag(garagId);
-        // Если поиск не производился(т.е. новый владелец не из базы и удалять его не надо)
-        if (!searchPerson && !deletePerson) {
-            //Очищаем id владельца
-            person.setId(null);
-            //Очищаем адрес
-            person.getAddress().setId(null);
-        }
-        //Если гараж у данного владельца не один, владельца необходимо удалить, поиск 
-        if (!oneGarag && deletePerson && !searchPerson) {
-            for (Garag g : garag.getPerson().getGaragList()) {
-                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
-            }
-            personService.saveOrUpdate(person);
-            logger.info("Владелец заменен!(" + person.getFIO() + ")");
-            map.put("message", "Владелец заменен!");
-            return "success";
-        }
-        if (oneGarag) {
-            historyGaragService.saveReason(reason, garag.getPerson().getFIO(), garag);
-            garag.setPerson(person);
-            garagService.save(garag);
-        } else {
-            Person oldPerson = personService.getPerson(oldPersonId);
-            person = personService.saveOrUpdate(person);
-            for (Garag g : oldPerson.getGaragList()) {
-                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
-                g.setPerson(person);
-                garagService.save(g);
-            }
-        }
-        if (searchPerson && deletePerson) {
-            personService.delete(oldPersonId);
-        }
+        garagService.changePerson(garagService.getGarag(garagId),person,searchPerson,deletePerson,oldPersonId,oneGarag,reason);
         logger.info("Владелец заменен!(" + person.getFIO() + ")");
         map.put("message", "Владелец заменен!");
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "success";
     }
 
@@ -231,9 +195,7 @@ public class GaragController {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
-        //todo помоему это лишнее
         map.addAttribute("fio", garag.getPerson().getFIO());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "garagInf";
     }
 
@@ -251,12 +213,16 @@ public class GaragController {
         map.addAttribute("garag", garag);
         map.addAttribute("fio", garag.getPerson().getFIO());
         map.addAttribute("now", Calendar.getInstance().getTime());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "infPrint";
     }
 
-    //Сохранения гаража
-
+    /**
+     * Сохранения гаража
+     * @param garag Гараж
+     * @param map ModelMap
+     * @param response ответ
+     * @return  сообщение о результате
+     */
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
         try {
@@ -278,28 +244,39 @@ public class GaragController {
         }
     }
 
-    //Поиск имеющихся владельцев
-
+    /**
+     * Поиск имеющихся владельцев
+     *
+     * @param pattern Часть ФИО для поиска
+     * @param map ModelMap
+     * @return страница personRes.jsp со список подходящих владельцев по имеющейся части ФИО
+     */
     @RequestMapping(value = "searchPerson", method = RequestMethod.POST)
     public String searchPerson(@RequestParam("pattern") String pattern, ModelMap map) {
         List<Person> persons = personService.findByfio(pattern);
         map.addAttribute("persons", persons);
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "personRes";
     }
 
-    //Вывод владельца после поиска и внесение в форму данных
-
+    /**
+     * Определенный владелец в формате JSON
+     * @param id ID Владельца
+     * @return json - ответ, найденный владелец.
+     */
     @RequestMapping(value = "getPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPerson(@RequestParam("personId") Integer id) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.createJsonResponse(gsonBuilder, personService.getPerson(id));
     }
 
-    //Удаление гаража
-
+    /**
+     * Удаление гаража
+     * @param id ID Гаража
+     * @param map ModelMap
+     * @param response ответ
+     * @return Сообщение о результате удаления гаража
+     */
     @RequestMapping(value = "deleteGarag/{id}", method = RequestMethod.POST)
     public String deleteGarag(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {

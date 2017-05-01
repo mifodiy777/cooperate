@@ -20,7 +20,14 @@ public class RentController {
 
     private final Logger logger = Logger.getLogger(RentController.class);
 
-    //Проверка на существование такого начисления
+    /**
+     * Проверка на существование определенного начисления
+     * @param year год начисления
+     * @param map  ModelMap
+     * @param response ответ
+     * @return Если не существует начисление текущего года, то отображается форма создания нового начисления modalNewRent.jsp
+     *         Если существует, то отображается ошибка создания нового начисления.
+     */
     @RequestMapping(value = "checkYearRent", method = RequestMethod.GET)
     public String checkYearRent(@RequestParam("year") Integer year, ModelMap map,
                                 HttpServletResponse response) {
@@ -35,13 +42,18 @@ public class RentController {
         }
     }
 
+    /**
+     * Сохранения нового начисления
+     * @param rent Начисление
+     * @param map ModelMap
+     * @return Сообщение о результате сохранения нового начисления
+     */
     @RequestMapping(value = "saveRent", method = RequestMethod.POST)
     public String saveRent(Rent rent, ModelMap map) {
         rentService.saveOrUpdate(rent);
         rentService.createNewPeriod(rent);
         logger.info("Создан новый период-" + rent.getYearRent());
         map.put("message", "Сумма оплаты за " + rent.getYearRent() + " год введена!");
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "success";
     }
 

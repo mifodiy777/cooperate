@@ -33,33 +33,54 @@ public class PersonController {
 
     private final Logger logger = Logger.getLogger(PersonController.class);
 
+    /**
+     * Страница владельцев
+     * @return persons.jsp
+     */
     @RequestMapping(value = "persons", method = RequestMethod.GET)
     public ModelAndView getPersonsPage() {
         return new ModelAndView("persons");
+
     }
 
+    /**
+     * Получение владельцев любые 30 или по части ФИО
+     * @param fio Часть ФИО
+     * @return JSON список владельцев
+     */
     @RequestMapping(value = "allPerson", method = RequestMethod.GET)
     public ResponseEntity<String> getPersons(@RequestParam("fio") String fio) {
         GsonBuilder gson = new GsonBuilder();
         gson.registerTypeAdapter(Person.class, new PersonPageAdapter());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gson, personService.getPersons(fio));
     }
 
+    /**
+     * Страница членов правления
+     * @return members.jsp
+     */
     @RequestMapping(value = "membersPage", method = RequestMethod.GET)
-    public ModelAndView getPavilionsPage() {
+    public ModelAndView getMembersPage() {
         return new ModelAndView("members");
     }
 
+    /**
+     * Получение списка всех членов правления
+     * @return JSON список членов правления
+     */
     @RequestMapping(value = "members", method = RequestMethod.GET)
     public ResponseEntity<String> getMembers() {
         GsonBuilder gson = new GsonBuilder();
         gson.excludeFieldsWithoutExposeAnnotation();
         gson.registerTypeAdapter(Person.class, new PersonAdapter());
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return Utils.convertListToJson(gson, personService.getMembers());
     }
 
+    /**
+     * Форма добавления владельцев
+     * @param map ModelMap
+     * @return person.jsp
+     */
     @RequestMapping(value = "person", method = RequestMethod.GET)
     public String addPersonForm(ModelMap map) {
         map.addAttribute("type", "Режим добавления владельца");
@@ -67,7 +88,12 @@ public class PersonController {
         return "person";
     }
 
-
+    /**
+     * Сохранение владельца
+     * @param person Владелец
+     * @param map ModelMap
+     * @return Сообщение о результате сохранения владельца
+     */
     @RequestMapping(value = "savePerson", method = RequestMethod.POST)
     public String savePerson(Person person, ModelMap map) {
         personService.saveOrUpdate(person);
@@ -77,6 +103,12 @@ public class PersonController {
         return "success";
     }
 
+    /**
+     * Форма редактирования владельца
+     * @param id ID владельца
+     * @param map ModelMap
+     * @return person.jsp
+     */
     @RequestMapping(value = "person/{id}", method = RequestMethod.GET)
     public String editPersonForm(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("type", "Режим редактирования владельца");
@@ -86,7 +118,13 @@ public class PersonController {
     }
 
 
-    //Удаление назначения к гаражу из режима редактирования владельца
+    /**
+     * Удаление назначения к гаражу из режима редактирования владельца
+     * @param idGarag ID Гаража
+     * @param map ModelMap
+     * @param response ответ
+     * @return Сообщение о результате удаления назначения к гаражу
+     */
     @RequestMapping(value = "deleteGaragInPerson", method = RequestMethod.POST)
     public String deletePerson(@RequestParam("idGarag") Integer idGarag,
                                ModelMap map, HttpServletResponse response) {
@@ -104,7 +142,13 @@ public class PersonController {
         }
     }
 
-
+    /**
+     * Удаление владельца
+     * @param id ID владельца
+     * @param map ModelMap
+     * @param response ответ
+     * @return Сообщение о результате удаления владельца
+     */
     @RequestMapping(value = "deletePerson/{id}", method = RequestMethod.POST)
     public String deleteGarag(@PathVariable("id") Integer id, ModelMap map, HttpServletResponse response) {
         try {

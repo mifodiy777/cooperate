@@ -1,6 +1,7 @@
 package com.cooperate.service;
 
 import com.cooperate.entity.Garag;
+import com.cooperate.entity.Person;
 import com.cooperate.exception.ExistGaragException;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface GaragService {
     Garag getGarag(Integer id);
 
     Float sumContribution(Garag garag);
+
+    void changePerson(Garag garag, Person person, Boolean searchPerson, Boolean deletePerson, Integer oldPersonId, Boolean oneGarag, String reason);
 
 }

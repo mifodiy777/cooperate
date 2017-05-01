@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 
+/**
+ * Контроллер по работе с долговыми периодами
+ */
 @Controller
 public class ContributionController {
 
@@ -41,27 +44,36 @@ public class ContributionController {
 
     /**
      * Форма добавления старых периодов
-     * @param id ID Гаража
+     *
+     * @param id   ID Гаража
      * @param year год периода
-     * @param map ModelMap
+     * @param map  ModelMap
+     * @param response   Response
      * @return страница modalEditContribute.jsp
      */
     @RequestMapping(value = "editContribute", method = RequestMethod.GET)
     public String editContributeForm(@RequestParam("idGarag") Integer id,
-                                     @RequestParam("year") Integer year, ModelMap map) {
-        map.addAttribute("contribution", contributionService.getContributionByGaragAndYear(id, year));
-        map.addAttribute("garag", garagService.getGarag(id));
-        map.addAttribute("max", rentService.findByYear(year));
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
-        return "modalEditContribute";
+                                     @RequestParam("year") Integer year, ModelMap map, HttpServletResponse response) {
+        try {
+            map.addAttribute("contribution", contributionService.getContributionByGaragAndYear(id, year));
+            map.addAttribute("garag", garagService.getGarag(id));
+            map.addAttribute("max", rentService.findByYear(year));
+            return "modalEditContribute";
+        } catch (DataIntegrityViolationException e){
+            logger.error("Невозможно получить форму долгового периода, ошибка БД!");
+            map.put("message", "Невозможно получить форму долгового периода, ошибка БД!");
+            response.setStatus(409);
+            return "error";
+        }
     }
 
     /**
      * Добавление старых периодов
+     *
      * @param contribute Период
-     * @param id ID Гаража
-     * @param map ModelMap
-     * @param response Response
+     * @param id         ID Гаража
+     * @param map        ModelMap
+     * @param response   Response
      * @return
      */
     @RequestMapping(value = "saveContribute", method = RequestMethod.POST)
@@ -86,5 +98,4 @@ public class ContributionController {
             return "error";
         }
     }
-
 }

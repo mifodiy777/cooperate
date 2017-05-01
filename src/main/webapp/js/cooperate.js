@@ -106,6 +106,10 @@ function emptyGarag() {
 function setOldContribute(id, year) {
     $.get('editContribute', {"idGarag": id, "year": year}, function (html) {
         $("#modalDiv").html(html);
+    }).fail(function (xhr) {
+        if (xhr.status == 409) {
+            showErrorMessage(xhr.responseText);
+        }
     });
 }
 
@@ -132,8 +136,7 @@ function payGarag(id, type) {
 }
 
 function saveEntity(entity) {
-    $("#formPanel").empty();
-    $("#formPanel").load(entity);
+    $("#formPanel").empty().load(entity);
     $(".addBtn").hide();
 }
 

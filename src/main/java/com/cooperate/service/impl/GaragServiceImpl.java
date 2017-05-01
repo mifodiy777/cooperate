@@ -5,6 +5,8 @@ import com.cooperate.dao.GaragDAO;
 import com.cooperate.entity.*;
 import com.cooperate.exception.ExistGaragException;
 import com.cooperate.service.GaragService;
+import com.cooperate.service.HistoryGaragService;
+import com.cooperate.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,12 @@ public class GaragServiceImpl implements GaragService {
 
     @Autowired
     private CustomDAO customDAO;
+
+    @Autowired
+    private HistoryGaragService historyGaragService;
+
+    @Autowired
+    private PersonService personService;
 
     /**
      * Метод добавления и редактирования гаражей в базе
@@ -136,5 +144,39 @@ public class GaragServiceImpl implements GaragService {
         return customDAO.getSumContribution(garag.getId());
     }
 
+    @Override
+    public void changePerson(Garag garag,Person person, Boolean searchPerson, Boolean deletePerson, Integer oldPersonId, Boolean oneGarag, String reason) {
+        // Если поиск не производился(т.е. новый владелец не из базы и удалять его не надо)
+        if (!searchPerson && !deletePerson) {
+            //Очищаем id владельца
+            person.setId(null);
+            //Очищаем адрес
+            person.getAddress().setId(null);
+        }
+        //Если гараж у данного владельца не один, владельца необходимо удалить, поиск
+        if (!oneGarag && deletePerson && !searchPerson) {
+            for (Garag g : garag.getPerson().getGaragList()) {
+                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
+            }
+            personService.saveOrUpdate(person);
+            return;
+        }
+        if (oneGarag) {
+            historyGaragService.saveReason(reason, garag.getPerson().getFIO(), garag);
+            garag.setPerson(person);
+            save(garag);
+        } else {
+            Person oldPerson = personService.getPerson(oldPersonId);
+            person = personService.saveOrUpdate(person);
+            for (Garag g : oldPerson.getGaragList()) {
+                historyGaragService.saveReason(reason, garag.getPerson().getFIO(), g);
+                g.setPerson(person);
+                save(g);
+            }
+        }
+        if (searchPerson && deletePerson) {
+            personService.delete(oldPersonId);
+        }
+    }
 }
 

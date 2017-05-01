@@ -83,6 +83,12 @@ public class Payment implements Serializable {
     @Column(name = "debt_past_pay")
     private float debtPastPay;
 
+    public Payment(Garag garag) {
+        this.garag = garag;
+    }
+
+    public Payment() {
+    }
 
     public Integer getId() {
         return id;

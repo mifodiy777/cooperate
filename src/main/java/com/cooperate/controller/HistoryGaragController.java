@@ -26,17 +26,28 @@ public class HistoryGaragController {
 
     private final Logger logger = Logger.getLogger(HistoryGaragController.class);
 
-    //Информационно модальное окно для история изменений владельцев гаража
+    //
 
+    /**
+     * Информационно модальное окно с историей изменений владельцев гаража
+     * @param id Гаража
+     * @param map ModelMap
+     * @return страница historyGarag.jsp
+     */
     @RequestMapping(value = "getHistoryGarag/{id}", method = RequestMethod.GET)
     public String historyModalGarag(@PathVariable("id") Integer id, ModelMap map) {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("garag", garag);
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "historyGarag";
     }
 
-    //Удаление гаража
+    /**
+     * Удаление записи об изменении владельца у текущего гаража
+     * @param idReason ID Записи об изменении владельца у гаража
+     * @param map ModelMap
+     * @param response ответ
+     * @return Сообщение о результате удаления записи
+     */
     @RequestMapping(value = "deleteReason", method = RequestMethod.POST)
     public String deleteReason(@RequestParam("idReason") Integer idReason,
                                ModelMap map, HttpServletResponse response) {

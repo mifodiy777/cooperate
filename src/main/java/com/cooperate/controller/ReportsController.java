@@ -44,6 +44,12 @@ public class ReportsController {
 
 
     //Страница отчетов
+
+    /**
+     * Страница дополнительных отчетов
+     * @param map ModelMap
+     * @return report.jsp
+     */
     @RequestMapping(value = "reportOther", method = RequestMethod.GET)
     public String reportOther(ModelMap map) {
         map.addAttribute("rents", rentService.getRents());
@@ -51,7 +57,12 @@ public class ReportsController {
         return "report";
     }
 
-    //Отчет - общий список гаражей
+    /**
+     * Отчет - общий список гаражей
+     * @param response
+     * @param map
+     * @return Отчет - общий список гаражей
+     */
     @RequestMapping(method = RequestMethod.GET, value = "reportAllPerson")
     public String reportAllPerson(HttpServletResponse response, ModelMap map) {
         HSSFWorkbook workBook = reportService.reportAll();
@@ -82,7 +93,12 @@ public class ReportsController {
         }
     }
 
-    //Отчет -  список льготников
+    /**
+     * Отчет -  список льготников
+     * @param response
+     * @param map
+     * @return Отчет -  список льготников
+     */
     @RequestMapping(method = RequestMethod.GET, value = "reportBenefitsPerson")
     public String reportBenefitsPerson(HttpServletResponse response, ModelMap map) {
         HSSFWorkbook workBook = reportService.reportBenefitsPerson();
@@ -113,7 +129,12 @@ public class ReportsController {
         }
     }
 
-    //Отчет -  список должников
+    /**
+     * Отчет -  список должников
+     * @param response
+     * @param map
+     * @return Отчет -  список должников
+     */
     @RequestMapping(method = RequestMethod.GET, value = "reportContribute")
     public String reportContribute(HttpServletResponse response, ModelMap map) {
         HSSFWorkbook workBook = reportService.reportContribute();
@@ -145,7 +166,16 @@ public class ReportsController {
     }
 
 
-    //Отчет -  доходы
+    /**
+     * Отчет -  доходы
+     * @param dateStart Дата начала периода отчета
+     * @param dateEnd Дата завершения периода отчета
+     * @param response
+     * @param map
+     * @return отчет
+     * @throws IOException
+     * @throws ParseException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "reportProfit")
     public String reportProfit(@RequestParam("profitDateStart") Calendar dateStart,
                                @RequestParam("profitDateEnd") Calendar dateEnd,
@@ -180,7 +210,16 @@ public class ReportsController {
 
     }
 
-    //Отчет по платежам
+    /**
+     * Отчет по платежам
+     * @param dateStart Дата начала периода отчета
+     * @param dateEnd Дата завершения периода отчета
+     * @param response
+     * @param map
+     * @return отчет
+     * @throws IOException
+     * @throws ParseException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "reportPayments")
     public String reportPayments(@RequestParam("paymentDateStart") Calendar dateStart,
                                  @RequestParam("paymentDateEnd") Calendar dateEnd,
