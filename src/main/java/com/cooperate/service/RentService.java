@@ -24,22 +24,39 @@ public class RentService {
     @Autowired
     private PaymentService paymentService;
 
+    /**
+     * Сохранение периода начислений
+     * @param rent период начислений
+     */
     @Transactional
     public void saveOrUpdate(Rent rent) {
         rentDAO.save(rent);
     }
 
     //Существует ли период начислений
+
+    /**
+     * Проверка существования периода определенного года
+     * @param year год
+     * @return true если не существует
+     */
     public Boolean checkRent(Integer year) {
         return rentDAO.countByYearRent(year) == 0;
     }
 
+    /**
+     * Получение всех периодов начисления
+     * @return список периодов
+     */
     public List<Rent> getRents() {
         return rentDAO.findAll();
     }
 
+    /**
+     * Создание нового периода
+     * @param rent период
+     */
     @Transactional
-    //Создание нового периода
     public void createNewPeriod(Rent rent) {
         for (Garag garag : garagService.getGarags()) {
             if (garag.getPerson() != null) {
@@ -73,11 +90,19 @@ public class RentService {
         }
     }
 
-    //Период начисления определенного года
+    /**
+     * Получение периода определенного года
+     * @param year год
+     * @return период
+     */
     public Rent findByYear(Integer year) {
         return rentDAO.findByYearRent(year);
     }
 
+    /**
+     * Получение всех периодов в отсортированном порядке
+     * @return список периодов
+     */
     public List<Rent> findAll() {
         return rentDAO.findAll(sortByYearAsc());
     }

@@ -39,6 +39,12 @@ public class ReportService {
     @Autowired
     private PaymentDAO paymentDAO;
 
+    /**
+     * Формирования отчета со списком платежей за определнный период
+     * @param start начало периода
+     * @param end конец периода
+     * @return документ word
+     */
     public HSSFWorkbook reportPayments(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список платежей");
@@ -163,6 +169,10 @@ public class ReportService {
         return workBook;
     }
 
+    /**
+     * Список всех гаражей
+     * @return документ word
+     */
     public HSSFWorkbook reportAll() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список членов ГК");
@@ -224,6 +234,10 @@ public class ReportService {
         return workBook;
     }
 
+    /**
+     * Список льготников
+     * @return документ word
+     */
     public HSSFWorkbook reportBenefitsPerson() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список льготников ГК");
@@ -278,6 +292,10 @@ public class ReportService {
         return workBook;
     }
 
+    /**
+     * Список должников
+     * @return документ word
+     */
     public HSSFWorkbook reportContribute() {
         HSSFWorkbook workBook = new HSSFWorkbook();
         HSSFSheet sheet = workBook.createSheet("Список должников ГК");
@@ -395,6 +413,12 @@ public class ReportService {
         return workBook;
     }
 
+    /**
+     * Отчет о доходах за определнный период
+     * @param start начало периода
+     * @param end конец периода
+     * @return документ word
+     */
     public HSSFWorkbook reportProfit(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
         CellStyle style = workBook.createCellStyle();

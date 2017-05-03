@@ -32,34 +32,58 @@ public class PaymentService {
     }
 
     /**
-     *
-     * @param payment
-     * @return
+     * Сохранение платежа
+     * @param payment Платеж
+     * @return сохраненный платеж
      */
     @Transactional
     public Payment saveOrUpdate(Payment payment) {
         return paymentDAO.save(payment);
     }
 
+    /**
+     * Получение списка платежей определенного года
+     * @param year год
+     * @return Список платежей
+     */
     public List<Payment> findByYear(Integer year) {
         return paymentDAO.findByYear(year);
     }
 
+    /**
+     * Получение платежа по идентификатору
+     * @param id ID платежа
+     * @return платеж
+     */
     public Payment getPayment(Integer id) {
         return paymentDAO.getOne(id);
     }
 
+    /**
+     * Удаление платежа
+     * @param id ID платежа
+     */
     @Transactional
     public void delete(Integer id) {
         paymentDAO.delete(id);
     }
 
-    //Возвращает платеж для определенного гаража с остатками денег
+    /**
+     * Возвращает платежи для определенного гаража с остатками денег
+     * @param garag Гараж
+     * @return список платежей
+     */
     public List<Payment> getPaymentOnGarag(Garag garag) {
         return paymentDAO.getPaymentOnGarag(garag.getId());
     }
 
-    //Метод платежа
+    /**
+     * Метод проведения платежа, или при раскидывания остаточных средств при создании нового долгового периода
+     * @param payment Платеж
+     * @param isCreateNewPeriod true - вызов метода при создании нового периода.
+     * @param type Тип платежа
+     * @return Платеж
+     */
     @Transactional
     public Payment pay(Payment payment, Boolean isCreateNewPeriod, String type) {
         //Получаем гараж
@@ -163,6 +187,10 @@ public class PaymentService {
         return paymentDAO.save(payment);
     }
 
+    /**
+     * Вычисление номера чека - Max
+     * @return свободный максимальный номер чека
+     */
     private Integer getMaxNumber() {
         Integer number = paymentDAO.getMaxValueNumber();
         number = (number == null) ? 1 : paymentDAO.getMaxValueNumber() + 1;
