@@ -1,6 +1,5 @@
 package com.cooperate;
 
-import com.cooperate.controller.ContributionController;
 import com.cooperate.service.ContributionService;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;

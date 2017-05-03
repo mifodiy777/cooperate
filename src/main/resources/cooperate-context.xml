@@ -54,7 +54,7 @@
                       transaction-manager-ref="jpaTransactionManager"/>
 
     <bean id="init" class="com.cooperate.InitFines">
-        <constructor-arg ref="contributionServiceImpl"/>
+        <constructor-arg ref="contributionService"/>
     </bean>
 
 </beans>

@@ -22,11 +22,12 @@ public class RentController {
 
     /**
      * Проверка на существование определенного начисления
-     * @param year год начисления
-     * @param map  ModelMap
+     *
+     * @param year     год начисления
+     * @param map      ModelMap
      * @param response ответ
      * @return Если не существует начисление текущего года, то отображается форма создания нового начисления modalNewRent.jsp
-     *         Если существует, то отображается ошибка создания нового начисления.
+     * Если существует, то отображается ошибка создания нового начисления.
      */
     @RequestMapping(value = "checkYearRent", method = RequestMethod.GET)
     public String checkYearRent(@RequestParam("year") Integer year, ModelMap map,
@@ -44,8 +45,9 @@ public class RentController {
 
     /**
      * Сохранения нового начисления
+     *
      * @param rent Начисление
-     * @param map ModelMap
+     * @param map  ModelMap
      * @return Сообщение о результате сохранения нового начисления
      */
     @RequestMapping(value = "saveRent", method = RequestMethod.POST)

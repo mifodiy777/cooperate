@@ -54,7 +54,6 @@ public class PaymentController {
             map.addAttribute("setYear", (year == null) ? Calendar.getInstance().get(Calendar.YEAR) : year);
             map.addAttribute("years", paymentService.findYears());
             map.addAttribute("rents", rentService.getRents());
-            //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
             return "payments";
         } catch (DataAccessResourceFailureException e) {
             map.addAttribute("textError", "Ошибка базы данных, проверте подключение к БД");
@@ -64,6 +63,7 @@ public class PaymentController {
 
     /**
      * Список всех платежей определенного года
+     *
      * @param year Год
      * @return json список платежей
      */
@@ -77,9 +77,10 @@ public class PaymentController {
 
     /**
      * Модальное окно платежа
-     * @param id ID Гаража
+     *
+     * @param id   ID Гаража
      * @param type Тип платежа (основной/дополнительный)
-     * @param map ModelMap
+     * @param map  ModelMap
      * @return modalPay.jsp
      */
     @RequestMapping(value = "payModal", method = RequestMethod.GET)
@@ -93,8 +94,9 @@ public class PaymentController {
 
     /**
      * Сохранение платежа
+     *
      * @param payment Платеж
-     * @param type Тип платежа
+     * @param type    Тип платежа
      * @return номер проведенного платежа
      */
     @RequestMapping(value = "savePayment", method = RequestMethod.POST)
@@ -107,7 +109,8 @@ public class PaymentController {
 
     /**
      * Печать выбранного чека
-     * @param id ID чека
+     *
+     * @param id  ID чека
      * @param map ModelMap
      * @return страница с печатной формой чека order.jsp
      */
@@ -119,8 +122,9 @@ public class PaymentController {
 
     /**
      * Удаление платежа
-     * @param id ID платежа
-     * @param map ModelMap
+     *
+     * @param id       ID платежа
+     * @param map      ModelMap
      * @param response ответ
      * @return сообщение о результате удаления платежа из базы
      */

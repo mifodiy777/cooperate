@@ -1,4 +1,4 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 import com.cooperate.dao.RentDAO;
 import com.cooperate.entity.Rent;
@@ -20,13 +20,13 @@ import static org.testng.Assert.assertTrue;
 /**
  * Created by Кирилл on 25.03.2017.
  */
-public class RentServiceImplTest {
+public class RentServiceTest {
 
     @Mock
     private RentDAO rentDAO;
 
     @InjectMocks
-    private RentService service = new RentServiceImpl();
+    private RentService service = new RentService();
 
     @BeforeClass
     public void init() {

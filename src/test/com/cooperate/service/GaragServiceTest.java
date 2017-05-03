@@ -1,4 +1,4 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 import com.cooperate.dao.CustomDAO;
 import com.cooperate.dao.GaragDAO;
@@ -6,7 +6,6 @@ import com.cooperate.entity.Garag;
 import com.cooperate.service.GaragService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -14,12 +13,11 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.*;
 
 /**
  * Created by Кирилл on 31.03.2017.
  */
-public class GaragServiceImplTest {
+public class GaragServiceTest {
 
     @Mock
     private GaragDAO garagDAO;
@@ -28,7 +26,7 @@ public class GaragServiceImplTest {
     private CustomDAO customDAO;
 
     @InjectMocks
-    private GaragService service = new GaragServiceImpl();
+    private GaragService service = new GaragService();
 
 
     @BeforeClass

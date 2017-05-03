@@ -1,4 +1,4 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 import com.cooperate.dao.PersonDAO;
 import com.cooperate.entity.Person;
@@ -12,18 +12,17 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.*;
 
 /**
  * Created by Кирилл on 25.03.2017.
  */
-public class PersonServiceImplTest {
+public class PersonServiceTest {
 
     @Mock
     private PersonDAO personDAO;
 
     @InjectMocks
-    private PersonService service = new PersonServiceImpl();
+    private PersonService service = new PersonService();
 
     @BeforeClass
     public void init() {

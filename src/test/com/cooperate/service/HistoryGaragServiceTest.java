@@ -1,18 +1,14 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 import com.cooperate.dao.HistoryGaragDAO;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.HistoryGarag;
 import com.cooperate.service.HistoryGaragService;
-import com.cooperate.service.impl.HistoryGaragServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Calendar;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,10 +21,10 @@ import static org.testng.Assert.assertEquals;
  * Тестирование сервиса - история гаража
  * Created by Кирилл on 22.03.2017.
  */
-public class HistoryGaragServiceImplTest {
+public class HistoryGaragServiceTest {
 
     @InjectMocks
-    private HistoryGaragService historyGaragService = new HistoryGaragServiceImpl();
+    private HistoryGaragService historyGaragService = new HistoryGaragService();
 
     @Mock
     private HistoryGaragDAO historyGaragDAO;

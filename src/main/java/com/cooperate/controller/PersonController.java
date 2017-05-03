@@ -35,6 +35,7 @@ public class PersonController {
 
     /**
      * Страница владельцев
+     *
      * @return persons.jsp
      */
     @RequestMapping(value = "persons", method = RequestMethod.GET)
@@ -45,6 +46,7 @@ public class PersonController {
 
     /**
      * Получение владельцев любые 30 или по части ФИО
+     *
      * @param fio Часть ФИО
      * @return JSON список владельцев
      */
@@ -57,6 +59,7 @@ public class PersonController {
 
     /**
      * Страница членов правления
+     *
      * @return members.jsp
      */
     @RequestMapping(value = "membersPage", method = RequestMethod.GET)
@@ -66,6 +69,7 @@ public class PersonController {
 
     /**
      * Получение списка всех членов правления
+     *
      * @return JSON список членов правления
      */
     @RequestMapping(value = "members", method = RequestMethod.GET)
@@ -78,6 +82,7 @@ public class PersonController {
 
     /**
      * Форма добавления владельцев
+     *
      * @param map ModelMap
      * @return person.jsp
      */
@@ -90,8 +95,9 @@ public class PersonController {
 
     /**
      * Сохранение владельца
+     *
      * @param person Владелец
-     * @param map ModelMap
+     * @param map    ModelMap
      * @return Сообщение о результате сохранения владельца
      */
     @RequestMapping(value = "savePerson", method = RequestMethod.POST)
@@ -99,13 +105,13 @@ public class PersonController {
         personService.saveOrUpdate(person);
         logger.info("Владелец сохранен!(" + person.getFIO() + ")");
         map.put("message", "Владелец сохранен!");
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "success";
     }
 
     /**
      * Форма редактирования владельца
-     * @param id ID владельца
+     *
+     * @param id  ID владельца
      * @param map ModelMap
      * @return person.jsp
      */
@@ -113,15 +119,15 @@ public class PersonController {
     public String editPersonForm(@PathVariable("id") Integer id, ModelMap map) {
         map.addAttribute("type", "Режим редактирования владельца");
         map.addAttribute("person", personService.getPerson(id));
-        //todo Добавить вариант ошибки подключения к БД, или ошибка запроса
         return "person";
     }
 
 
     /**
      * Удаление назначения к гаражу из режима редактирования владельца
-     * @param idGarag ID Гаража
-     * @param map ModelMap
+     *
+     * @param idGarag  ID Гаража
+     * @param map      ModelMap
      * @param response ответ
      * @return Сообщение о результате удаления назначения к гаражу
      */
@@ -144,8 +150,9 @@ public class PersonController {
 
     /**
      * Удаление владельца
-     * @param id ID владельца
-     * @param map ModelMap
+     *
+     * @param id       ID владельца
+     * @param map      ModelMap
      * @param response ответ
      * @return Сообщение о результате удаления владельца
      */

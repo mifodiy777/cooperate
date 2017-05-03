@@ -1,4 +1,4 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 import com.cooperate.dao.ContributionDAO;
 import com.cooperate.dao.RentDAO;
@@ -12,10 +12,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -27,10 +25,10 @@ import static org.testng.Assert.*;
  * Тестирование сервиса долговых периодов
  * Created by Кирилл on 22.03.2017.
  */
-public class ContributionServiceImplTest {
+public class ContributionServiceTest {
 
     @InjectMocks
-    private ContributionService contributionService = new ContributionServiceImpl();
+    private ContributionService contributionService = new ContributionService();
 
     @Mock
     private ContributionDAO contributionDAO;

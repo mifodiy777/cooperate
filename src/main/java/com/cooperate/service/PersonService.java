@@ -1,26 +1,58 @@
 package com.cooperate.service;
 
+import com.cooperate.dao.PersonDAO;
 import com.cooperate.entity.Person;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * Created by KuzminKA on 17.06.2015.
  */
-public interface PersonService {
+@Service
+public class PersonService {
 
-    Person saveOrUpdate(Person person);
+    @Autowired
+    private PersonDAO personDAO;
 
-    void delete(Integer id);
+    @Transactional
+    public Person saveOrUpdate(Person person) {
+        return personDAO.save(person);
+    }
 
-    List<Person> getPersons(String fio);
+    @Transactional
+    public void delete(Integer id) {
+        personDAO.delete(id);
+    }
 
-    List<Person> getMembers();
+    public List<Person> getPersons(String fio) {
+        if (fio != null && !fio.isEmpty()) {
+            return personDAO.findByPersonfio(fio);
+        }
+        return personDAO.findTop30By();
+    }
 
-    Person getPerson(Integer id);
+    public List<Person> getMembers() {
+        return personDAO.findByMemberBoard(true);
+    }
 
-    List<Person> findByfio(String pattern);
+    public Person getPerson(Integer id) {
+        return personDAO.findOne(id);
+    }
 
-    Person getByFio(Person person);
+    //Список владельцев по ФИО
+    public List<Person> findByfio(String fio) {
+        return personDAO.findByPersonfio(fio);
+    }
+
+    //Определенный владелец по ФИО
+    public Person getByFio(Person person) {
+        return personDAO.findByLastNameAndNameAndFatherName(person.getLastName(),
+                person.getName(), person.getFatherName());
+    }
+
 
 }
+

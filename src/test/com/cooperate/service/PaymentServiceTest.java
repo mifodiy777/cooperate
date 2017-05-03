@@ -1,16 +1,13 @@
-package com.cooperate.service.impl;
+package com.cooperate.service;
 
 
 import com.cooperate.dao.PaymentDAO;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
-import com.cooperate.service.PaymentService;
-import com.cooperate.service.impl.PaymentServiceImpl;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import org.aspectj.lang.annotation.Before;
+import com.cooperate.service.PaymentService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeClass;
@@ -18,15 +15,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.*;
 
 /**
  * Created by Кирилл on 20.03.2017.
  */
-public class PaymentServiceImplTest {
+public class PaymentServiceTest {
 
     @InjectMocks
-    private PaymentService paymentService = new PaymentServiceImpl();
+    private PaymentService paymentService = new PaymentService();
 
     @Mock
     private PaymentDAO paymentDAO;
