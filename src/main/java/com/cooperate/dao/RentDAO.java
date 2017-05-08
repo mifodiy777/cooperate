@@ -9,10 +9,11 @@ import java.util.*;
 @Repository
 public interface RentDAO  extends JpaRepository<Rent, Integer> {
 
-    //Кол-во начилсений определенного года
-    Integer countByYearRent(Integer year);
-
-    //Нахождение определенного начисления по году
+    /**
+     * Нахождение определенного начисления по году
+     * @param year год
+     * @return начисление определенного года
+     */
     Rent findByYearRent(Integer year);
 
 }

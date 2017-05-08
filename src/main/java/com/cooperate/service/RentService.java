@@ -41,7 +41,7 @@ public class RentService {
      * @return true если не существует
      */
     public Boolean checkRent(Integer year) {
-        return rentDAO.countByYearRent(year) == 0;
+        return rentDAO.findByYearRent(year) == null;
     }
 
     /**

@@ -77,14 +77,4 @@ public class PersonServiceTest {
         verify(personDAO).findByPersonfio("fio");
     }
 
-    @Test
-    public void testGetByFio() throws Exception {
-        Person person = new Person();
-        person.setLastName("Ivanov");
-        person.setName("Ivan");
-        person.setFatherName("Ivanovich");
-        service.getByFio(person);
-        verify(personDAO).findByLastNameAndNameAndFatherName("Ivanov", "Ivan", "Ivanovich");
-    }
-
 }

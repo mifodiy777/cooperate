@@ -15,6 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -47,8 +48,8 @@ public class RentServiceTest {
 
     @Test
     public void testCheckRent() throws Exception {
-        given(rentDAO.countByYearRent(2010)).willReturn(0);
-        assertTrue(service.checkRent(2010));
+        given(rentDAO.findByYearRent(2010)).willReturn(new Rent());
+        assertFalse(service.checkRent(2010));
     }
 
     @Test

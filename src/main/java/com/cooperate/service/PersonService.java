@@ -74,15 +74,6 @@ public class PersonService {
         return personDAO.findByPersonfio(fio);
     }
 
-    /**
-     * Определенный владелец по ФИО
-     * @param person Владелец с заполненным полем ФИО
-     * @return Владелец из базы
-     */
-    public Person getByFio(Person person) {
-        return personDAO.findByLastNameAndNameAndFatherName(person.getLastName(),
-                person.getName(), person.getFatherName());
-    }
 
 
 }

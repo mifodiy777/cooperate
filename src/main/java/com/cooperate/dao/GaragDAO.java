@@ -14,36 +14,41 @@ import java.util.List;
 @Repository
 public interface GaragDAO extends JpaRepository<Garag, Integer> {
 
-
-    //Метод существования
-    //Метод выдает кол-во гаражей с заданным рядом и номером гаража с исключение заданного id гаража.
-
-    Integer countBySeriesAndNumberAndIdNot(String series, String number, Integer id);
-
-    //Метод существования
-    //Метод выдает кол-во гаражей с заданным рядом и номером гаража.
-
-    Integer countBySeriesAndNumber(String series, String number);
-
-    //Метод получает всех льготников
-
+    /**
+     * Метод получает всех льготников
+     * @return список гаражей у которых владельцы имеют льготы
+     */
     @Query("select g from Garag g inner join g.person p where length(p.benefits) <> 0 ")
     List<Garag> getGaragForPersonBenefits();
 
-    //Метод получает ряды
+    /**
+     * Метод получает все ряды
+     * @return список рядов
+     */
     @Query("select distinct g.series from Garag g")
     List<String> getSeries();
 
-    //Метод получает должников
+    /**
+     * Метод получает должников
+     * @return должники
+     */
     @Query("select distinct g from Garag g inner join g.person p inner join g.contributions c where g.oldContribute > 0 or c.contribute > 0 or c.contLand > 0 " +
             "or c.contTarget > 0 or c.fines > 0 ")
     List<Garag> getGaragDebt();
 
-    //Нахождение гаражей выбранного ряда
+    /**
+     * Нахождение гаражей выбранного ряда
+     * @param series ряд
+     * @return список гаражей
+     */
     List<Garag> findBySeries(String series);
 
-    //Нахождение гаражей выбранного ряда c назначенными владельцами
-     @Query("select distinct g from Garag g inner join g.person p where g.series = :series")
+    /**
+     * Нахождение гаражей выбранного ряда c назначенными владельцами
+     * @param series ряд
+     * @return список гаражей
+     */
+    @Query("select distinct g from Garag g inner join g.person p where g.series = :series")
     List<Garag> findBySeriesAndPerson(@Param("series") String series);
 
 }
