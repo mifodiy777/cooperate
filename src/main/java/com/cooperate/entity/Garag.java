@@ -99,6 +99,10 @@ public class Garag implements Serializable {
         this.contributions = contributions;
     }
 
+    /**
+     * Долги предыдущих лет
+     * @return
+     */
     public float getOldContribute() {
         return oldContribute;
     }
