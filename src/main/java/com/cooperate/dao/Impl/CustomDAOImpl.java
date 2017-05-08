@@ -57,4 +57,5 @@ public class CustomDAOImpl implements CustomDAO {
         cq.where(predicates.toArray(new Predicate[]{}));
         return em.createQuery(cq).getSingleResult() > 0;
     }
+
 }

@@ -39,12 +39,7 @@ public class GaragService {
     public Garag saveOrUpdate(Garag garag) throws ExistGaragException {
         //Редактирование гаража
         if (!customDAO.existGarag(garag)) {
-            if (garag.getId() != null) {
-                Garag garagEdit = garagDAO.findOne(garag.getId());
-                garag.setContributions(garagEdit.getContributions());
-                garag.setPayments(garagEdit.getPayments());
-                garag.setHistoryGarags(garagEdit.getHistoryGarags());
-            }
+            //Гараж новый, а владелец взят из базы.
             if (garag.getId() == null && garag.getPerson() != null && garag.getPerson().getId() != null) {
                 Person p = garag.getPerson();
                 garag.setPerson(null);
@@ -52,26 +47,26 @@ public class GaragService {
                 getGarag.setPerson(p);
                 return garagDAO.save(getGarag);
             }
+            //Если гараж уже есть в базе, не трогаем Историю, Платежи, Периоды.
+            if (garag.getId() != null) {
+                Garag garagEdit = garagDAO.findOne(garag.getId());
+                garag.setContributions(garagEdit.getContributions());
+                garag.setPayments(garagEdit.getPayments());
+                garag.setHistoryGarags(garagEdit.getHistoryGarags());
+            }
+            //Во всех остальных случиях просто сохраняем гараж.
             return garagDAO.save(garag);
         }
         throw new ExistGaragException();
     }
 
     /**
-     * @param garag
-     * @return
+     * Метод сохранения гаража уже имеющегося в базе
+     * @param garag Гараж
+     * @return Сохраненный гараж
      */
     @Transactional
     public Garag save(Garag garag) {
-        if (garag.getId() == null && garag.getPerson() != null) {
-            if (garag.getPerson().getId() != null) {
-                Person p = garag.getPerson();
-                garag.setPerson(null);
-                Garag getGarag = garagDAO.save(garag);
-                getGarag.setPerson(p);
-                return garagDAO.save(getGarag);
-            }
-        }
         return garagDAO.save(garag);
     }
 
