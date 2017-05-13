@@ -39,12 +39,20 @@ public class HistoryGaragServiceTest {
         reset(historyGaragDAO);
     }
 
+    /**
+     * Получение определенной истории по идентификатору
+     * @throws Exception
+     */
     @Test
     public void testGetHistoryGarag() throws Exception {
         historyGaragService.getHistoryGarag(100);
         verify(historyGaragDAO).getOne(100);
     }
 
+    /**
+     * Сохранении истории
+     * @throws Exception
+     */
     @Test
     public void testSaveReason() throws Exception {
         HistoryGarag historyGarag = new HistoryGarag();
@@ -52,6 +60,10 @@ public class HistoryGaragServiceTest {
         assertEquals(historyGaragService.saveReason("reason", "fio", new Garag()), historyGarag);
     }
 
+    /**
+     * Удаление истории
+     * @throws Exception
+     */
     @Test
     public void testDelete() throws Exception {
         historyGaragService.delete(100);

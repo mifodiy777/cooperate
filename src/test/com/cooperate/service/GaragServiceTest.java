@@ -6,7 +6,6 @@ import com.cooperate.entity.Address;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Person;
 import com.cooperate.exception.ExistGaragException;
-import com.cooperate.service.GaragService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeClass;
@@ -19,11 +18,10 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 /**
+ * Тестирование сервиса работы с гаражами
  * Created by Кирилл on 31.03.2017.
  */
 public class GaragServiceTest {
@@ -54,6 +52,11 @@ public class GaragServiceTest {
         reset(garagDAO);
     }
 
+    /**
+     * Сохранение гаража с формы UI
+     * Case: гараж существует
+     * @throws Exception
+     */
     @Test(expectedExceptions = ExistGaragException.class)
     public void testSaveOrUpdateExcept() throws Exception {
         Garag garag = new Garag();
@@ -63,6 +66,11 @@ public class GaragServiceTest {
         service.saveOrUpdate(garag);
     }
 
+    /**
+     * Сохранение гаража с формы UI
+     * case: пустой гаража
+     * @throws Exception
+     */
     @Test
     public void testSaveOrUpdate() throws Exception {
         Garag garag = new Garag();
@@ -73,6 +81,11 @@ public class GaragServiceTest {
         verify(garagDAO).save(garag);
     }
 
+    /**
+     * Сохранение гаража с формы UI
+     * case: Сохранение гаража, владелец существова(производился поиск из базы)
+     * @throws Exception
+     */
     @Test
     public void testSaveOrUpdateIsNewPersonIsOld() throws Exception {
         Garag garag = spy(new Garag());
@@ -84,6 +97,11 @@ public class GaragServiceTest {
         service.saveOrUpdate(garag);
     }
 
+    /**
+     * Изменение гаража с формы UI
+     * case: Гараж существовал, владелец существовал
+     * @throws Exception
+     */
     @Test
     public void testSaveOrUpdateIsNew() throws Exception {
         Garag garag = spy(new Garag());
@@ -98,6 +116,10 @@ public class GaragServiceTest {
         verify(garag).setHistoryGarags(null);
     }
 
+    /**
+     * Сохранение гаража полученного из базы
+     * @throws Exception
+     */
     @Test
     public void testSave() throws Exception {
         Garag garag = new Garag();
@@ -105,7 +127,10 @@ public class GaragServiceTest {
         verify(garagDAO).save(garag);
     }
 
-
+    /**
+     * Удаление гаража
+     * @throws Exception
+     */
     @Test
     public void testDelete() throws Exception {
         Integer id = 1;
@@ -113,18 +138,30 @@ public class GaragServiceTest {
         verify(garagDAO).delete(id);
     }
 
+    /**
+     * Получение всех гаражей
+     * @throws Exception
+     */
     @Test
     public void testGetGarags() throws Exception {
         service.getGarags();
         verify(garagDAO).findAll();
     }
 
+    /**
+     * Получение всех рядов
+     * @throws Exception
+     */
     @Test
     public void testGetSeries() throws Exception {
         service.getSeries();
         verify(garagDAO).getSeries();
     }
 
+    /**
+     * Получение всех гаражей определенного ряда
+     * @throws Exception
+     */
     @Test
     public void testFindBySeries() throws Exception {
         String series = "1";
@@ -132,6 +169,10 @@ public class GaragServiceTest {
         verify(garagDAO).findBySeries(series);
     }
 
+    /**
+     * Получение гаража по идентификатору
+     * @throws Exception
+     */
     @Test
     public void testGetGarag() throws Exception {
         Integer id = 1;
@@ -139,6 +180,10 @@ public class GaragServiceTest {
         verify(garagDAO).findOne(id);
     }
 
+    /**
+     * Получение общей суммы задолжности определенного гаража
+     * @throws Exception
+     */
     @Test
     public void testSumContribution() throws Exception {
         Garag garag = new Garag();

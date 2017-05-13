@@ -34,6 +34,10 @@ public class PersonServiceTest {
         reset(personDAO);
     }
 
+    /**
+     * Сохранение владельца
+     * @throws Exception
+     */
     @Test
     public void testSaveOrUpdate() throws Exception {
         Person person = new Person();
@@ -41,6 +45,10 @@ public class PersonServiceTest {
         verify(personDAO).save(person);
     }
 
+    /**
+     * Удаление владельца
+     * @throws Exception
+     */
     @Test
     public void testDelete() throws Exception {
         Integer id = 1;
@@ -48,6 +56,12 @@ public class PersonServiceTest {
         verify(personDAO).delete(id);
     }
 
+    /**
+     * Получение владельцев по fio
+     * case 1: fio пусто - получение 30 любых владельцев
+     * case 2: fio заполненно - получение списка владельцев по схожим буквам
+     * @throws Exception
+     */
     @Test
     public void testGetPersons() throws Exception {
         String fio = null;
@@ -58,12 +72,20 @@ public class PersonServiceTest {
         verify(personDAO).findByPersonfio(fio);
     }
 
+    /**
+     * Получение списка членов правления
+     * @throws Exception
+     */
     @Test
     public void testGetMembers() throws Exception {
         service.getMembers();
         verify(personDAO).findByMemberBoard(true);
     }
 
+    /**
+     * Получение владельца по идентификатору
+     * @throws Exception
+     */
     @Test
     public void testGetPerson() throws Exception {
         Integer id = 1;
@@ -71,6 +93,10 @@ public class PersonServiceTest {
         verify(personDAO).findOne(id);
     }
 
+    /**
+     * Получение списка владельце по части ФИО
+     * @throws Exception
+     */
     @Test
     public void testFindByfio() throws Exception {
         service.findByfio("fio");
