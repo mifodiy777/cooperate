@@ -1,9 +1,11 @@
 package com.cooperate.service;
 
+import com.cooperate.controller.ContributionController;
 import com.cooperate.dao.ContributionDAO;
 import com.cooperate.dao.RentDAO;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Rent;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ public class ContributionService {
 
     @Autowired
     private RentDAO rentDAO;
+
+    private final Logger logger = Logger.getLogger(ContributionService.class);
 
     /**
      * Метод сохранения долгов определенного года
@@ -60,32 +64,38 @@ public class ContributionService {
             //Вычисляем кол-во дней с последнего обновления.
             //Первая дата должна устанавливаться при включении режима пеней
             if (sumContribute != 0) {
-                long days = getDays(calendar, c.getFinesLastUpdate());
-                Double finesDouble = (sumContribute * 0.001) * days;
-                int fines = (finesDouble.intValue() / 50);
-                fines *= 50;
-                //Вычисляем сумму пени
-                if (fines != 0) {
-                    int difference = (finesDouble.intValue() % 50);
-                    difference = (difference > 0) ? difference / (int) Math.round(sumContribute * 0.001) : 0;
-                    difference = calendar.get(Calendar.DAY_OF_YEAR) - difference;
-                    if (difference >= 0 && calendar.get(Calendar.DAY_OF_YEAR) > difference) {
-                        calendar.set(Calendar.DAY_OF_YEAR, difference);
-                    }
-                    c.setFinesLastUpdate(calendar);
-                    int newFines = c.getFines() + fines;
-                    if (newFines < sumContribute) {
-                        c.setFines(newFines);
-                    } else if (newFines == sumContribute) {
-                        c.setFines(newFines);
-                        c.setFinesOn(false);
-                    } else {
-                        //Если новые пени больши суммы долго определяем сумму начислений этого года и отключаем пени
-                        c.setFinesOn(false);
-                        if (c.getFines() == 0) {
-                            c.setFines(sumContribute.intValue());
+                try {
+                    long days = getDays(calendar, c.getFinesLastUpdate());
+                    Double finesDouble = (sumContribute * 0.001) * days;
+                    int fines = (finesDouble.intValue() / 50);
+                    fines *= 50;
+                    //Вычисляем сумму пени
+                    if (fines != 0) {
+                        int difference = (finesDouble.intValue() % 50);
+                        float unit = (float) (sumContribute * 0.001);
+                        difference = (difference > 0) ? Math.round(difference / unit) : 0;
+                        difference = calendar.get(Calendar.DAY_OF_YEAR) - difference;
+                        if (difference >= 0 && calendar.get(Calendar.DAY_OF_YEAR) > difference) {
+                            calendar.set(Calendar.DAY_OF_YEAR, difference);
                         }
+                        c.setFinesLastUpdate(calendar);
+                        int newFines = c.getFines() + fines;
+                        if (newFines < sumContribute) {
+                            c.setFines(newFines);
+                        } else if (newFines == sumContribute) {
+                            c.setFines(newFines);
+                            c.setFinesOn(false);
+                        } else {
+                            //Если новые пени больши суммы долго определяем сумму начислений этого года и отключаем пени
+                            c.setFinesOn(false);
+                            if (c.getFines() == 0) {
+                                c.setFines(sumContribute.intValue());
+                            }
+                        }
+
                     }
+                } catch (ArithmeticException e) {
+                    logger.error("Арифметическая ошибка для contribution_id=" + c.getId());
                 }
             } else {
                 c.setFinesOn(false); // если сумма долга равна 0, то режим начисления пеней выключается.
