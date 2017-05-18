@@ -1,5 +1,6 @@
 package com.cooperate.service;
 
+import com.cooperate.adapter.ResultProfit;
 import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.dao.PaymentDAO;
@@ -8,8 +9,7 @@ import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
 import com.cooperate.entity.Rent;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +41,9 @@ public class ReportService {
 
     /**
      * Формирования отчета со списком платежей за определнный период
+     *
      * @param start начало периода
-     * @param end конец периода
+     * @param end   конец периода
      * @return документ word
      */
     public HSSFWorkbook reportPayments(Calendar start, Calendar end) {
@@ -171,6 +172,7 @@ public class ReportService {
 
     /**
      * Список всех гаражей
+     *
      * @return документ word
      */
     public HSSFWorkbook reportAll() {
@@ -236,6 +238,7 @@ public class ReportService {
 
     /**
      * Список льготников
+     *
      * @return документ word
      */
     public HSSFWorkbook reportBenefitsPerson() {
@@ -294,6 +297,7 @@ public class ReportService {
 
     /**
      * Список должников
+     *
      * @return документ word
      */
     public HSSFWorkbook reportContribute() {
@@ -415,26 +419,34 @@ public class ReportService {
 
     /**
      * Отчет о доходах за определнный период
+     *
      * @param start начало периода
-     * @param end конец периода
+     * @param end   конец периода
      * @return документ word
      */
     public HSSFWorkbook reportProfit(Calendar start, Calendar end) {
         HSSFWorkbook workBook = new HSSFWorkbook();
-        CellStyle style = workBook.createCellStyle();
-        style.setWrapText(true);
-        style.setAlignment(CellStyle.ALIGN_CENTER);
+        CellStyle styleHeader = workBook.createCellStyle();
+        styleHeader.setWrapText(true);
+        styleHeader.setAlignment(CellStyle.ALIGN_CENTER);
         Font font = workBook.createFont();
         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        style.setFont(font);
+        styleHeader.setFont(font);
+
+        CellStyle rowStyleEven = workBook.createCellStyle();
+        rowStyleEven.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        rowStyleEven.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        List<ResultProfit> resultProfits = new LinkedList<>();
         for (String series : garagDAO.getSeries()) {
             HSSFSheet sheet = workBook.createSheet(series);
-            createHeader(sheet, style);
+            createHeader(sheet, styleHeader);
             //Расчеты
             int fistRow = 3;
             int lastRow;
             //Порядковый номер гаража
             int number = 1;
+            sheet.setColumnWidth(15, 10 * 256);
             //Находим гаражи с назначенными владельцами
             List<Garag> garagList = garagDAO.findBySeriesAndPerson(series);
             //Сортируем по номеру гаража
@@ -455,25 +467,33 @@ public class ReportService {
                     //Из количества платежей определяем количество строк в таблице для данного гаража
                     lastRow = (paymentsPeriod.size() == 0) ? fistRow : fistRow + paymentsPeriod.size() - 1;
                     HSSFRow row = sheet.createRow(fistRow);
+                    row.setHeightInPoints(30);
+
                     //Порядковый номер 1
                     HSSFCell countCell = row.createCell(0);
                     countCell.setCellValue(number);
+                    setColoredCell(number, countCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 0, 0));
                     //Порядковый номер 2
                     HSSFCell countTwoCell = row.createCell(13);
                     countTwoCell.setCellValue(number);
+                    setColoredCell(number, countTwoCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 13, 13));
                     //Ряд
                     HSSFCell seriesCell = row.createCell(1);
                     seriesCell.setCellValue(g.getSeries());
+                    setColoredCell(number, seriesCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 1, 1));
                     //Номер гаража
                     HSSFCell nubmerCell = row.createCell(2);
                     nubmerCell.setCellValue(g.getNumber());
+                    setColoredCell(number, nubmerCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 2, 2));
                     //ФИО владельца
                     HSSFCell fioCell = row.createCell(3);
+                    sheet.setColumnWidth(3, 38 * 256);
                     fioCell.setCellValue(g.getPerson().getFIO());
+                    setColoredCell(number, fioCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 3, 3));
                     //Задолжность после оплат выбранного года
                     float contribute = 0f;
@@ -492,27 +512,33 @@ public class ReportService {
                     Float sumContributions = contribute + contLand + contTarget + fines + old;
                     //Долг после оплат
                     HSSFCell contributeSumNewCell = row.createCell(24);
+                    setColoredCell(number, contributeSumNewCell, rowStyleEven);
                     contributeSumNewCell.setCellValue(new BigDecimal(sumContributions).setScale(2, RoundingMode.UP).floatValue());
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 24, 24));
                     //Долг по членскому взносу
                     HSSFCell contributeNewCell = row.createCell(25);
                     contributeNewCell.setCellValue(contribute);
+                    setColoredCell(number, contributeNewCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 25, 25));
                     //Долги по аренде
                     HSSFCell contLandNewCell = row.createCell(26);
                     contLandNewCell.setCellValue(contLand);
+                    setColoredCell(number, contLandNewCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 26, 26));
                     //Долг по целевому взносу
                     HSSFCell contTargetNewCell = row.createCell(27);
                     contTargetNewCell.setCellValue(contTarget);
+                    setColoredCell(number, contTargetNewCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 27, 27));
                     //Долг по прошлым годам
                     HSSFCell contOldNewCell = row.createCell(28);
                     contOldNewCell.setCellValue(old);
+                    setColoredCell(number, contOldNewCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 28, 28));
                     //Долг по пеням
                     HSSFCell contFinesNewCell = row.createCell(29);
                     contFinesNewCell.setCellValue(fines);
+                    setColoredCell(number, contFinesNewCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 29, 29));
                     //Начисления текущего года
                     float rentSum = 0f;
@@ -528,27 +554,34 @@ public class ReportService {
                     //Сумма начислений
                     HSSFCell rentSumCell = row.createCell(9);
                     rentSumCell.setCellValue(rentSum);
+                    setColoredCell(number, rentSumCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 9, 9));
                     //Начисления членского взноса
                     HSSFCell rentContributeCell = row.createCell(10);
                     rentContributeCell.setCellValue(rentContribute);
+                    setColoredCell(number, rentContributeCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 10, 10));
                     //Начисления аренды земли
                     HSSFCell rentContLandCell = row.createCell(11);
                     rentContLandCell.setCellValue(rentContLand);
+                    setColoredCell(number, rentContLandCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 11, 11));
                     //Начисления целевого взноса
                     HSSFCell rentContTargetCell = row.createCell(12);
                     rentContTargetCell.setCellValue(rentContTarget);
+                    setColoredCell(number, rentContTargetCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 12, 12));
                     //Приход
                     int t = fistRow;
+                    if ((number % 2) == 0) {
+                        coloredPayments(paymentsPeriod, row, rowStyleEven);
+                    }
                     for (Payment p : paymentsPeriod) {
                         if (t == fistRow) {
-                            calculatePayment(row, p);
+                            calculatePayment(row, p, number, rowStyleEven);
                         } else {
                             HSSFRow rowNext = sheet.createRow(t);
-                            calculatePayment(rowNext, p);
+                            calculatePayment(rowNext, p, number, rowStyleEven);
                         }
                         t++;
                     }
@@ -571,22 +604,27 @@ public class ReportService {
                     //Сумма прошлой задолжности
                     HSSFCell oldContributeSumCell = row.createCell(4);
                     oldContributeSumCell.setCellValue(new BigDecimal(sumOldContribute).setScale(2, RoundingMode.UP).floatValue());
+                    setColoredCell(number, oldContributeSumCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 4, 4));
                     //Прошлая задолжность по членскому взносу
                     HSSFCell oldContributeCell = row.createCell(5);
                     oldContributeCell.setCellValue(pastContribute);
+                    setColoredCell(number, oldContributeCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 5, 5));
                     //Прошлая задолжность по аренде
                     HSSFCell oldContLandCell = row.createCell(6);
                     oldContLandCell.setCellValue(pastContLand);
+                    setColoredCell(number, oldContLandCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 6, 6));
                     //Прошлая задолжность по целевому взносу
                     HSSFCell oldContTargetCell = row.createCell(7);
                     oldContTargetCell.setCellValue(pastContTarget);
+                    setColoredCell(number, oldContTargetCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 7, 7));
                     //Прошлая задолжность по долгам прошлых лет
                     HSSFCell pastOldCell = row.createCell(8);
                     pastOldCell.setCellValue(pastOld);
+                    setColoredCell(number, pastOldCell, rowStyleEven);
                     sheet.addMergedRegion(new CellRangeAddress(fistRow, lastRow, 8, 8));
                     //Счетчики
                     if (paymentsPeriod.size() == 0) {
@@ -597,10 +635,26 @@ public class ReportService {
                 }
             }
             //Суммы
-            createFooter(sheet, style, fistRow);
-
+            ResultProfit resultProfit = new ResultProfit(series);
+            resultProfits.add(resultProfit);
+            createFooter(sheet, styleHeader, fistRow, resultProfit);
         }
+        createResultSheet(resultProfits, workBook, styleHeader, rowStyleEven);
         return workBook;
+    }
+
+    private void coloredPayments(List<Payment> paymentsPeriod, HSSFRow row, CellStyle rowStyleEven) {
+        if (paymentsPeriod.isEmpty()) {
+            for (int i = 14; i <= 23; i++) {
+                row.createCell(i).setCellStyle(rowStyleEven);
+            }
+        }
+    }
+
+    private void setColoredCell(Integer number, HSSFCell cell, CellStyle style) {
+        if ((number % 2) == 0) {
+            cell.setCellStyle(style);
+        }
     }
 
     private void createHeader(HSSFSheet sheet, CellStyle style) {
@@ -742,159 +796,361 @@ public class ReportService {
         finesCNHCell.setCellStyle(style);
     }
 
-    private void createFooter(HSSFSheet sheet, CellStyle style, int numberRow) {
-        HSSFRow resumeRow = sheet.createRow(numberRow);
-        HSSFCell resume = resumeRow.createCell(3);
-        resume.setCellValue("Итого:");
-        resume.setCellStyle(style);
-        HSSFCell allContributeOld = resumeRow.createCell(4);
-        allContributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        allContributeOld.setCellFormula("SUM(E4:E" + numberRow + ")");
-        allContributeOld.setCellStyle(style);
-
-        HSSFCell contributeOld = resumeRow.createCell(5);
-        contributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        contributeOld.setCellFormula("SUM(F4:F" + numberRow + ")");
-        contributeOld.setCellStyle(style);
-
-        HSSFCell landOld = resumeRow.createCell(6);
-        landOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        landOld.setCellFormula("SUM(G4:G" + numberRow + ")");
-        landOld.setCellStyle(style);
-
-        HSSFCell tagetOld = resumeRow.createCell(7);
-        tagetOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        tagetOld.setCellFormula("SUM(H4:H" + numberRow + ")");
-        tagetOld.setCellStyle(style);
-
-        HSSFCell pastOld = resumeRow.createCell(8);
-        pastOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        pastOld.setCellFormula("SUM(I4:I" + numberRow + ")");
-        pastOld.setCellStyle(style);
-
-        HSSFCell allRent = resumeRow.createCell(9);
-        allRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        allRent.setCellFormula("SUM(J4:J" + numberRow + ")");
-        allRent.setCellStyle(style);
-
-        HSSFCell contributeRent = resumeRow.createCell(10);
-        contributeRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        contributeRent.setCellFormula("SUM(K4:K" + numberRow + ")");
-        contributeRent.setCellStyle(style);
-
-        HSSFCell landRent = resumeRow.createCell(11);
-        landRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        landRent.setCellFormula("SUM(L4:L" + numberRow + ")");
-        landRent.setCellStyle(style);
-
-        HSSFCell tagetRent = resumeRow.createCell(12);
-        tagetRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        tagetRent.setCellFormula("SUM(M4:M" + numberRow + ")");
-        tagetRent.setCellStyle(style);
-
-        HSSFCell allPay = resumeRow.createCell(16);
-        allPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        allPay.setCellFormula("SUM(Q4:Q" + numberRow + ")");
-        allPay.setCellStyle(style);
-
-        HSSFCell contributePay = resumeRow.createCell(17);
-        contributePay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        contributePay.setCellFormula("SUM(R4:R" + numberRow + ")");
-        contributePay.setCellStyle(style);
-
-        HSSFCell landPay = resumeRow.createCell(18);
-        landPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        landPay.setCellFormula("SUM(S4:S" + numberRow + ")");
-        landPay.setCellStyle(style);
-
-        HSSFCell tagetPay = resumeRow.createCell(19);
-        tagetPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        tagetPay.setCellFormula("SUM(T4:T" + numberRow + ")");
-        tagetPay.setCellStyle(style);
-
-        HSSFCell assignPay = resumeRow.createCell(20);
-        assignPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        assignPay.setCellFormula("SUM(U4:U" + numberRow + ")");
-        assignPay.setCellStyle(style);
-
-        HSSFCell oldPay = resumeRow.createCell(21);
-        oldPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        oldPay.setCellFormula("SUM(V4:V" + numberRow + ")");
-        oldPay.setCellStyle(style);
-
-        HSSFCell finesPay = resumeRow.createCell(22);
-        finesPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        finesPay.setCellFormula("SUM(W4:W" + numberRow + ")");
-        finesPay.setCellStyle(style);
-
-        HSSFCell balance = resumeRow.createCell(23);
-        balance.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        balance.setCellFormula("SUM(X4:X" + numberRow + ")");
-        balance.setCellStyle(style);
-
-        HSSFCell allContributeNew = resumeRow.createCell(24);
-        allContributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        allContributeNew.setCellFormula("SUM(Y4:Y" + numberRow + ")");
-        allContributeNew.setCellStyle(style);
-
-        HSSFCell contributeNew = resumeRow.createCell(25);
-        contributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        contributeNew.setCellFormula("SUM(Z4:Z" + numberRow + ")");
-        contributeNew.setCellStyle(style);
-
-        HSSFCell landNew = resumeRow.createCell(26);
-        landNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        landNew.setCellFormula("SUM(AA4:AA" + numberRow + ")");
-        landNew.setCellStyle(style);
-
-        HSSFCell targetNew = resumeRow.createCell(27);
-        targetNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        targetNew.setCellFormula("SUM(AB4:AB" + numberRow + ")");
-        targetNew.setCellStyle(style);
-
-        HSSFCell oldNew = resumeRow.createCell(28);
-        oldNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        oldNew.setCellFormula("SUM(AC4:AC" + numberRow + ")");
-        oldNew.setCellStyle(style);
-
-        HSSFCell finesNew = resumeRow.createCell(29);
-        finesNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        finesNew.setCellFormula("SUM(AD4:AD" + numberRow + ")");
-        finesNew.setCellStyle(style);
+    private Integer getEvaluateCell(HSSFCell cell, FormulaEvaluator evaluator) {
+        CellValue cellValue = evaluator.evaluate(cell);
+        switch (cellValue.getCellType()) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return Double.valueOf(cellValue.getNumberValue()).intValue();
+            case Cell.CELL_TYPE_STRING:
+                return Integer.parseInt(cellValue.getStringValue());
+            case Cell.CELL_TYPE_ERROR:
+                break;
+        }
+        return 0;
     }
 
-    private void calculatePayment(HSSFRow row, Payment p) {
+    private void calculatePayment(HSSFRow row, Payment p, Integer number, CellStyle style) {
         HSSFCell numberPay = row.createCell(14);
+        setColoredCell(number, numberPay, style);
         numberPay.setCellValue(p.getNumber());
         //Дата платежа
         HSSFCell datePay = row.createCell(15);
         Date dt = p.getDatePayment().getTime();
         DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
         datePay.setCellValue(ndf.format(dt));
+        setColoredCell(number, datePay, style);
         //Сумма платежа
         HSSFCell sumPay = row.createCell(16);
         sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
                 p.getAdditionallyPay() + p.getFinesPay() + p.getOldContributePay() + p.getPay());
+        setColoredCell(number, sumPay, style);
         //Платеж  по членскому взносу
         HSSFCell contributePay = row.createCell(17);
         contributePay.setCellValue(p.getContributePay());
+        setColoredCell(number, contributePay, style);
         //Платеж по аренде
         HSSFCell contLandPay = row.createCell(18);
         contLandPay.setCellValue(p.getContLandPay());
+        setColoredCell(number, contLandPay, style);
         //Платеж по целевому взносу
         HSSFCell contTargetPay = row.createCell(19);
         contTargetPay.setCellValue(p.getContTargetPay());
+        setColoredCell(number, contTargetPay, style);
         //Платеж по добавочному взносу
         HSSFCell addingPay = row.createCell(20);
         addingPay.setCellValue(p.getAdditionallyPay());
+        setColoredCell(number, addingPay, style);
         //Платеж по долгам прошлых лет
         HSSFCell oldPay = row.createCell(21);
         oldPay.setCellValue(p.getOldContributePay());
+        setColoredCell(number, oldPay, style);
         //Платеж по пеням
         HSSFCell finesPay = row.createCell(22);
         finesPay.setCellValue(p.getFinesPay());
+        setColoredCell(number, finesPay, style);
         //Остаточные деньги
         HSSFCell balancePay = row.createCell(23);
         balancePay.setCellValue(p.getPay());
+        setColoredCell(number, balancePay, style);
     }
+
+    private void createFooter(HSSFSheet sheet, CellStyle style, int numberRow, ResultProfit resultProfit) {
+        FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
+        HSSFRow resumeRow = sheet.createRow(numberRow);
+        HSSFCell resume = resumeRow.createCell(3);
+        resume.setCellValue("Итого:");
+        resume.setCellStyle(style);
+        //Сумма общей задолжности ряда на начало периода
+        HSSFCell allContributeOld = resumeRow.createCell(4);
+        allContributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allContributeOld.setCellFormula("SUM(E4:E" + numberRow + ")");
+        allContributeOld.setCellStyle(style);
+        resultProfit.setOldSumContribute(getEvaluateCell(allContributeOld, evaluator));
+
+        //Сумма задолжности членского взноса ряда на начало периода
+        HSSFCell contributeOld = resumeRow.createCell(5);
+        contributeOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeOld.setCellFormula("SUM(F4:F" + numberRow + ")");
+        contributeOld.setCellStyle(style);
+        resultProfit.setOldContribute(getEvaluateCell(contributeOld, evaluator));
+
+        //Сумма задолжности аренды земли ряда на начало периода
+        HSSFCell landOld = resumeRow.createCell(6);
+        landOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landOld.setCellFormula("SUM(G4:G" + numberRow + ")");
+        landOld.setCellStyle(style);
+        resultProfit.setOldContLand(getEvaluateCell(landOld, evaluator));
+
+        //Сумма задолжности целевого взноса ряда на начало периода
+        HSSFCell tagetOld = resumeRow.createCell(7);
+        tagetOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        tagetOld.setCellFormula("SUM(H4:H" + numberRow + ")");
+        tagetOld.setCellStyle(style);
+        resultProfit.setOldContTarget(getEvaluateCell(tagetOld, evaluator));
+
+        //Сумма задолжности прошлых лет ряда на начало периода
+        HSSFCell pastOld = resumeRow.createCell(8);
+        pastOld.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        pastOld.setCellFormula("SUM(I4:I" + numberRow + ")");
+        pastOld.setCellStyle(style);
+        resultProfit.setPastOld(getEvaluateCell(pastOld, evaluator));
+
+        //Сумма начисленного для ряда в текущем периода
+        HSSFCell allRent = resumeRow.createCell(9);
+        allRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allRent.setCellFormula("SUM(J4:J" + numberRow + ")");
+        allRent.setCellStyle(style);
+        resultProfit.setSumRent(getEvaluateCell(allRent, evaluator));
+
+        //Сумма начисленного членского взноса для ряда в текущем периода
+        HSSFCell contributeRent = resumeRow.createCell(10);
+        contributeRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeRent.setCellFormula("SUM(K4:K" + numberRow + ")");
+        contributeRent.setCellStyle(style);
+        resultProfit.setRentContribute(getEvaluateCell(contributeRent, evaluator));
+
+        //Сумма начисленной аренды земли для ряда в текущем периода
+        HSSFCell landRent = resumeRow.createCell(11);
+        landRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landRent.setCellFormula("SUM(L4:L" + numberRow + ")");
+        landRent.setCellStyle(style);
+        resultProfit.setRentContLand(getEvaluateCell(landRent, evaluator));
+
+        //Сумма начисленного целевого взноса для ряда в текущем периода
+        HSSFCell targetRent = resumeRow.createCell(12);
+        targetRent.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        targetRent.setCellFormula("SUM(M4:M" + numberRow + ")");
+        targetRent.setCellStyle(style);
+        resultProfit.setOldContTarget(getEvaluateCell(targetRent, evaluator));
+
+        //Сумма полученных денег для ряда в текущем периода
+        HSSFCell allPay = resumeRow.createCell(16);
+        allPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allPay.setCellFormula("SUM(Q4:Q" + numberRow + ")");
+        allPay.setCellStyle(style);
+        resultProfit.setSumPayment(getEvaluateCell(allPay, evaluator));
+
+        //Сумма полученных денег по членскому взносу для ряда в текущем периода
+        HSSFCell contributePay = resumeRow.createCell(17);
+        contributePay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributePay.setCellFormula("SUM(R4:R" + numberRow + ")");
+        contributePay.setCellStyle(style);
+        resultProfit.setPayContribute(getEvaluateCell(contributePay, evaluator));
+
+        //Сумма полученных денег по аренде для ряда в текущем периода
+        HSSFCell landPay = resumeRow.createCell(18);
+        landPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landPay.setCellFormula("SUM(S4:S" + numberRow + ")");
+        landPay.setCellStyle(style);
+        resultProfit.setPayContLand(getEvaluateCell(landPay, evaluator));
+
+        //Сумма полученных денег по целевому взносу для ряда в текущем периода
+        HSSFCell targetPay = resumeRow.createCell(19);
+        targetPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        targetPay.setCellFormula("SUM(T4:T" + numberRow + ")");
+        targetPay.setCellStyle(style);
+        resultProfit.setPayContTarget(getEvaluateCell(targetPay, evaluator));
+
+        //Сумма полученных денег дополнительного платежа для ряда в текущем периода
+        HSSFCell assignPay = resumeRow.createCell(20);
+        assignPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        assignPay.setCellFormula("SUM(U4:U" + numberRow + ")");
+        assignPay.setCellStyle(style);
+        resultProfit.setPayAdding(getEvaluateCell(assignPay, evaluator));
+
+        //Сумма полученных денег по долгам прошлых лет для ряда в текущем периода
+        HSSFCell oldPay = resumeRow.createCell(21);
+        oldPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        oldPay.setCellFormula("SUM(V4:V" + numberRow + ")");
+        oldPay.setCellStyle(style);
+        resultProfit.setPayPastOld(getEvaluateCell(oldPay, evaluator));
+
+        //Сумма полученных денег по пеням для ряда в текущем периода
+        HSSFCell finesPay = resumeRow.createCell(22);
+        finesPay.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        finesPay.setCellFormula("SUM(W4:W" + numberRow + ")");
+        finesPay.setCellStyle(style);
+        resultProfit.setPayFines(getEvaluateCell(finesPay, evaluator));
+
+        //Сумма полученных денег лежащих в остатке для ряда в текущем периода
+        HSSFCell balance = resumeRow.createCell(23);
+        balance.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        balance.setCellFormula("SUM(X4:X" + numberRow + ")");
+        balance.setCellStyle(style);
+        resultProfit.setBalance(getEvaluateCell(balance, evaluator));
+
+        //Сумма общей задолжности для ряда на конец периода
+        HSSFCell allContributeNew = resumeRow.createCell(24);
+        allContributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        allContributeNew.setCellFormula("SUM(Y4:Y" + numberRow + ")");
+        allContributeNew.setCellStyle(style);
+        resultProfit.setSumContribute(getEvaluateCell(allContributeNew, evaluator));
+
+        //Сумма задолжности по членскому взносу для ряда на конец периода
+        HSSFCell contributeNew = resumeRow.createCell(25);
+        contributeNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        contributeNew.setCellFormula("SUM(Z4:Z" + numberRow + ")");
+        contributeNew.setCellStyle(style);
+        resultProfit.setContribute(getEvaluateCell(contributeNew, evaluator));
+
+        //Сумма задолжности по аренде земли для ряда на конец периода
+        HSSFCell landNew = resumeRow.createCell(26);
+        landNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        landNew.setCellFormula("SUM(AA4:AA" + numberRow + ")");
+        landNew.setCellStyle(style);
+        resultProfit.setContLand(getEvaluateCell(landNew, evaluator));
+
+        //Сумма задолжности по целевому взносу для ряда на конец периода
+        HSSFCell targetNew = resumeRow.createCell(27);
+        targetNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        targetNew.setCellFormula("SUM(AB4:AB" + numberRow + ")");
+        targetNew.setCellStyle(style);
+        resultProfit.setContTarget(getEvaluateCell(targetNew, evaluator));
+
+        //Сумма задолжности по долгам прошлых лет для ряда на конец периода
+        HSSFCell oldNew = resumeRow.createCell(28);
+        oldNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        oldNew.setCellFormula("SUM(AC4:AC" + numberRow + ")");
+        oldNew.setCellStyle(style);
+        resultProfit.setPastContribute(getEvaluateCell(oldNew, evaluator));
+
+        //Сумма задолжности по пеням для ряда на конец периода
+        HSSFCell finesNew = resumeRow.createCell(29);
+        finesNew.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        finesNew.setCellFormula("SUM(AD4:AD" + numberRow + ")");
+        finesNew.setCellStyle(style);
+        resultProfit.setFines(getEvaluateCell(finesNew, evaluator));
+    }
+
+    private void createResultSheet(List<ResultProfit> resultProfits, HSSFWorkbook workBook, CellStyle style, CellStyle rowStyleEven) {
+        HSSFSheet sheet = workBook.createSheet("ИТОГИ");
+        createHeader(sheet, style);
+        int rowNumber = 3;
+        for (ResultProfit profit : resultProfits) {
+
+            HSSFRow row = sheet.createRow(rowNumber);
+            row.setHeightInPoints(30);
+
+            HSSFCell  record = row.createCell(0);
+            record.setCellValue(rowNumber-2);
+            setColoredCell(rowNumber,record,rowStyleEven);
+
+            HSSFCell  series = row.createCell(1);
+            series.setCellValue(profit.getSeries());
+            setColoredCell(rowNumber,series,rowStyleEven);
+
+            HSSFCell number = row.createCell(2);
+            number.setCellValue("-");
+            setColoredCell(rowNumber,number,rowStyleEven);
+
+            HSSFCell seriesColumnFio =row.createCell(3);
+            seriesColumnFio.setCellValue("РЯД №" + profit.getSeries());
+            setColoredCell(rowNumber,seriesColumnFio,rowStyleEven);
+
+            HSSFCell oldSumContribute = row.createCell(4);
+            oldSumContribute.setCellValue(profit.getOldSumContribute());
+            setColoredCell(rowNumber,oldSumContribute,rowStyleEven);
+
+            HSSFCell oldContribute = row.createCell(5);
+            oldContribute.setCellValue(profit.getOldContribute());
+            setColoredCell(rowNumber,oldContribute,rowStyleEven);
+            
+            HSSFCell oldContLand = row.createCell(6);
+            oldContLand.setCellValue(profit.getOldContLand());
+            setColoredCell(rowNumber,oldContLand,rowStyleEven);
+            
+            HSSFCell oldContTarget = row.createCell(7);
+            oldContTarget.setCellValue(profit.getOldContTarget());
+            setColoredCell(rowNumber,oldContTarget,rowStyleEven);
+            
+            HSSFCell pastOld = row.createCell(8);
+            pastOld.setCellValue(profit.getPastOld());
+            setColoredCell(rowNumber,pastOld,rowStyleEven);
+
+            HSSFCell sumRent = row.createCell(9);
+            sumRent.setCellValue(profit.getSumRent());
+            setColoredCell(rowNumber,sumRent,rowStyleEven);
+
+            HSSFCell rentContribute = row.createCell(10);
+            rentContribute.setCellValue(profit.getRentContribute());
+            setColoredCell(rowNumber,rentContribute,rowStyleEven);
+
+            HSSFCell rentContLand = row.createCell(11);
+            rentContLand.setCellValue(profit.getRentContLand());
+            setColoredCell(rowNumber,rentContLand,rowStyleEven);
+
+            HSSFCell rentContTarget = row.createCell(12);
+            rentContTarget.setCellValue(profit.getRentContTarget());
+            setColoredCell(rowNumber,rentContTarget,rowStyleEven);
+
+            HSSFCell  recordTwo = row.createCell(13);
+            recordTwo.setCellValue(rowNumber-2);
+            setColoredCell(rowNumber,recordTwo,rowStyleEven);
+
+            setColoredCell(rowNumber,row.createCell(14),rowStyleEven);
+            setColoredCell(rowNumber,row.createCell(15),rowStyleEven);
+            
+            HSSFCell  sumPayment = row.createCell(16);
+            sumPayment.setCellValue(profit.getSumPayment());
+            setColoredCell(rowNumber,sumPayment,rowStyleEven);
+
+            HSSFCell  payContribute = row.createCell(17);
+            payContribute.setCellValue(profit.getPayContribute());
+            setColoredCell(rowNumber,payContribute,rowStyleEven);
+
+            HSSFCell  payContLand = row.createCell(18);
+            payContLand.setCellValue(profit.getPayContLand());
+            setColoredCell(rowNumber,payContLand,rowStyleEven);
+
+            HSSFCell  payContTarget = row.createCell(19);
+            payContTarget.setCellValue(profit.getPayContTarget());
+            setColoredCell(rowNumber,payContTarget,rowStyleEven);
+
+            HSSFCell  payAdding = row.createCell(20);
+            payAdding.setCellValue(profit.getPayAdding());
+            setColoredCell(rowNumber,payAdding,rowStyleEven);
+
+            HSSFCell  payPastOld = row.createCell(21);
+            payPastOld.setCellValue(profit.getPayPastOld());
+            setColoredCell(rowNumber,payPastOld,rowStyleEven);
+
+            HSSFCell  payFines = row.createCell(22);
+            payFines.setCellValue(profit.getPayFines());
+            setColoredCell(rowNumber,payFines,rowStyleEven);
+
+            HSSFCell  balance = row.createCell(23);
+            balance.setCellValue(profit.getBalance());
+            setColoredCell(rowNumber,balance,rowStyleEven);
+
+            HSSFCell  sumContribute = row.createCell(24);
+            sumContribute.setCellValue(profit.getSumContribute());
+            setColoredCell(rowNumber,sumContribute,rowStyleEven);
+
+            HSSFCell  contribute = row.createCell(25);
+            contribute.setCellValue(profit.getContribute());
+            setColoredCell(rowNumber,contribute,rowStyleEven);
+
+            HSSFCell  contLand = row.createCell(26);
+            contLand.setCellValue(profit.getContLand());
+            setColoredCell(rowNumber,contLand,rowStyleEven);
+
+            HSSFCell  contTarget = row.createCell(27);
+            contTarget.setCellValue(profit.getContTarget());
+            setColoredCell(rowNumber,contTarget,rowStyleEven);
+
+            HSSFCell  pastContribute = row.createCell(28);
+            pastContribute.setCellValue(profit.getPastContribute());
+            setColoredCell(rowNumber,pastContribute,rowStyleEven);
+
+            HSSFCell  fines = row.createCell(29);
+            fines.setCellValue(profit.getFines());
+            setColoredCell(rowNumber,fines,rowStyleEven);
+
+            rowNumber++;
+        }
+
+        ResultProfit resultProfit = new ResultProfit("ИТОГИ");
+        createFooter(sheet, style, rowNumber, resultProfit);
+    }
+
 }
