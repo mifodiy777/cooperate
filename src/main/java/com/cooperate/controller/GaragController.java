@@ -184,15 +184,20 @@ public class GaragController {
     //Информационно модальное окно для гаража
 
     /**
-     * Информационное модальное окно для гаража - платежи, долги.
+     * Информационное окно для гаража - платежи, долги.
      *
      * @param id  ID Гаража
      * @param map ModelMap
      * @return garagInf.jsp
      */
     @RequestMapping(value = "garagInf", method = RequestMethod.GET)
-    public String payModal(@RequestParam("idGarag") Integer id, ModelMap map) {
+    public String payModal(@RequestParam("idGarag") Integer id, ModelMap map, HttpServletResponse response) {
         Garag garag = garagService.getGarag(id);
+        if(garag.getContributions().isEmpty()){
+            map.put("message", "У гаража отсутствуют периоды начислений.\n Добавте их в меню редактирования гаража!");
+            response.setStatus(409);
+            return "error";
+        }
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
         map.addAttribute("fio", garag.getPerson().getFIO());
