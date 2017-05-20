@@ -40,6 +40,278 @@ public class ReportService {
     private PaymentDAO paymentDAO;
 
     /**
+     * Список всех гаражей
+     *
+     * @return документ word
+     */
+    public HSSFWorkbook reportAll() {
+        HSSFWorkbook workBook = new HSSFWorkbook();
+        HSSFSheet sheet = workBook.createSheet("Список членов ГК");
+        sheet.setActive(true);
+        HSSFRow row = sheet.createRow(0);
+        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес", "Льготы"};
+        CellStyle headerStyle = workBook.createCellStyle();
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+        Font font = workBook.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setFont(font);
+        CellStyle styleEven = createStyleEven(workBook);
+        for (int i = 0; i < hatCells.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(hatCells[i]);
+            cell.setCellStyle(headerStyle);
+            if (i == 0) {
+                sheet.setColumnWidth(i, (short) (5 * 256));
+            }
+            if (i == 1) {
+                sheet.setColumnWidth(i, (short) (10 * 256));
+            }
+            if (i == 2) {
+                sheet.setColumnWidth(i, (short) (40 * 256));
+            }
+            if (i == 3) {
+                sheet.setColumnWidth(i, (short) (15 * 256));
+            }
+            if (i == 4) {
+                sheet.setColumnWidth(i, (short) (50 * 256));
+            }
+            if (i == 5) {
+                sheet.setColumnWidth(i, (short) (30 * 256));
+            }
+        }
+        int numberRow = 1;
+        List<Garag> garagList = garagDAO.findAll();
+        ;
+        Collections.sort(garagList, new GaragComparator());
+        for (Garag garag : garagList) {
+            HSSFRow nextRow = sheet.createRow(numberRow);
+            HSSFCell countCell = nextRow.createCell(0);
+            countCell.setCellValue(numberRow);
+            setColoredCell(numberRow,countCell,styleEven);
+            HSSFCell garagCell = nextRow.createCell(1);
+            garagCell.setCellValue(garag.getName());
+            setColoredCell(numberRow,garagCell,styleEven);
+            if (garag.getPerson() != null) {
+                HSSFCell fioCell = nextRow.createCell(2);
+                fioCell.setCellValue(garag.getPerson().getFIO());
+                setColoredCell(numberRow,fioCell,styleEven);
+                HSSFCell phoneCell = nextRow.createCell(3);
+                phoneCell.setCellValue(garag.getPerson().getTelephone());
+                setColoredCell(numberRow,phoneCell,styleEven);
+                HSSFCell addressCell = nextRow.createCell(4);
+                addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
+                setColoredCell(numberRow,addressCell,styleEven);
+                HSSFCell benefitsCell = nextRow.createCell(5);
+                benefitsCell.setCellValue(garag.getPerson().getBenefits());
+                setColoredCell(numberRow,benefitsCell,styleEven);
+            }
+            numberRow++;
+        }
+        return workBook;
+    }
+
+    /**
+     * Список льготников
+     *
+     * @return документ word
+     */
+    public HSSFWorkbook reportBenefitsPerson() {
+        HSSFWorkbook workBook = new HSSFWorkbook();
+        HSSFSheet sheet = workBook.createSheet("Список льготников ГК");
+        sheet.setActive(true);
+        HSSFRow row = sheet.createRow(0);
+        String[] hatCells = new String[]{"№", "ФИО", "Гараж", "Лготы", "Площадь"};
+        CellStyle headerStyle = workBook.createCellStyle();
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+        Font font = workBook.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setFont(font);
+        CellStyle styleEven = createStyleEven(workBook);
+        for (int i = 0; i < hatCells.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(hatCells[i]);
+            cell.setCellStyle(headerStyle);
+            if (i == 0) {
+                sheet.setColumnWidth(i, (short) (5 * 256));
+            }
+            if (i == 1) {
+                sheet.setColumnWidth(i, (short) (40 * 256));
+            }
+            if (i == 2) {
+                sheet.setColumnWidth(i, (short) (40 * 256));
+            }
+            if (i == 3) {
+                sheet.setColumnWidth(i, (short) (60 * 256));
+            }
+            if (i == 4) {
+                sheet.setColumnWidth(i, (short) (20 * 256));
+            }
+        }
+        int numberRow = 1;
+        List<Garag> garagList = garagDAO.getGaragForPersonBenefits();
+        Collections.sort(garagList, new GaragComparator());
+        for (Garag garag : garagList) {
+            HSSFRow nextRow = sheet.createRow(numberRow);
+            HSSFCell countCell = nextRow.createCell(0);
+            countCell.setCellValue(numberRow);
+            setColoredCell(numberRow,countCell,styleEven);
+            HSSFCell fioCell = nextRow.createCell(1);
+            fioCell.setCellValue(garag.getPerson().getFIO());
+            setColoredCell(numberRow,fioCell,styleEven);
+            HSSFCell garagCell = nextRow.createCell(2);
+            garagCell.setCellValue("Членская книжка ГК №23 " + garag.getSeries() + " ряд-" + garag.getNumber() + " место");
+            setColoredCell(numberRow,garagCell,styleEven);
+            HSSFCell benefitsCell = nextRow.createCell(3);
+            benefitsCell.setCellValue(garag.getPerson().getBenefits());
+            setColoredCell(numberRow,benefitsCell,styleEven);
+            HSSFCell squedCell = nextRow.createCell(4);
+            Long count = garagDAO.count();
+            squedCell.setCellValue((51004 / count) + " кв. м.");
+            setColoredCell(numberRow,squedCell,styleEven);
+            numberRow++;
+        }
+        return workBook;
+    }
+
+    /**
+     * Список должников
+     *
+     * @return документ word
+     */
+    public HSSFWorkbook reportContribute() {
+        HSSFWorkbook workBook = new HSSFWorkbook();
+        HSSFSheet sheet = workBook.createSheet("Список должников ГК");
+        sheet.setActive(true);
+        HSSFRow row = sheet.createRow(0);
+        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес",
+                "Общий долг", "Членские взносы", "За землю", "Целевой взнос", "Пени", "Долги прошлых лет"};
+        CellStyle headerStyle = workBook.createCellStyle();
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+        Font font = workBook.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setFont(font);
+        for (int i = 0; i < hatCells.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(hatCells[i]);
+            cell.setCellStyle(headerStyle);
+            if (i == 0) {
+                sheet.setColumnWidth(i, (short) (5 * 256));
+            }
+            if (i == 1) {
+                sheet.setColumnWidth(i, (short) (10 * 256));
+            }
+            if (i == 2) {
+                sheet.setColumnWidth(i, (short) (40 * 256));
+            }
+            if (i == 3) {
+                sheet.setColumnWidth(i, (short) (15 * 256));
+            }
+            if (i == 4) {
+                sheet.setColumnWidth(i, (short) (40 * 256));
+            }
+            if (i >= 5) {
+                sheet.setColumnWidth(i, (short) (20 * 256));
+            }
+        }
+        int numberRow = 1;
+        List<Garag> garagList = garagDAO.getGaragDebt();
+        Collections.sort(garagList, new GaragComparator());
+        CellStyle rowStyleEven = createStyleEven(workBook);
+        for (Garag garag : garagList) {
+            HSSFRow nextRow = sheet.createRow(numberRow);
+            HSSFCell countCell = nextRow.createCell(0);
+            countCell.setCellValue(numberRow);
+            setColoredCell(numberRow, countCell, rowStyleEven);
+            HSSFCell garagCell = nextRow.createCell(1);
+            garagCell.setCellValue(garag.getName());
+            setColoredCell(numberRow, garagCell, rowStyleEven);
+            HSSFCell fioCell = nextRow.createCell(2);
+            fioCell.setCellValue(garag.getPerson().getFIO());
+            setColoredCell(numberRow, fioCell, rowStyleEven);
+            HSSFCell phoneCell = nextRow.createCell(3);
+            phoneCell.setCellValue(garag.getPerson().getTelephone());
+            setColoredCell(numberRow, phoneCell, rowStyleEven);
+            HSSFCell addressCell = nextRow.createCell(4);
+            addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
+            setColoredCell(numberRow, addressCell, rowStyleEven);
+            Float cont = 0f;
+            Float land = 0f;
+            Float target = 0f;
+            Integer fines = 0;
+            for (Contribution c : garag.getContributions()) {
+                cont += c.getContribute();
+                land += c.getContLand();
+                target += c.getContTarget();
+                fines += c.getFines();
+            }
+            Float sum = cont + land + target + fines + garag.getOldContribute();
+            HSSFCell allContributeColumn = nextRow.createCell(5);
+            allContributeColumn.setCellValue(sum);
+            setColoredCell(numberRow, allContributeColumn, rowStyleEven);
+            HSSFCell contributeColumn = nextRow.createCell(6);
+            contributeColumn.setCellValue(cont);
+            setColoredCell(numberRow, contributeColumn, rowStyleEven);
+            HSSFCell landColumn = nextRow.createCell(7);
+            landColumn.setCellValue(land);
+            setColoredCell(numberRow, landColumn, rowStyleEven);
+            HSSFCell tagetColumn = nextRow.createCell(8);
+            tagetColumn.setCellValue(target);
+            setColoredCell(numberRow, tagetColumn, rowStyleEven);
+            HSSFCell finesColumn = nextRow.createCell(9);
+            finesColumn.setCellValue(fines);
+            setColoredCell(numberRow, finesColumn, rowStyleEven);
+            HSSFCell oldColumn = nextRow.createCell(10);
+            oldColumn.setCellValue(garag.getOldContribute());
+            setColoredCell(numberRow, oldColumn, rowStyleEven);
+            numberRow++;
+        }
+        if (!garagList.isEmpty()) {
+            CellStyle footerStyle = workBook.createCellStyle();
+            footerStyle.setWrapText(true);
+            footerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+            footerStyle.setBorderTop(CellStyle.BORDER_MEDIUM);
+            Font fontFooter = workBook.createFont();
+            fontFooter.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+            footerStyle.setFont(fontFooter);
+            HSSFRow resumeRow = sheet.createRow(numberRow);
+            HSSFCell resume = resumeRow.createCell(4);
+            resume.setCellValue("Итого:");
+            resume.setCellStyle(footerStyle);
+            HSSFCell allContributeResume = resumeRow.createCell(5);
+            allContributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            allContributeResume.setCellFormula("SUM(F2:F" + numberRow + ")");
+            allContributeResume.setCellStyle(footerStyle);
+            HSSFCell contributeResume = resumeRow.createCell(6);
+            contributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            contributeResume.setCellFormula("SUM(G2:G" + numberRow + ")");
+            contributeResume.setCellStyle(footerStyle);
+            HSSFCell landResume = resumeRow.createCell(7);
+            landResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            landResume.setCellFormula("SUM(H2:H" + numberRow + ")");
+            landResume.setCellStyle(footerStyle);
+            HSSFCell tagetResume = resumeRow.createCell(8);
+            tagetResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            tagetResume.setCellFormula("SUM(I2:I" + numberRow + ")");
+            tagetResume.setCellStyle(footerStyle);
+            HSSFCell finesResume = resumeRow.createCell(9);
+            finesResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            finesResume.setCellFormula("SUM(J2:J" + numberRow + ")");
+            finesResume.setCellStyle(footerStyle);
+            HSSFCell oldResume = resumeRow.createCell(10);
+            oldResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+            oldResume.setCellFormula("SUM(K2:K" + numberRow + ")");
+            oldResume.setCellStyle(footerStyle);
+        }
+        return workBook;
+    }
+
+    /**
      * Формирования отчета со списком платежей за определнный период
      *
      * @param start начало периода
@@ -60,6 +332,7 @@ public class ReportService {
         Font font = workBook.createFont();
         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         headerStyle.setFont(font);
+        CellStyle styleEven = createStyleEven(workBook);
         for (int i = 0; i < hatCells.length; i++) {
             HSSFCell cell = row.createCell(i);
             cell.setCellValue(hatCells[i]);
@@ -90,35 +363,48 @@ public class ReportService {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
+            setColoredCell(numberRow,countCell,styleEven);
             HSSFCell numberCell = nextRow.createCell(1);
             numberCell.setCellValue(p.getNumber());
+            setColoredCell(numberRow,numberCell,styleEven);
             Date dt = p.getDatePayment().getTime();
             DateFormat ndf = new SimpleDateFormat("dd/MM/yyyy");
             String dateFull = ndf.format(dt);
             HSSFCell datePay = nextRow.createCell(2);
             datePay.setCellValue(dateFull);
+            setColoredCell(numberRow,datePay,styleEven);
             HSSFCell garagCell = nextRow.createCell(3);
             garagCell.setCellValue(p.getGarag().getName());
+            setColoredCell(numberRow,garagCell,styleEven);
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());
+            setColoredCell(numberRow,fioCell,styleEven);
             Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +
                     p.getPay() + p.getAdditionallyPay() + p.getOldContributePay();
             HSSFCell sumPayColumn = nextRow.createCell(5);
             sumPayColumn.setCellValue(sum);
+            setColoredCell(numberRow,sumPayColumn,styleEven);
             HSSFCell contributeColumn = nextRow.createCell(6);
             contributeColumn.setCellValue(p.getContributePay());
+            setColoredCell(numberRow,contributeColumn,styleEven);
             HSSFCell landColumn = nextRow.createCell(7);
             landColumn.setCellValue(p.getContLandPay());
+            setColoredCell(numberRow,landColumn,styleEven);
             HSSFCell tagetColumn = nextRow.createCell(8);
             tagetColumn.setCellValue(p.getContTargetPay());
+            setColoredCell(numberRow,tagetColumn,styleEven);
             HSSFCell finesColumn = nextRow.createCell(9);
             finesColumn.setCellValue(p.getFinesPay());
+            setColoredCell(numberRow,finesColumn,styleEven);
             HSSFCell addingColumn = nextRow.createCell(10);
             addingColumn.setCellValue(p.getAdditionallyPay());
+            setColoredCell(numberRow,addingColumn,styleEven);
             HSSFCell oldContributeColumn = nextRow.createCell(11);
             oldContributeColumn.setCellValue(p.getOldContributePay());
+            setColoredCell(numberRow,oldContributeColumn,styleEven);
             HSSFCell reminderColumn = nextRow.createCell(12);
             reminderColumn.setCellValue(p.getPay());
+            setColoredCell(numberRow,reminderColumn,styleEven);
             numberRow++;
         }
 
@@ -171,253 +457,6 @@ public class ReportService {
     }
 
     /**
-     * Список всех гаражей
-     *
-     * @return документ word
-     */
-    public HSSFWorkbook reportAll() {
-        HSSFWorkbook workBook = new HSSFWorkbook();
-        HSSFSheet sheet = workBook.createSheet("Список членов ГК");
-        sheet.setActive(true);
-        HSSFRow row = sheet.createRow(0);
-        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес", "Льготы"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
-        for (int i = 0; i < hatCells.length; i++) {
-            HSSFCell cell = row.createCell(i);
-            cell.setCellValue(hatCells[i]);
-            cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (15 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (50 * 256));
-            }
-            if (i == 5) {
-                sheet.setColumnWidth(i, (short) (30 * 256));
-            }
-        }
-        int numberRow = 1;
-        List<Garag> garagList = garagDAO.findAll();
-        ;
-        Collections.sort(garagList, new GaragComparator());
-        for (Garag garag : garagList) {
-            HSSFRow nextRow = sheet.createRow(numberRow);
-            HSSFCell countCell = nextRow.createCell(0);
-            countCell.setCellValue(numberRow);
-            HSSFCell garagCell = nextRow.createCell(1);
-            garagCell.setCellValue(garag.getName());
-            if (garag.getPerson() != null) {
-                HSSFCell fioCell = nextRow.createCell(2);
-                fioCell.setCellValue(garag.getPerson().getFIO());
-                HSSFCell phoneCell = nextRow.createCell(3);
-                phoneCell.setCellValue(garag.getPerson().getTelephone());
-                HSSFCell addressCell = nextRow.createCell(4);
-                addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
-                HSSFCell benefitsCell = nextRow.createCell(5);
-                benefitsCell.setCellValue(garag.getPerson().getBenefits());
-            }
-            numberRow++;
-        }
-        return workBook;
-    }
-
-    /**
-     * Список льготников
-     *
-     * @return документ word
-     */
-    public HSSFWorkbook reportBenefitsPerson() {
-        HSSFWorkbook workBook = new HSSFWorkbook();
-        HSSFSheet sheet = workBook.createSheet("Список льготников ГК");
-        sheet.setActive(true);
-        HSSFRow row = sheet.createRow(0);
-        String[] hatCells = new String[]{"№", "ФИО", "Гараж", "Лготы", "Площадь"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
-        for (int i = 0; i < hatCells.length; i++) {
-            HSSFCell cell = row.createCell(i);
-            cell.setCellValue(hatCells[i]);
-            cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (60 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
-            }
-        }
-        int numberRow = 1;
-        List<Garag> garagList = garagDAO.getGaragForPersonBenefits();
-        Collections.sort(garagList, new GaragComparator());
-        for (Garag garag : garagList) {
-            HSSFRow nextRow = sheet.createRow(numberRow);
-            HSSFCell countCell = nextRow.createCell(0);
-            countCell.setCellValue(numberRow);
-            HSSFCell fioCell = nextRow.createCell(1);
-            fioCell.setCellValue(garag.getPerson().getFIO());
-            HSSFCell garagCell = nextRow.createCell(2);
-            garagCell.setCellValue("Членская книжка ГК №23 " + garag.getSeries() + " ряд-" + garag.getNumber() + " место");
-            HSSFCell benefitsCell = nextRow.createCell(3);
-            benefitsCell.setCellValue(garag.getPerson().getBenefits());
-            HSSFCell squedCell = nextRow.createCell(4);
-            Long count = garagDAO.count();
-            squedCell.setCellValue((51004 / count) + " кв. м.");
-            numberRow++;
-        }
-        return workBook;
-    }
-
-    /**
-     * Список должников
-     *
-     * @return документ word
-     */
-    public HSSFWorkbook reportContribute() {
-        HSSFWorkbook workBook = new HSSFWorkbook();
-        HSSFSheet sheet = workBook.createSheet("Список должников ГК");
-        sheet.setActive(true);
-        HSSFRow row = sheet.createRow(0);
-        String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес",
-                "Общий долг", "Членские взносы", "За землю", "Целевой взнос", "Пени", "Долги прошлых лет"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
-        for (int i = 0; i < hatCells.length; i++) {
-            HSSFCell cell = row.createCell(i);
-            cell.setCellValue(hatCells[i]);
-            cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (15 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i >= 5) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
-            }
-        }
-        int numberRow = 1;
-        List<Garag> garagList = garagDAO.getGaragDebt();
-        Collections.sort(garagList, new GaragComparator());
-        for (Garag garag : garagList) {
-            HSSFRow nextRow = sheet.createRow(numberRow);
-            HSSFCell countCell = nextRow.createCell(0);
-            countCell.setCellValue(numberRow);
-            HSSFCell garagCell = nextRow.createCell(1);
-            garagCell.setCellValue(garag.getName());
-            HSSFCell fioCell = nextRow.createCell(2);
-            fioCell.setCellValue(garag.getPerson().getFIO());
-            HSSFCell phoneCell = nextRow.createCell(3);
-            phoneCell.setCellValue(garag.getPerson().getTelephone());
-            HSSFCell addressCell = nextRow.createCell(4);
-            addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
-            Float cont = 0f;
-            Float land = 0f;
-            Float target = 0f;
-            Integer fines = 0;
-            for (Contribution c : garag.getContributions()) {
-                cont += c.getContribute();
-                land += c.getContLand();
-                target += c.getContTarget();
-                fines += c.getFines();
-            }
-            Float sum = cont + land + target + fines + garag.getOldContribute();
-            HSSFCell allContributeColumn = nextRow.createCell(5);
-            allContributeColumn.setCellValue(sum);
-            HSSFCell contributeColumn = nextRow.createCell(6);
-            contributeColumn.setCellValue(cont);
-            HSSFCell landColumn = nextRow.createCell(7);
-            landColumn.setCellValue(land);
-            HSSFCell tagetColumn = nextRow.createCell(8);
-            tagetColumn.setCellValue(target);
-            HSSFCell finesColumn = nextRow.createCell(9);
-            finesColumn.setCellValue(fines);
-            HSSFCell oldColumn = nextRow.createCell(10);
-            oldColumn.setCellValue(garag.getOldContribute());
-            numberRow++;
-        }
-        if (!garagList.isEmpty()) {
-            CellStyle footerStyle = workBook.createCellStyle();
-            footerStyle.setWrapText(true);
-            footerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            footerStyle.setBorderTop(CellStyle.BORDER_MEDIUM);
-            Font fontFooter = workBook.createFont();
-            fontFooter.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-            footerStyle.setFont(fontFooter);
-            HSSFRow resumeRow = sheet.createRow(numberRow);
-            HSSFCell resume = resumeRow.createCell(4);
-            resume.setCellValue("Итого:");
-            resume.setCellStyle(footerStyle);
-            HSSFCell allContributeResume = resumeRow.createCell(5);
-            allContributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            allContributeResume.setCellFormula("SUM(F2:F" + numberRow + ")");
-            allContributeResume.setCellStyle(footerStyle);
-            HSSFCell contributeResume = resumeRow.createCell(6);
-            contributeResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            contributeResume.setCellFormula("SUM(G2:G" + numberRow + ")");
-            contributeResume.setCellStyle(footerStyle);
-            HSSFCell landResume = resumeRow.createCell(7);
-            landResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            landResume.setCellFormula("SUM(H2:H" + numberRow + ")");
-            landResume.setCellStyle(footerStyle);
-            HSSFCell tagetResume = resumeRow.createCell(8);
-            tagetResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            tagetResume.setCellFormula("SUM(I2:I" + numberRow + ")");
-            tagetResume.setCellStyle(footerStyle);
-            HSSFCell finesResume = resumeRow.createCell(9);
-            finesResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            finesResume.setCellFormula("SUM(J2:J" + numberRow + ")");
-            finesResume.setCellStyle(footerStyle);
-            HSSFCell oldResume = resumeRow.createCell(10);
-            oldResume.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            oldResume.setCellFormula("SUM(K2:K" + numberRow + ")");
-            oldResume.setCellStyle(footerStyle);
-        }
-        return workBook;
-    }
-
-    /**
      * Отчет о доходах за определнный период
      *
      * @param start начало периода
@@ -433,9 +472,7 @@ public class ReportService {
         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         styleHeader.setFont(font);
 
-        CellStyle rowStyleEven = workBook.createCellStyle();
-        rowStyleEven.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-        rowStyleEven.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        CellStyle rowStyleEven = createStyleEven(workBook);
 
         List<ResultProfit> resultProfits = new LinkedList<>();
         for (String series : garagDAO.getSeries()) {
@@ -643,20 +680,6 @@ public class ReportService {
         return workBook;
     }
 
-    private void coloredPayments(List<Payment> paymentsPeriod, HSSFRow row, CellStyle rowStyleEven) {
-        if (paymentsPeriod.isEmpty()) {
-            for (int i = 14; i <= 23; i++) {
-                row.createCell(i).setCellStyle(rowStyleEven);
-            }
-        }
-    }
-
-    private void setColoredCell(Integer number, HSSFCell cell, CellStyle style) {
-        if ((number % 2) == 0) {
-            cell.setCellStyle(style);
-        }
-    }
-
     private void createHeader(HSSFSheet sheet, CellStyle style) {
         HSSFRow rowZero = sheet.createRow(0);
         HSSFRow rowOne = sheet.createRow(1);
@@ -794,64 +817,6 @@ public class ReportService {
         HSSFCell finesCNHCell = rowTwo.createCell(29);
         finesCNHCell.setCellValue("пени");
         finesCNHCell.setCellStyle(style);
-    }
-
-    private Integer getEvaluateCell(HSSFCell cell, FormulaEvaluator evaluator) {
-        CellValue cellValue = evaluator.evaluate(cell);
-        switch (cellValue.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
-                return Double.valueOf(cellValue.getNumberValue()).intValue();
-            case Cell.CELL_TYPE_STRING:
-                return Integer.parseInt(cellValue.getStringValue());
-            case Cell.CELL_TYPE_ERROR:
-                break;
-        }
-        return 0;
-    }
-
-    private void calculatePayment(HSSFRow row, Payment p, Integer number, CellStyle style) {
-        HSSFCell numberPay = row.createCell(14);
-        setColoredCell(number, numberPay, style);
-        numberPay.setCellValue(p.getNumber());
-        //Дата платежа
-        HSSFCell datePay = row.createCell(15);
-        Date dt = p.getDatePayment().getTime();
-        DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
-        datePay.setCellValue(ndf.format(dt));
-        setColoredCell(number, datePay, style);
-        //Сумма платежа
-        HSSFCell sumPay = row.createCell(16);
-        sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
-                p.getAdditionallyPay() + p.getFinesPay() + p.getOldContributePay() + p.getPay());
-        setColoredCell(number, sumPay, style);
-        //Платеж  по членскому взносу
-        HSSFCell contributePay = row.createCell(17);
-        contributePay.setCellValue(p.getContributePay());
-        setColoredCell(number, contributePay, style);
-        //Платеж по аренде
-        HSSFCell contLandPay = row.createCell(18);
-        contLandPay.setCellValue(p.getContLandPay());
-        setColoredCell(number, contLandPay, style);
-        //Платеж по целевому взносу
-        HSSFCell contTargetPay = row.createCell(19);
-        contTargetPay.setCellValue(p.getContTargetPay());
-        setColoredCell(number, contTargetPay, style);
-        //Платеж по добавочному взносу
-        HSSFCell addingPay = row.createCell(20);
-        addingPay.setCellValue(p.getAdditionallyPay());
-        setColoredCell(number, addingPay, style);
-        //Платеж по долгам прошлых лет
-        HSSFCell oldPay = row.createCell(21);
-        oldPay.setCellValue(p.getOldContributePay());
-        setColoredCell(number, oldPay, style);
-        //Платеж по пеням
-        HSSFCell finesPay = row.createCell(22);
-        finesPay.setCellValue(p.getFinesPay());
-        setColoredCell(number, finesPay, style);
-        //Остаточные деньги
-        HSSFCell balancePay = row.createCell(23);
-        balancePay.setCellValue(p.getPay());
-        setColoredCell(number, balancePay, style);
     }
 
     private void createFooter(HSSFSheet sheet, CellStyle style, int numberRow, ResultProfit resultProfit) {
@@ -1022,6 +987,85 @@ public class ReportService {
         resultProfit.setFines(getEvaluateCell(finesNew, evaluator));
     }
 
+    private CellStyle createStyleEven(HSSFWorkbook workBook) {
+        CellStyle rowStyleEven = workBook.createCellStyle();
+        rowStyleEven.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+        rowStyleEven.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        return rowStyleEven;
+    }
+
+    private void setColoredCell(Integer number, HSSFCell cell, CellStyle style) {
+        if ((number % 2) == 0) {
+            cell.setCellStyle(style);
+        }
+    }
+
+    private void coloredPayments(List<Payment> paymentsPeriod, HSSFRow row, CellStyle rowStyleEven) {
+        if (paymentsPeriod.isEmpty()) {
+            for (int i = 14; i <= 23; i++) {
+                row.createCell(i).setCellStyle(rowStyleEven);
+            }
+        }
+    }
+
+    private Integer getEvaluateCell(HSSFCell cell, FormulaEvaluator evaluator) {
+        CellValue cellValue = evaluator.evaluate(cell);
+        switch (cellValue.getCellType()) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return Double.valueOf(cellValue.getNumberValue()).intValue();
+            case Cell.CELL_TYPE_STRING:
+                return Integer.parseInt(cellValue.getStringValue());
+            case Cell.CELL_TYPE_ERROR:
+                break;
+        }
+        return 0;
+    }
+
+    private void calculatePayment(HSSFRow row, Payment p, Integer number, CellStyle style) {
+        HSSFCell numberPay = row.createCell(14);
+        setColoredCell(number, numberPay, style);
+        numberPay.setCellValue(p.getNumber());
+        //Дата платежа
+        HSSFCell datePay = row.createCell(15);
+        Date dt = p.getDatePayment().getTime();
+        DateFormat ndf = new SimpleDateFormat("dd.MM.yyyy");
+        datePay.setCellValue(ndf.format(dt));
+        setColoredCell(number, datePay, style);
+        //Сумма платежа
+        HSSFCell sumPay = row.createCell(16);
+        sumPay.setCellValue(p.getContributePay() + p.getContLandPay() + p.getContTargetPay() +
+                p.getAdditionallyPay() + p.getFinesPay() + p.getOldContributePay() + p.getPay());
+        setColoredCell(number, sumPay, style);
+        //Платеж  по членскому взносу
+        HSSFCell contributePay = row.createCell(17);
+        contributePay.setCellValue(p.getContributePay());
+        setColoredCell(number, contributePay, style);
+        //Платеж по аренде
+        HSSFCell contLandPay = row.createCell(18);
+        contLandPay.setCellValue(p.getContLandPay());
+        setColoredCell(number, contLandPay, style);
+        //Платеж по целевому взносу
+        HSSFCell contTargetPay = row.createCell(19);
+        contTargetPay.setCellValue(p.getContTargetPay());
+        setColoredCell(number, contTargetPay, style);
+        //Платеж по добавочному взносу
+        HSSFCell addingPay = row.createCell(20);
+        addingPay.setCellValue(p.getAdditionallyPay());
+        setColoredCell(number, addingPay, style);
+        //Платеж по долгам прошлых лет
+        HSSFCell oldPay = row.createCell(21);
+        oldPay.setCellValue(p.getOldContributePay());
+        setColoredCell(number, oldPay, style);
+        //Платеж по пеням
+        HSSFCell finesPay = row.createCell(22);
+        finesPay.setCellValue(p.getFinesPay());
+        setColoredCell(number, finesPay, style);
+        //Остаточные деньги
+        HSSFCell balancePay = row.createCell(23);
+        balancePay.setCellValue(p.getPay());
+        setColoredCell(number, balancePay, style);
+    }
+
     private void createResultSheet(List<ResultProfit> resultProfits, HSSFWorkbook workBook, CellStyle style, CellStyle rowStyleEven) {
         HSSFSheet sheet = workBook.createSheet("ИТОГИ");
         createHeader(sheet, style);
@@ -1031,120 +1075,120 @@ public class ReportService {
             HSSFRow row = sheet.createRow(rowNumber);
             row.setHeightInPoints(30);
 
-            HSSFCell  record = row.createCell(0);
-            record.setCellValue(rowNumber-2);
-            setColoredCell(rowNumber,record,rowStyleEven);
+            HSSFCell record = row.createCell(0);
+            record.setCellValue(rowNumber - 2);
+            setColoredCell(rowNumber, record, rowStyleEven);
 
-            HSSFCell  series = row.createCell(1);
+            HSSFCell series = row.createCell(1);
             series.setCellValue(profit.getSeries());
-            setColoredCell(rowNumber,series,rowStyleEven);
+            setColoredCell(rowNumber, series, rowStyleEven);
 
             HSSFCell number = row.createCell(2);
             number.setCellValue("-");
-            setColoredCell(rowNumber,number,rowStyleEven);
+            setColoredCell(rowNumber, number, rowStyleEven);
 
-            HSSFCell seriesColumnFio =row.createCell(3);
+            HSSFCell seriesColumnFio = row.createCell(3);
             seriesColumnFio.setCellValue("РЯД №" + profit.getSeries());
-            setColoredCell(rowNumber,seriesColumnFio,rowStyleEven);
+            setColoredCell(rowNumber, seriesColumnFio, rowStyleEven);
 
             HSSFCell oldSumContribute = row.createCell(4);
             oldSumContribute.setCellValue(profit.getOldSumContribute());
-            setColoredCell(rowNumber,oldSumContribute,rowStyleEven);
+            setColoredCell(rowNumber, oldSumContribute, rowStyleEven);
 
             HSSFCell oldContribute = row.createCell(5);
             oldContribute.setCellValue(profit.getOldContribute());
-            setColoredCell(rowNumber,oldContribute,rowStyleEven);
-            
+            setColoredCell(rowNumber, oldContribute, rowStyleEven);
+
             HSSFCell oldContLand = row.createCell(6);
             oldContLand.setCellValue(profit.getOldContLand());
-            setColoredCell(rowNumber,oldContLand,rowStyleEven);
-            
+            setColoredCell(rowNumber, oldContLand, rowStyleEven);
+
             HSSFCell oldContTarget = row.createCell(7);
             oldContTarget.setCellValue(profit.getOldContTarget());
-            setColoredCell(rowNumber,oldContTarget,rowStyleEven);
-            
+            setColoredCell(rowNumber, oldContTarget, rowStyleEven);
+
             HSSFCell pastOld = row.createCell(8);
             pastOld.setCellValue(profit.getPastOld());
-            setColoredCell(rowNumber,pastOld,rowStyleEven);
+            setColoredCell(rowNumber, pastOld, rowStyleEven);
 
             HSSFCell sumRent = row.createCell(9);
             sumRent.setCellValue(profit.getSumRent());
-            setColoredCell(rowNumber,sumRent,rowStyleEven);
+            setColoredCell(rowNumber, sumRent, rowStyleEven);
 
             HSSFCell rentContribute = row.createCell(10);
             rentContribute.setCellValue(profit.getRentContribute());
-            setColoredCell(rowNumber,rentContribute,rowStyleEven);
+            setColoredCell(rowNumber, rentContribute, rowStyleEven);
 
             HSSFCell rentContLand = row.createCell(11);
             rentContLand.setCellValue(profit.getRentContLand());
-            setColoredCell(rowNumber,rentContLand,rowStyleEven);
+            setColoredCell(rowNumber, rentContLand, rowStyleEven);
 
             HSSFCell rentContTarget = row.createCell(12);
             rentContTarget.setCellValue(profit.getRentContTarget());
-            setColoredCell(rowNumber,rentContTarget,rowStyleEven);
+            setColoredCell(rowNumber, rentContTarget, rowStyleEven);
 
-            HSSFCell  recordTwo = row.createCell(13);
-            recordTwo.setCellValue(rowNumber-2);
-            setColoredCell(rowNumber,recordTwo,rowStyleEven);
+            HSSFCell recordTwo = row.createCell(13);
+            recordTwo.setCellValue(rowNumber - 2);
+            setColoredCell(rowNumber, recordTwo, rowStyleEven);
 
-            setColoredCell(rowNumber,row.createCell(14),rowStyleEven);
-            setColoredCell(rowNumber,row.createCell(15),rowStyleEven);
-            
-            HSSFCell  sumPayment = row.createCell(16);
+            setColoredCell(rowNumber, row.createCell(14), rowStyleEven);
+            setColoredCell(rowNumber, row.createCell(15), rowStyleEven);
+
+            HSSFCell sumPayment = row.createCell(16);
             sumPayment.setCellValue(profit.getSumPayment());
-            setColoredCell(rowNumber,sumPayment,rowStyleEven);
+            setColoredCell(rowNumber, sumPayment, rowStyleEven);
 
-            HSSFCell  payContribute = row.createCell(17);
+            HSSFCell payContribute = row.createCell(17);
             payContribute.setCellValue(profit.getPayContribute());
-            setColoredCell(rowNumber,payContribute,rowStyleEven);
+            setColoredCell(rowNumber, payContribute, rowStyleEven);
 
-            HSSFCell  payContLand = row.createCell(18);
+            HSSFCell payContLand = row.createCell(18);
             payContLand.setCellValue(profit.getPayContLand());
-            setColoredCell(rowNumber,payContLand,rowStyleEven);
+            setColoredCell(rowNumber, payContLand, rowStyleEven);
 
-            HSSFCell  payContTarget = row.createCell(19);
+            HSSFCell payContTarget = row.createCell(19);
             payContTarget.setCellValue(profit.getPayContTarget());
-            setColoredCell(rowNumber,payContTarget,rowStyleEven);
+            setColoredCell(rowNumber, payContTarget, rowStyleEven);
 
-            HSSFCell  payAdding = row.createCell(20);
+            HSSFCell payAdding = row.createCell(20);
             payAdding.setCellValue(profit.getPayAdding());
-            setColoredCell(rowNumber,payAdding,rowStyleEven);
+            setColoredCell(rowNumber, payAdding, rowStyleEven);
 
-            HSSFCell  payPastOld = row.createCell(21);
+            HSSFCell payPastOld = row.createCell(21);
             payPastOld.setCellValue(profit.getPayPastOld());
-            setColoredCell(rowNumber,payPastOld,rowStyleEven);
+            setColoredCell(rowNumber, payPastOld, rowStyleEven);
 
-            HSSFCell  payFines = row.createCell(22);
+            HSSFCell payFines = row.createCell(22);
             payFines.setCellValue(profit.getPayFines());
-            setColoredCell(rowNumber,payFines,rowStyleEven);
+            setColoredCell(rowNumber, payFines, rowStyleEven);
 
-            HSSFCell  balance = row.createCell(23);
+            HSSFCell balance = row.createCell(23);
             balance.setCellValue(profit.getBalance());
-            setColoredCell(rowNumber,balance,rowStyleEven);
+            setColoredCell(rowNumber, balance, rowStyleEven);
 
-            HSSFCell  sumContribute = row.createCell(24);
+            HSSFCell sumContribute = row.createCell(24);
             sumContribute.setCellValue(profit.getSumContribute());
-            setColoredCell(rowNumber,sumContribute,rowStyleEven);
+            setColoredCell(rowNumber, sumContribute, rowStyleEven);
 
-            HSSFCell  contribute = row.createCell(25);
+            HSSFCell contribute = row.createCell(25);
             contribute.setCellValue(profit.getContribute());
-            setColoredCell(rowNumber,contribute,rowStyleEven);
+            setColoredCell(rowNumber, contribute, rowStyleEven);
 
-            HSSFCell  contLand = row.createCell(26);
+            HSSFCell contLand = row.createCell(26);
             contLand.setCellValue(profit.getContLand());
-            setColoredCell(rowNumber,contLand,rowStyleEven);
+            setColoredCell(rowNumber, contLand, rowStyleEven);
 
-            HSSFCell  contTarget = row.createCell(27);
+            HSSFCell contTarget = row.createCell(27);
             contTarget.setCellValue(profit.getContTarget());
-            setColoredCell(rowNumber,contTarget,rowStyleEven);
+            setColoredCell(rowNumber, contTarget, rowStyleEven);
 
-            HSSFCell  pastContribute = row.createCell(28);
+            HSSFCell pastContribute = row.createCell(28);
             pastContribute.setCellValue(profit.getPastContribute());
-            setColoredCell(rowNumber,pastContribute,rowStyleEven);
+            setColoredCell(rowNumber, pastContribute, rowStyleEven);
 
-            HSSFCell  fines = row.createCell(29);
+            HSSFCell fines = row.createCell(29);
             fines.setCellValue(profit.getFines());
-            setColoredCell(rowNumber,fines,rowStyleEven);
+            setColoredCell(rowNumber, fines, rowStyleEven);
 
             rowNumber++;
         }
