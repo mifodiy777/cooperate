@@ -11,7 +11,7 @@
 
         $("#contributionForm").validate({
             submitHandler: function (form) {
-                $('#contributionForm input.number').each(function() {
+                $('#contributionForm input.number').each(function () {
                     var val = $(this).val();
                     if (val.length == 0) {
                         $(this).val(0);
@@ -30,29 +30,28 @@
                     }
                 });
             },
-            rules:{
-                contTarget:{
+            rules: {
+                contTarget: {
                     max: ${max.contTargetMax}
                 }
 
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             }
         });
 
-        $("#contributionForm input[type=text]").focusout(function() {
-            $("#contributionForm input[type=text]").each(function(key, value) {
+        $("#contributionForm input[type=text]").focusout(function () {
+            $("#contributionForm input[type=text]").each(function (key, value) {
                 $(value).val($(value).val().trim())
             })
         })
 
 
-        $("#memberBoardOn").on("change", function() {
+        $("#memberBoardOn").on("change", function () {
             if ($("#memberBoardOn").prop("checked")) {
                 $("#memberBoardOnHide").val(0);
                 $(".maxContribute").text("MAX 0 руб.");
@@ -63,7 +62,7 @@
         });
 
 
-        $("#benefitsOn").on("click", function() {
+        $("#benefitsOn").on("click", function () {
             if ($("#benefitsOn:checked").val()) {
                 $("#benefitsOnHide").val(${max.contLandMax/2});
                 $(".maxLand").html("MAX ${max.contLandMax/2} руб.");
@@ -81,7 +80,6 @@
 
 
         $('#contributionForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'top'
@@ -89,12 +87,12 @@
 
         $("#finesLastUpdate").datepicker({
             format: "dd.mm.yyyy",
-            defaultViewDate: {year:${contribution.year}, month:6, day:1},
+            defaultViewDate: {year:${contribution.year}, month: 6, day: 1},
             startDate: '-10y',
             endDate: "-0d",
-            language:'ru',
-            todayBtn:'linked',
-            todayHighlight:true
+            language: 'ru',
+            todayBtn: 'linked',
+            todayHighlight: true
 
         });
 
@@ -142,7 +140,7 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group">
+                        <div class="form-group input-group">
                             <label for="contribute" class="input-group-addon">Членский взнос</label>
                             <form:input path="contribute" id="contribute"
                                         cssClass="number form-control maxContributeVal"/>
@@ -165,7 +163,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group">
+                        <div class="form-group input-group">
                             <label for="contLand" class="input-group-addon">Аренда земли</label>
                             <form:input path="contLand" id="contLand"
                                         cssClass="number form-control maxLandVal"/>
@@ -187,7 +185,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group">
+                        <div class="form-group input-group">
                             <label for="contTarget" class="input-group-addon">Целевой взнос</label>
                             <form:input path="contTarget" id="contTarget"
                                         cssClass="number form-control"/>
@@ -200,7 +198,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group">
+                        <div class="form-group input-group">
                             <label for="fines" class="input-group-addon">Пени</label>
                             <form:input path="fines" id="fines"
                                         cssClass="number form-control"/>
@@ -210,7 +208,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group">
+                        <div class="form-group input-group">
                             <label for="finesLastUpdate" class="input-group-addon">Дата обновления пеней</label>
                             <form:input path="finesLastUpdate" id="finesLastUpdate"
                                         cssClass="form-control dateRU"/>

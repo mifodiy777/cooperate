@@ -16,16 +16,14 @@
                 });
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             }
         });
 
         $('#personForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'top'

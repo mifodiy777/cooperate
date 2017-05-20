@@ -3,12 +3,11 @@
 <jsp:include page="header.jsp"/>
 <script type="text/javascript">
 
-    $(function() {
+    $(function () {
 
         rangeDate();
 
         $('.reportForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'top'
@@ -21,11 +20,10 @@
                 window.open($(form).attr("action") + "?" + data)
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             }
         });
 
@@ -35,11 +33,10 @@
                 window.open($(form).attr("action") + "?" + data)
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             }
         });
     })

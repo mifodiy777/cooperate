@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp"/>
 <script type="text/javascript">
-    $(document).ready(function () {       
+    $(document).ready(function () {
 
         $("#rentForm").validate({
             submitHandler: function (form) {
@@ -26,17 +26,16 @@
                 });
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             },
-            rules:{
-                yearRent:{
-                    required:true,
+            rules: {
+                yearRent: {
+                    required: true,
                     rangelength: [4, 4]
-                } 
+                }
             }
         });
 
@@ -49,7 +48,6 @@
         });
 
         $('#rentForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'right'
@@ -81,25 +79,26 @@
                         <label for="contributeMax" class="input-group-addon">Взнос*</label>
                         <form:input path="contributeMax" id="contributeMax"
                                     cssClass="required number form-control"/>
-                         <span class="input-group-addon">руб.</span>
+                        <span class="input-group-addon">руб.</span>
                     </div>
 
                     <div class="form-group input-group">
                         <label for="contLandMax" class="input-group-addon">За землю*</label>
                         <form:input path="contLandMax" id="contLandMax"
                                     cssClass="required number form-control"/>
-                         <span class="input-group-addon">руб.</span>
+                        <span class="input-group-addon">руб.</span>
                     </div>
 
                     <div class="form-group input-group">
                         <label for="contTargetMax" class="input-group-addon">Целевой взнос*</label>
                         <form:input path="contTargetMax" id="contTargetMax"
                                     cssClass="required number form-control"/>
-                         <span class="input-group-addon">руб.</span>
+                        <span class="input-group-addon">руб.</span>
                     </div>
 
                     <div align="center">
-                        <button id="submitOldRent" type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok"></span>
+                        <button id="submitOldRent" type="submit" class="btn btn-success"><span
+                                class="glyphicon glyphicon-ok"></span>
                             Сохранить
                         </button>
                     </div>

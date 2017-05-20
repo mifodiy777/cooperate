@@ -1,13 +1,21 @@
 function showSuccessMessage(html) {
-    $("#messages").removeClass("alert-danger");
-    $("#messages").addClass("alert-info");
-    $("#messages").html(html).show(800).delay(4000).hide(1000);
+    $("#messages").removeClass("alert-danger").addClass("alert-info").html(html).show(800).delay(4000).hide(1000);
 }
 
 function showErrorMessage(html) {
-    $("#messages").removeClass("alert-info");
-    $("#messages").addClass("alert-danger");
-    $("#messages").html(html).show(800).delay(4000).hide(1000);
+    $("#messages").removeClass("alert-info").addClass("alert-danger").html(html).show(800).delay(4000).hide(1000);
+}
+
+function validPlaceError(error, element) {
+    $(element).parent().addClass("has-error").removeClass("has-success");
+    $(element).tooltipster('update', error.text());
+    $(element).tooltipster('show');
+}
+
+function validPlaceSuccess(label, element) {
+    $(element).parent().removeClass("has-error").addClass("has-success");
+    $(element).tooltipster('hide');
+
 }
 
 function searchPerson() {

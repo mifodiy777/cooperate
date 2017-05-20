@@ -24,11 +24,10 @@
                 });
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             }
         });
 
@@ -37,7 +36,6 @@
         })
 
         $('#rentForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'top'
@@ -76,7 +74,7 @@
                     <form:hidden path="yearRent"/>
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="input-group">
+                            <div class="form-group input-group">
                                 <label for="contributeMax" class="input-group-addon">Взнос*</label>
                                 <form:input path="contributeMax" id="contributeMax"
                                             cssClass="required form-control"/>
@@ -86,7 +84,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="input-group">
+                            <div class="form-group input-group">
                                 <label for="contLandMax" class="input-group-addon">За землю*</label>
                                 <form:input path="contLandMax" id="contLandMax"
                                             cssClass="required form-control"/>
@@ -96,7 +94,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="input-group">
+                            <div class="form-group input-group">
                                 <label for="contTargetMax" class="input-group-addon">Целевой взнос*</label>
                                 <form:input path="contTargetMax" id="contTargetMax"
                                             cssClass="required form-control"/>

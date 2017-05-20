@@ -7,8 +7,8 @@
         $("#paymentForm").validate({
             submitHandler: function (form) {
                 $(form).ajaxSubmit({
-                    data:{
-                        "type":"${type}"
+                    data: {
+                        "type": "${type}"
                     },
                     success: function (id) {
                         if ($("#informationPanel").length != 0 && $("#idGarag").val() == ${payment.garag.id}) {
@@ -27,11 +27,10 @@
                 });
             },
             errorPlacement: function (error, element) {
-                $(element).tooltipster('update', $(error).text());
-                $(element).tooltipster('show');
+                validPlaceError(error, element);
             },
             success: function (label, element) {
-                $(element).tooltipster('hide');
+                validPlaceSuccess(label, element);
             },
             rules: {
                 pay: {
@@ -43,7 +42,6 @@
         });
 
         $('#paymentForm input').tooltipster({
-            animation: 'slide',
             trigger: 'custom',
             onlyOne: false,
             position: 'right'
@@ -53,8 +51,8 @@
             format: "dd.mm.yyyy",
             startDate: '-10y',
             endDate: "-0d",
-            language:'ru',
-            todayBtn:true
+            language: 'ru',
+            todayBtn: true
         });
 
         $('#payBtn').popConfirm({
@@ -94,7 +92,7 @@
                     <form:hidden path="garag.id" id="garag"/>
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
-                            <div class="input-group">
+                            <div class="form-group input-group">
                                 <label for="pay" class="input-group-addon">Cумма*</label>
                                 <form:input path="pay" id="pay"
                                             cssClass="form-control"/>
