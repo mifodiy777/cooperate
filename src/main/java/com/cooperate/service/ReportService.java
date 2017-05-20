@@ -324,7 +324,7 @@ public class ReportService {
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Счет", "Дата", "Гараж", "ФИО", "Сумма", "Членский взнос",
-                "Аренда земли", "Целевой взнос", "Пени", "Доп.взнос", "Долги прошлых лет", "Остаток"};
+                "Аренда земли", "Целевой взнос", "Пени", "Доп. взнос", "Долги прошлых лет", "Остаток"};
         CellStyle headerStyle = workBook.createCellStyle();
         headerStyle.setWrapText(true);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -338,23 +338,45 @@ public class ReportService {
             cell.setCellValue(hatCells[i]);
             cell.setCellStyle(headerStyle);
             if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
+                sheet.setColumnWidth(i, (short) (3 * 256));
             }
             if (i == 1) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
+                sheet.setColumnWidth(i, (short) (6 * 256));
             }
             if (i == 2) {
-                sheet.setColumnWidth(i, (short) (12 * 256));
-            }
-            if (i == 3) {
                 sheet.setColumnWidth(i, (short) (10 * 256));
             }
+            if (i == 3) {
+                sheet.setColumnWidth(i, (short) (7 * 256));
+            }
             if (i == 4) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
+                sheet.setColumnWidth(i, (short) (33 * 256));
             }
-            if (i >= 5) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
+            if (i == 5) {
+                sheet.setColumnWidth(i, (short) (7 * 256));
             }
+            if (i == 6) {
+                sheet.setColumnWidth(i, (short) (10 * 256));
+            }
+            if (i == 7) {
+                sheet.setColumnWidth(i, (short) (8.3 * 256));
+            }
+            if (i == 8) {
+                sheet.setColumnWidth(i, (short) (9.6 * 256));
+            }
+            if (i == 9) {
+                sheet.setColumnWidth(i, (short) (6 * 256));
+            }
+            if (i == 10) {
+                sheet.setColumnWidth(i, (short) (6.4 * 256));
+            }
+            if (i == 11) {
+                sheet.setColumnWidth(i, (short) (9.5 * 256));
+            }
+            if (i == 12) {
+                sheet.setColumnWidth(i, (short) (8.5 * 256));
+            }
+
         }
         int numberRow = 1;
         //При выборе например 18 числа будет выборка всех платеже по 19.01.01 00:00:00
@@ -989,7 +1011,7 @@ public class ReportService {
 
     private CellStyle createStyleEven(HSSFWorkbook workBook) {
         CellStyle rowStyleEven = workBook.createCellStyle();
-        rowStyleEven.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+        rowStyleEven.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         rowStyleEven.setFillPattern(CellStyle.SOLID_FOREGROUND);
         return rowStyleEven;
     }
