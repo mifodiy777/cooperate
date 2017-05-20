@@ -208,13 +208,13 @@ function deleteAssign(garag, id) {
     });
 }
 
-function rangeDate() {
+function rangeDate(elementFrom, elementTo) {
     var FromEndDate = new Date();
     var ToEndDate = new Date();
 
     ToEndDate.setDate(ToEndDate.getDate());
 
-    $('.from_date').datepicker({
+    elementFrom.datepicker({
         format: "dd.mm.yyyy",
         weekStart: 1,
         endDate: FromEndDate,
@@ -222,14 +222,14 @@ function rangeDate() {
         autoclose: true,
         todayHighlight: true,
         todayBtn: 'linked'
-    })
-            .on('changeDate', function (selected) {
+    }).on('changeDate', function (selected) {
         startDate = new Date(selected.date.valueOf());
         startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-        $('.to_date').datepicker('setStartDate', startDate);
+        elementTo.datepicker('setStartDate', startDate);
+        $(this).valid();
     });
-    $('.to_date')
-            .datepicker({
+
+    elementTo.datepicker({
         format: "dd.mm.yyyy",
         weekStart: 1,
         endDate: ToEndDate,
@@ -237,11 +237,11 @@ function rangeDate() {
         autoclose: true,
         todayHighlight: true,
         todayBtn: 'linked'
-    })
-            .on('changeDate', function (selected) {
+    }).on('changeDate', function (selected) {
         FromEndDate = new Date(selected.date.valueOf());
         FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
-        $('.from_date').datepicker('setEndDate', FromEndDate);
+        elementFrom.datepicker('setEndDate', FromEndDate);
+        $(this).valid();
     });
 
 }
@@ -262,8 +262,8 @@ function getHistoryGarag(id) {
 function deleteReason(id) {
     $.ajax({
         url: "deleteReason",
-        data:{
-            idReason:id
+        data: {
+            idReason: id
         },
         type: "post",
         success: function (html) {
@@ -344,24 +344,24 @@ function setTextTip(selectOne, selectTwo, selectThee) {
 
 function promtReason(form, id) {
     $('#promtModal').modal({
-        backdrop:"static",
-        keyboard:false,
-        show:true
+        backdrop: "static",
+        keyboard: false,
+        show: true
     });
-    $('#reason').on("focus", function() {
+    $('#reason').on("focus", function () {
         $('#reason').parent().removeClass("has-error");
         $('#reason').parent().children(".help-block").empty();
     });
-    $('#applyBtn').on("click", function() {
+    $('#applyBtn').on("click", function () {
         if ($('#reason').val().length > 3) {
             $(form).ajaxSubmit({
-                data:{
+                data: {
                     garag: id,
                     searchPerson: ($("#idPastPerson").val() != $("#personId").val()),
                     deletePerson: $("#deleteOldPerson").prop("checked"),
-                    countGarag : $("input[name='changeGaragAll']").prop("checked"),
-                    oldPerson :$("#idPastPerson").val(),
-                    reason:$('#reason').val()
+                    countGarag: $("input[name='changeGaragAll']").prop("checked"),
+                    oldPerson: $("#idPastPerson").val(),
+                    reason: $('#reason').val()
 
                 },
                 success: function (html) {

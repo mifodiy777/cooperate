@@ -93,7 +93,8 @@
             language: 'ru',
             todayBtn: 'linked',
             todayHighlight: true
-
+        }).on('changeDate', function () {
+            $(this).valid();
         });
 
     });

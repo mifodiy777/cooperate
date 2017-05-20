@@ -5,14 +5,11 @@
 
     $(function () {
 
-        rangeDate();
-
         $('.reportForm input').tooltipster({
             trigger: 'custom',
             onlyOne: false,
             position: 'top'
         });
-
 
         $("#reportProfitForm").validate({
             submitHandler: function (form) {
@@ -39,6 +36,10 @@
                 validPlaceSuccess(label, element);
             }
         });
+
+        rangeDate($('#profitDateStart'),$('#profitDateEnd'));
+
+        rangeDate($('#paymentDateStart'),$('#paymentDateEnd'));
     })
 
 </script>
@@ -60,14 +61,14 @@
                                         <div class="input-group form-group">
                                             <label for="profitDateStart" class="input-group-addon">C </label>
                                             <input id="profitDateStart" name="profitDateStart"
-                                                   class="from_date required form-control dateRU">
+                                                   class="from_date required form-control dateRU" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="input-group form-group">
                                             <label for="profitDateEnd" class="input-group-addon"> ПО </label>
                                             <input id="profitDateEnd" name="profitDateEnd"
-                                                   class="to_date required form-control dateRU">
+                                                   class="to_date required form-control dateRU" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -94,14 +95,14 @@
                                         <div class="input-group form-group">
                                             <label for="paymentDateStart" class="input-group-addon">C </label>
                                             <input id="paymentDateStart" name="paymentDateStart"
-                                                   class="from_date required form-control dateRU">
+                                                   class="from_date required form-control dateRU" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="input-group form-group">
                                             <label for="paymentDateEnd" class="input-group-addon"> ПО </label>
                                             <input id="paymentDateEnd" name="paymentDateEnd"
-                                                   class="to_date required form-control dateRU">
+                                                   class="to_date required form-control dateRU" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-2">

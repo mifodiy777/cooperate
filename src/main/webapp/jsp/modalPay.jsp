@@ -47,14 +47,6 @@
             position: 'right'
         });
 
-        $("#datePayment").datepicker({
-            format: "dd.mm.yyyy",
-            startDate: '-10y',
-            endDate: "-0d",
-            language: 'ru',
-            todayBtn: true
-        });
-
         $('#payBtn').popConfirm({
             title: "Вы хотите произвести платеж?",
             content: "",
