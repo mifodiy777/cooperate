@@ -10,7 +10,7 @@
 
         $('.cooperateTable').DataTable({
             "order": [
-                [0, 'asc']
+                [1, 'asc']
             ],
             "ajax": {
                 url: "allGarag",
@@ -38,6 +38,7 @@
                 $("#count").html(iTotalRecords);
             },
             "columns": [
+                {data: "number", "visible": false, orderable: false},
                 {
                     data: "number", "searchable": false, "render": function (data, type, full) {
                     return '<a href=\"#\" onclick=\"initTR(' + full.id + ');editEntity(' + full.id + ',\'garag\')\">' + full.number + '</a>'
