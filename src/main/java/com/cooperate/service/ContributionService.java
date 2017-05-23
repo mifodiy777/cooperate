@@ -33,7 +33,7 @@ public class ContributionService {
      */
     @Transactional
     public void saveOrUpdate(Contribution contribution) {
-        contributionDAO.save(contribution);
+        contributionDAO.saveAndFlush(contribution);
     }
 
     /**
