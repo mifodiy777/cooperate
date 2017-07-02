@@ -138,7 +138,7 @@ public class ContributionService {
             }
         }
         //Включение пеней для должников не уплативших до 1 июля
-        if (now.get(Calendar.MONTH) == 6) {
+        if (now.get(Calendar.MONTH) == Calendar.JULY) {
             Rent rent = rentDAO.findByYearRent(now.get(Calendar.YEAR));
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR))) {
                 Integer rentMax = 0;
