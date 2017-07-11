@@ -19,8 +19,9 @@ import java.util.List;
  */
 public class CustomDAOImpl implements CustomDAO {
 
-    private static final String SUM_CONTRIBUTE = "SELECT (sum(c.contribute)+sum(c.contLand)+sum(c.contTarget)+sum(c.fines)) AS SUM " +
-            "FROM contribution c INNER JOIN garag_contribution gc ON gc.contributions_id_count=c.id_count WHERE gc.Garag_id_garag = :idGarag";
+    private static final String SUM_CONTRIBUTE = "SELECT (sum(c.contribute)+sum(c.contLand)+sum(c.contTarget)+sum(c.fines))+g.old_contribute AS SUM " +
+            "FROM contribution c INNER JOIN garag_contribution gc ON gc.contributions_id_count=c.id_count " +
+            "INNER JOIN garag g ON gc.garag_id_garag=g.id_garag WHERE gc.Garag_id_garag = :idGarag";
 
     @PersistenceContext
     private EntityManager em;

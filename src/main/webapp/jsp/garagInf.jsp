@@ -63,7 +63,10 @@
                 <th>${sumFines} руб.</th>
             </tr>
         </table>
-        <h5>Долги прошлых лет: ${garag.oldContribute} руб.</h5>
+
+        <c:if test="${garag.oldContribute > 0.0}">
+            <span class="label label-danger">Долги прошлых лет: ${garag.oldContribute} руб.</span>
+        </c:if>
 
         <h3><b>Общий долг: ${contributionAll} руб.</b></h3>
         <hr>
@@ -108,7 +111,8 @@
         </table>
         <c:if test="${not empty garag.historyGarags }">
             <div class="pull-left">
-                <button id="historyBtn" class="btn btn-info" type="button" onclick="getHistoryGarag(${garag.id}); return false">
+                <button id="historyBtn" class="btn btn-info" type="button"
+                        onclick="getHistoryGarag(${garag.id}); return false">
                     <span class="glyphicon glyphicon-time"></span> История
                 </button>
             </div>
