@@ -57,12 +57,12 @@ public class ContributionService {
      */
     @Transactional
     public void updateFines() {
-        Calendar calendar = Calendar.getInstance();// текущая дата
         //Получаем список долгов с включенным режимом пени
         for (Contribution c : contributionDAO.findByFinesOn(true)) {
             Float sumContribute = c.getSumFixed(); //Находим сумму долга
             //Вычисляем кол-во дней с последнего обновления.
             //Первая дата должна устанавливаться при включении режима пеней
+            Calendar calendar = Calendar.getInstance();// текущая дата
             if (sumContribute != 0) {
                 try {
                     long days = getDays(calendar, c.getFinesLastUpdate());
@@ -118,7 +118,7 @@ public class ContributionService {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         long days = cal.getTimeInMillis();
-        return (today - days) / (24 * 60 * 60 * 1000);
+        return (today - days) / (24 * 60 * 60 * 1000) + 1;
     }
 
     /**
@@ -129,6 +129,7 @@ public class ContributionService {
     public void onFines(Calendar now) {
         //Включение пеней для должников со следующего года
         if (now.get(Calendar.MONTH) == 0) {
+            now.set(Calendar.DAY_OF_MONTH,1);
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR) - 1)) {
                 if (c.getSumFixed() != 0) {
                     c.setFinesOn(true);
@@ -139,6 +140,7 @@ public class ContributionService {
         }
         //Включение пеней для должников не уплативших до 1 июля
         if (now.get(Calendar.MONTH) == Calendar.JULY) {
+            now.set(Calendar.DAY_OF_MONTH,1);
             Rent rent = rentDAO.findByYearRent(now.get(Calendar.YEAR));
             for (Contribution c : contributionDAO.findByFinesOnAndYear(false, now.get(Calendar.YEAR))) {
                 Integer rentMax = 0;

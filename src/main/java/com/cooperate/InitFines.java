@@ -2,6 +2,7 @@ package com.cooperate;
 
 import com.cooperate.service.ContributionService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Calendar;
@@ -13,12 +14,13 @@ public class InitFines {
 
     private final Logger logger = Logger.getLogger(InitFines.class);
 
+    @Autowired
+    private ContributionService service;
+
     /**
-     * При создании экземпляра запускаетс метод обновления пеней
-     *
-     * @param service Сервис по работе с долговыми периодами
+     * При инициализации контекста запускаетс метод обновления пеней
      */
-    public InitFines(ContributionService service) {
+    public void initFines(){
         try {
             service.updateFines();
             service.onFines(Calendar.getInstance());
@@ -26,6 +28,5 @@ public class InitFines {
         } catch (DataIntegrityViolationException e) {
             logger.error(e);
         }
-
     }
 }
