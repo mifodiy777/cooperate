@@ -22,8 +22,8 @@ public class InitFines {
      */
     public void initFines(){
         try {
-            service.updateFines();
             service.onFines(Calendar.getInstance());
+            service.updateFines();
             logger.error("Обновление данных произведено");
         } catch (DataIntegrityViolationException e) {
             logger.error(e);
