@@ -78,7 +78,7 @@ public class ContributionService {
                     // Получаем точную сумму пеней
                     Double finesDouble = unit * days;
                     //Округляем пени до 50
-                    long fines = (int)(finesDouble / 50) * 50;
+                    long fines = (int) (finesDouble / 50) * 50;
                     if (fines != 0) {
                         //Вычисляем разницу дней для правильной установки даты последнего обновления пеней в связи с округлением
                         //Получаем разницу в сумме пеней
@@ -132,11 +132,13 @@ public class ContributionService {
             contributionDAO.save(c);
         }
         //Включение пеней для должников не уплативших до 1 июля
-        for (Contribution c : customDAO.findContributionsByFines(now.get(Calendar.YEAR))) {
-            if (getRentMax(rent, c).equals(c.getSumFixed().intValue())) {
-                c.setFinesOn(true);
-                c.setFinesLastUpdate(july);
-                contributionDAO.save(c);
+        if (now.get(Calendar.MONTH) >= Calendar.JULY) {
+            for (Contribution c : customDAO.findContributionsByFines(now.get(Calendar.YEAR))) {
+                if (getRentMax(rent, c).equals(c.getSumFixed().intValue())) {
+                    c.setFinesOn(true);
+                    c.setFinesLastUpdate(july);
+                    contributionDAO.save(c);
+                }
             }
         }
     }
