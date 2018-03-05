@@ -125,7 +125,7 @@ public class ContributionServiceTest {
 
     /**
      * Тест обновления пеней
-     * Case: newFines < sumContribute.+
+     * Case: newFines < sumContribute.
      * new Fines более чем 50
      * Устанавливаемые пени будут меньше суммы долга.
      *
@@ -136,7 +136,7 @@ public class ContributionServiceTest {
         Contribution contribution = new Contribution();
         contribution.setContribute(2400f);
         contribution.setContLand(200f);
-        contribution.setFinesLastUpdate(DateTime.parse("01.07.2017", forPattern("dd.MM.yyyy")).toGregorianCalendar());
+        contribution.setFinesLastUpdate(DateTime.now().minusDays(106).toGregorianCalendar());
         contribution.setFinesOn(true);
 
         List<Contribution> list = new ArrayList<>();

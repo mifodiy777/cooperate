@@ -1,6 +1,6 @@
 package com.cooperate.service;
 
-import com.cooperate.adapter.ResultProfit;
+import com.cooperate.dto.ResultProfit;
 import com.cooperate.comparator.GaragComparator;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.dao.PaymentDAO;
@@ -566,6 +566,7 @@ public class ReportService {
                             contribute += c.getContribute();
                             contLand += c.getContLand();
                             contTarget += c.getContTarget();
+                            fines += c.getFines();
                         }
                     }
                     Float sumContributions = contribute + contLand + contTarget + fines + old;

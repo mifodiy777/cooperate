@@ -1,4 +1,4 @@
-package com.cooperate.adapter;
+package com.cooperate.dto;
 
 /**
  * Класс сбора информации из отчета по доходам Итоговые данные.
