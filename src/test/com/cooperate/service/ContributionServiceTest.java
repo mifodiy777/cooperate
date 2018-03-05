@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.joda.time.format.DateTimeFormat.forPattern;
@@ -239,7 +240,6 @@ public class ContributionServiceTest {
      */
     @Test
     public void testOnFinesJulyBenefitFalse() throws Exception {
-        Calendar now = Calendar.getInstance();
 
         Contribution contribution = new Contribution();
         contribution.setMemberBoardOn(false);
@@ -248,6 +248,8 @@ public class ContributionServiceTest {
         contribution.setContLand(200f);
         List<Contribution> list = new ArrayList<>();
         list.add(contribution);
+
+        Calendar now = new GregorianCalendar(2017,10,1);
 
         Rent rent = new Rent();
         rent.setYearRent(now.get(Calendar.YEAR));
@@ -274,7 +276,7 @@ public class ContributionServiceTest {
      */
     @Test
     public void testOnFinesJulyBenefitTrue() throws Exception {
-        Calendar now = Calendar.getInstance();
+        Calendar now = new GregorianCalendar(2017,10,1);
 
         Contribution contribution = new Contribution();
         contribution.setMemberBoardOn(false);
@@ -309,7 +311,7 @@ public class ContributionServiceTest {
      */
     @Test
     public void testOnFinesJulysMemberBoardOn() throws Exception {
-        Calendar now = Calendar.getInstance();
+        Calendar now = new GregorianCalendar(2017,10,1);
 
         Contribution contribution = new Contribution();
         contribution.setMemberBoardOn(true);
