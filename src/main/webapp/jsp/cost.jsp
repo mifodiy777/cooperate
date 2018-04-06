@@ -1,7 +1,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<script name="text/javascript">
+<script type="text/javascript" src="<c:url value="/js/typeahead.js"/>"></script>
+<script type="text/javascript">
     $(document).ready(function () {
 
         $("#costForm").validate({
@@ -28,6 +29,7 @@
             }
         });
 
+
         $("#date").datepicker({
             format: "dd.mm.yyyy",
             endDate: "-0d",
@@ -49,8 +51,45 @@
             $(this).valid();
             return false;
         });
-    });
 
+        var costTypeData = [];
+        var costTypeIds = new Object();
+
+        function getCostType() {
+            $.post("getTypes", function (data) {
+                costTypeData = $.map(data, function (type) {
+                    costTypeIds[type.name] = type.id;
+                    return type.name;
+                });
+                costType.clear();
+                $('#typeName').typeahead('val', '');
+                costType.add(costTypeData);
+            });
+        }
+
+        getCostType();
+
+        var costType = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: costTypeData
+        });
+
+        $('#typeName').typeahead({
+                minLength: 3
+            },
+            {
+                limit: 15,
+                name: 'costType',
+                source: costType
+            }).bind('typeahead:select', function (ev, suggestion) {
+            $("#typeId").val(costTypeIds[suggestion]).valid();
+            $("#statusType").text("Существующий тип").attr('class', 'label label-warning');
+        }).keypress(function (e) {
+            $("#statusType").text("Новый тип").attr('class', 'label label-primary');
+            $("#typeId").val("");
+        });
+    });
 
 </script>
 <div class="panel panel-success">
@@ -62,24 +101,38 @@
             <form:hidden path="id"/>
             <div class="divider"><h4> Расходная накладная: </h4></div>
             <div class="row">
-                <form:hidden path="type.id" id="typeId"/>
-                <div class="col-md-4">
-                    <div class="form-group input-group">
-                        <label for="name" class="input-group-addon">Наименование*</label>
-                        <form:input path="type.name" id="name" cssClass="required form-control"/>
+                <div class="col-md-3">
+                    <form:hidden path="type.id" id="typeId" cssClass="select-typehead"/>
+                    <div class="form-group">
+                        <label for="typeName">Наименование*</label>
+                        <form:input path="type.name" id="typeName" placeholder="Найти"
+                                    cssClass="required form-control typeahead"/>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group input-group">
-                        <label for="date" class="input-group-addon">Дата*</label>
+                <div class="col-md-1 status">
+                    <h2><span id="statusType" class="label label-primary">Новый тип</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="date">Дата*</label>
                         <form:input path="date" id="date" cssClass="required form-control dateRU"/>
                     </div>
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="date">Сумма*</label>
+                        <form:input path="money" id="money" cssClass="required form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group input-group">
-                        <label for="description" class="input-group-addon">Дополнительная информация</label>
+                    <div class="form-group">
+                        <label for="description">Дополнительная информация</label>
                         <form:input path="description" id="description" cssClass="form-control"/>
                     </div>
                 </div>

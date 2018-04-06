@@ -5,7 +5,9 @@ import com.cooperate.dao.CostTypeDAO;
 import com.cooperate.entity.Cost;
 import com.cooperate.entity.CostType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
  */
 @Service
 public class CostService {
+
 
     @Autowired
     private CostDAO costDAO;
@@ -24,11 +27,10 @@ public class CostService {
     /**
      * Метод получения списка типов расходов
      *
-     * @param type - начало наименования типа расходов
      * @return Список типов расходов
      */
-    public List<CostType> getTypes(String type) {
-        return typeDAO.findByNameStartingWith(type);
+    public List<CostType> getTypes() {
+        return typeDAO.findAll();
     }
 
     /**
@@ -37,8 +39,14 @@ public class CostService {
      * @param cost расход
      * @return расход
      */
-    public Cost saveCost(Cost cost) {
-        return costDAO.save(cost);
+    @Transactional
+    public Cost saveCost(Cost cost) throws DataAccessException {
+        if (cost.getType().getId() != null) {
+            //detached
+            cost.setType(typeDAO.findOne(cost.getType().getId()));
+        }
+        costDAO.save(cost);
+        return cost;
     }
 
     /**
@@ -49,4 +57,15 @@ public class CostService {
     public List<Cost> getAll() {
         return costDAO.findAll();
     }
+
+    /**
+     * Удаление расхода
+     *
+     * @param id ID расхода
+     */
+    @Transactional
+    public void delete(Integer id) {
+        costDAO.delete(id);
+    }
+
 }

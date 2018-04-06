@@ -8,7 +8,7 @@ import java.util.Calendar;
  * Сущность описывающая затраты, расходы
  */
 @Entity
-public class Cost implements Serializable{
+public class Cost implements Serializable {
 
     /**
      * Идентификатор расхода
@@ -21,7 +21,7 @@ public class Cost implements Serializable{
     /**
      * Тип расхода
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_type")
     private CostType type;
 
@@ -30,6 +30,12 @@ public class Cost implements Serializable{
      */
     @Column(name = "description", nullable = false)
     private String description;
+
+    /**
+     * Сумма расхода
+     */
+    @Column(name = "money", nullable = false)
+    private Float money;
 
     /**
      * Дата расхода
@@ -70,6 +76,14 @@ public class Cost implements Serializable{
         this.date = date;
     }
 
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +93,7 @@ public class Cost implements Serializable{
 
         if (id != null ? !id.equals(cost.id) : cost.id != null) return false;
         if (description != null ? !description.equals(cost.description) : cost.description != null) return false;
+        if (money != null ? !money.equals(cost.money) : cost.money != null) return false;
         return date != null ? date.equals(cost.date) : cost.date == null;
     }
 
@@ -86,6 +101,7 @@ public class Cost implements Serializable{
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (money != null ? money.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         return result;
     }

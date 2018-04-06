@@ -7,19 +7,34 @@
 
         $('#costsTable').DataTable({
             "order": [
-                [0, 'asc']
+                [0, 'desc']
             ],
             "ajax": {
                 "url": "getCosts",
                 "type": "POST"
             },
-            "fnCreatedRow": function (nRow, aData) {
-                $(nRow).attr('id', 'costTR_' + aData.id);
+            "fnDrawCallback": function () {
+                $('a.deleteButton').off("click");
+                $('a.deleteButton').popConfirm({
+                    title: "Удалить?",
+                    content: "",
+                    placement: "bottom",
+                    yesBtn: "Да",
+                    noBtn: "Нет"
+                });
+
             },
             "columns": [
+                {"data": "date", 'title': 'Дата', type: 'de_date', targets: 1, "searchable": false},
                 {"data": "name", 'title': 'Наименование расхода'},
-                {"data": "date", 'title': 'Дата', "searchable": false},
-                {"data": "description", 'title': 'Описание', "searchable": false}
+                {"data": "money", 'title': 'Сумма', "searchable": false},
+                {"data": "description", 'title': 'Описание', "searchable": false, "orderable": false},
+                {'title': 'Удалить', "searchable": false,  className: "btnCost",
+                    "render": function (data, type, full) {
+                        return "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deleteCost_" + full.id +
+                            '" onclick="deleteEntity(' + full.id + ',\'deleteCost\');\"><span class="glyphicon glyphicon-trash"/></span></a>'
+                    }
+                }
             ]
         });
 
@@ -30,7 +45,7 @@
     <div id="formPanel"></div>
     <div class="panel panel-primary">
         <div class="panel-heading ">
-            <h3 class="panel-title pull-left">Расходы ГК</h3>
+            <h3 class="panel-title pull-left">Расходы</h3>
             <button id="addCost" class="btn btn-success pull-right addBtn" onclick="saveEntity('cost')"><b><span
                     class="glyphicon glyphicon-plus"></span> Добавить</b></button>
             <div class="clearfix"></div>
@@ -40,4 +55,4 @@
                    width="100%"></table>
         </div>
     </div>
-</div>
+    <jsp:include page="footer.jsp"/>
