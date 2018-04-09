@@ -37,4 +37,13 @@ jQuery.validator.addMethod("maxContributeVal", function(value, element) {
     return this.optional(element) || check;
 }, "Пожалуйста, введите значение меньшее максимального");
 
+$.validator.addMethod("typeahead", function(value, element) {
+    return $("#typeName").val().length > 0;
+}, "Введите тип расхода.");
+
+$.validator.addMethod("currency", function (value, element) {
+    return this.optional(element) || /^\d+(?:\.\d{1,2})?$/.test(value);
+}, "Введите сумму расхода в формате xxx.xx");
+
+
 

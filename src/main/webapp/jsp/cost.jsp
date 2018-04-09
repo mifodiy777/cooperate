@@ -22,13 +22,12 @@
                 });
             },
             errorPlacement: function (error, element) {
-                validPlaceError(error, element);
+                validError(error, element);
             },
             success: function (label, element) {
-                validPlaceSuccess(label, element);
+                validSuccess(label, element);
             }
         });
-
 
         $("#date").datepicker({
             format: "dd.mm.yyyy",
@@ -38,18 +37,6 @@
             todayHighlight: true
         }).on('changeDate', function () {
             $(this).valid();
-        });
-
-        $('#costForm input').tooltipster({
-            trigger: 'custom',
-            onlyOne: false,
-            position: 'top'
-        });
-
-        $("#costForm").submit(function (e) {
-            e.preventDefault();
-            $(this).valid();
-            return false;
         });
 
         var costTypeData = [];
@@ -62,7 +49,6 @@
                     return type.name;
                 });
                 costType.clear();
-                $('#typeName').typeahead('val', '');
                 costType.add(costTypeData);
             });
         }
@@ -83,7 +69,7 @@
                 name: 'costType',
                 source: costType
             }).bind('typeahead:select', function (ev, suggestion) {
-            $("#typeId").val(costTypeIds[suggestion]).valid();
+            $("#typeId").val(costTypeIds[suggestion]);
             $("#statusType").text("Существующий тип").attr('class', 'label label-warning');
         }).keypress(function (e) {
             $("#statusType").text("Новый тип").attr('class', 'label label-primary');
@@ -106,7 +92,8 @@
                     <div class="form-group">
                         <label for="typeName">Наименование*</label>
                         <form:input path="type.name" id="typeName" placeholder="Найти"
-                                    cssClass="required form-control typeahead"/>
+                                    cssClass="form-control typeahead"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="col-md-1 status">
@@ -118,6 +105,7 @@
                     <div class="form-group">
                         <label for="date">Дата*</label>
                         <form:input path="date" id="date" cssClass="required form-control dateRU"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
             </div>
@@ -125,7 +113,8 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="date">Сумма*</label>
-                        <form:input path="money" id="money" cssClass="required form-control"/>
+                        <form:input path="money" id="money" cssClass="required currency form-control"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
             </div>

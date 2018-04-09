@@ -15,7 +15,16 @@ function validPlaceError(error, element) {
 function validPlaceSuccess(label, element) {
     $(element).parent().removeClass("has-error").addClass("has-success");
     $(element).tooltipster('hide');
+}
 
+function validError(error, element) {
+    $(element).parents(".form-group").addClass("has-error").removeClass("has-success");
+    $(element).parents(".form-group").find('.help-block').text($(error).text());
+}
+
+function validSuccess(label, element) {
+    $(element).parents(".form-group").removeClass("has-error").addClass("has-success");
+    $(element).parents(".form-group").find('.help-block').empty();
 }
 
 function searchPerson() {
