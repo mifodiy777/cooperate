@@ -221,8 +221,6 @@ function rangeDate(elementFrom, elementTo) {
     var FromEndDate = new Date();
     var ToEndDate = new Date();
 
-    ToEndDate.setDate(ToEndDate.getDate());
-
     elementFrom.datepicker({
         format: "dd.mm.yyyy",
         weekStart: 1,
@@ -329,8 +327,8 @@ function setTextTip(selectOne, selectTwo, selectThee) {
     var message = "Описание: ";
     var changeField = " Измените значения полей или найдите владельца в базе! ";
     var changePerson = " Новый владелец будет взят из базы! ";
-    var pastPersonDelete = " Прошлый владелец удалиться! ";
-    var pastPersonNotDelete = " Прошлый владелец не удалиться! ";
+    var pastPersonDelete = " Прошлый владелец удалится! ";
+    var pastPersonNotDelete = " Прошлый владелец не удалится! ";
     var changeOneGarag = " Владелец заменится только у текущего гаража! ";
     var changeAllGarag = " Владелец заменится у всех гаражей! ";
     if (selectOne) {

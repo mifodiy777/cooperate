@@ -94,7 +94,13 @@ td.btnCost {
     width: 110px;
 }
 
-.status{
+#emptyPerson {
+    color: #fff;
+    background-color: #9542bf;
+    border-color: #9542bf;
+}
+
+.status {
     margin-top: 10px;
     margin-left: -25px;
 }

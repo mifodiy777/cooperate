@@ -112,8 +112,8 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label for="date">Сумма*</label>
-                        <form:input path="money" id="money" cssClass="required currency form-control"/>
+                        <label for="date">Сумма/Руб*</label>
+                        <form:input path="money" id="money" cssClass="required digits form-control"/>
                         <span class="help-block"></span>
                     </div>
                 </div>

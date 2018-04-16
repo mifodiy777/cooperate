@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * User: Kuzmin K.A.
  */
-public class Utils {  
+public class Utils {
 
     /**
      * Преобразование коллекции элементов в JSON массив с именем aaData для таблиц
@@ -34,7 +36,7 @@ public class Utils {
     public static ResponseEntity<String> convertObjectToJson(GsonBuilder gson, Serializable entity) {
         gson.serializeNulls();
         JsonObject obj = new JsonObject();
-        JsonArray  elements = new JsonArray();
+        JsonArray elements = new JsonArray();
         elements.add(gson.create().toJsonTree(entity));
         obj.add("aaData", elements);
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -49,5 +51,9 @@ public class Utils {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(new MediaType("application", "json", Charset.forName("utf-8")));
         return new ResponseEntity<String>(gson.create().toJson(obj), responseHeaders, HttpStatus.OK);
+    }
+
+    public static String formatDate(Calendar calendar) {
+        return new SimpleDateFormat("dd.MM.yyyy").format(calendar.getTime());
     }
 }

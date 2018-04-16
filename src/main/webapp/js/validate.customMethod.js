@@ -19,7 +19,7 @@ jQuery.validator.addMethod("dateRU", function(value, element) {
     return this.optional(element) || check;
     }
     return true;
-}, "Пожалуйста, введите корректную дату.");
+}, "Пожалуйста, введите корректную дату в формате ДД.ММ.ГГГГ");
 
 $.validator.addMethod("lettersonly", function(value, element) {
     return this.optional(element) || /^[a-я\s]+$/i.test(value);
@@ -40,10 +40,6 @@ jQuery.validator.addMethod("maxContributeVal", function(value, element) {
 $.validator.addMethod("typeahead", function(value, element) {
     return $("#typeName").val().length > 0;
 }, "Введите тип расхода.");
-
-$.validator.addMethod("currency", function (value, element) {
-    return this.optional(element) || /^\d+(?:\.\d{1,2})?$/.test(value);
-}, "Введите сумму расхода в формате xxx.xx");
 
 
 

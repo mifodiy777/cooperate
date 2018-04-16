@@ -9,10 +9,7 @@
             "order": [
                 [0, 'desc']
             ],
-            "ajax": {
-                "url": "getCosts",
-                "type": "POST"
-            },
+            "ajax": "getCosts",
             "fnDrawCallback": function () {
                 $('a.deleteButton').off("click");
                 $('a.deleteButton').popConfirm({
@@ -29,7 +26,8 @@
                 {"data": "name", 'title': 'Наименование расхода'},
                 {"data": "money", 'title': 'Сумма', "searchable": false},
                 {"data": "description", 'title': 'Описание', "searchable": false, "orderable": false},
-                {'title': 'Удалить', "searchable": false,  className: "btnCost",
+                {
+                    'title': 'Удалить', "searchable": false, className: "btnCost",
                     "render": function (data, type, full) {
                         return "<a href=\"#\" class=\"deleteButton btn btn-danger btn-sm\" data-placement=\"top\" id=\"deleteCost_" + full.id +
                             '" onclick="deleteEntity(' + full.id + ',\'deleteCost\');\"><span class="glyphicon glyphicon-trash"/></span></a>'
@@ -46,8 +44,11 @@
     <div class="panel panel-primary">
         <div class="panel-heading ">
             <h3 class="panel-title pull-left">Расходы</h3>
-            <button id="addCost" class="btn btn-success pull-right addBtn" onclick="saveEntity('cost')"><b><span
-                    class="glyphicon glyphicon-plus"></span> Добавить</b></button>
+            <div class="btn-group pull-right">
+                <button id="addCost" class="btn btn-success addBtn" onclick="saveEntity('cost')"><b><span
+                        class="glyphicon glyphicon-plus"></span> Добавить</b></button>
+                <a href="<c:url value="/costTypesPage" />" class="btn btn-default pull-right">Типы расходов</a>
+            </div>
             <div class="clearfix"></div>
         </div>
         <div class="panel-body">

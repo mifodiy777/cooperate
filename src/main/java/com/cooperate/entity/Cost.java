@@ -35,7 +35,7 @@ public class Cost implements Serializable {
      * Сумма расхода
      */
     @Column(name = "money", nullable = false)
-    private Float money;
+    private Long money;
 
     /**
      * Дата расхода
@@ -76,11 +76,11 @@ public class Cost implements Serializable {
         this.date = date;
     }
 
-    public Float getMoney() {
+    public Long getMoney() {
         return money;
     }
 
-    public void setMoney(Float money) {
+    public void setMoney(Long money) {
         this.money = money;
     }
 

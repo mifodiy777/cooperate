@@ -1,13 +1,13 @@
 package com.cooperate.service;
 
-import com.cooperate.dto.ResultProfit;
 import com.cooperate.comparator.GaragComparator;
+import com.cooperate.dao.CostDAO;
+import com.cooperate.dao.CustomDAO;
 import com.cooperate.dao.GaragDAO;
 import com.cooperate.dao.PaymentDAO;
-import com.cooperate.entity.Contribution;
-import com.cooperate.entity.Garag;
-import com.cooperate.entity.Payment;
-import com.cooperate.entity.Rent;
+import com.cooperate.dto.CostDTO;
+import com.cooperate.dto.ResultProfit;
+import com.cooperate.entity.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -19,6 +19,8 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.cooperate.Utils.formatDate;
 
 /**
  * Сервис формирования отчетов
@@ -39,6 +41,12 @@ public class ReportService {
     @Autowired
     private PaymentDAO paymentDAO;
 
+    @Autowired
+    private CustomDAO customDAO;
+
+    @Autowired
+    private CostDAO costDAO;
+
     /**
      * Список всех гаражей
      *
@@ -50,13 +58,7 @@ public class ReportService {
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Гараж", "ФИО", "Телефон", "Адрес", "Льготы"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
+        CellStyle headerStyle = createStyle(workBook);
         CellStyle styleEven = createStyleEven(workBook);
         for (int i = 0; i < hatCells.length; i++) {
             HSSFCell cell = row.createCell(i);
@@ -89,26 +91,129 @@ public class ReportService {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
-            setColoredCell(numberRow,countCell,styleEven);
+            setColoredCell(numberRow, countCell, styleEven);
             HSSFCell garagCell = nextRow.createCell(1);
             garagCell.setCellValue(garag.getName());
-            setColoredCell(numberRow,garagCell,styleEven);
+            setColoredCell(numberRow, garagCell, styleEven);
             if (garag.getPerson() != null) {
                 HSSFCell fioCell = nextRow.createCell(2);
                 fioCell.setCellValue(garag.getPerson().getFIO());
-                setColoredCell(numberRow,fioCell,styleEven);
+                setColoredCell(numberRow, fioCell, styleEven);
                 HSSFCell phoneCell = nextRow.createCell(3);
                 phoneCell.setCellValue(garag.getPerson().getTelephone());
-                setColoredCell(numberRow,phoneCell,styleEven);
+                setColoredCell(numberRow, phoneCell, styleEven);
                 HSSFCell addressCell = nextRow.createCell(4);
                 addressCell.setCellValue(garag.getPerson().getAddress().getAddr());
-                setColoredCell(numberRow,addressCell,styleEven);
+                setColoredCell(numberRow, addressCell, styleEven);
                 HSSFCell benefitsCell = nextRow.createCell(5);
                 benefitsCell.setCellValue(garag.getPerson().getBenefits());
-                setColoredCell(numberRow,benefitsCell,styleEven);
+                setColoredCell(numberRow, benefitsCell, styleEven);
             }
             numberRow++;
         }
+        return workBook;
+    }
+
+    /**
+     * Отчет по типам расходов
+     *
+     * @return документ word
+     */
+    public HSSFWorkbook reportGroupCost(Calendar start, Calendar end) {
+        HSSFWorkbook workBook = new HSSFWorkbook();
+        HSSFSheet sheet = workBook.createSheet("Отчет по типам расходов");
+        HSSFRow row = sheet.createRow(0);
+        String[] hatCells = new String[]{"№", "Тип расхода", "Кол-во", "Сумма"};
+        Integer[] widthCells = new Integer[]{5, 40, 8, 30};
+        CellStyle headerStyle = createStyle(workBook);
+        CellStyle styleEven = createStyleEven(workBook);
+        for (int i = 0; i < hatCells.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(hatCells[i]);
+            cell.setCellStyle(headerStyle);
+            sheet.setColumnWidth(i, (short) (widthCells[i] * 256));
+        }
+        int numberRow = 1;
+        for (CostDTO cost : customDAO.findGroupCost(start, end)) {
+            HSSFRow nextRow = sheet.createRow(numberRow);
+            HSSFCell numberCell = nextRow.createCell(0);
+            numberCell.setCellValue(numberRow);
+            setColoredCell(numberRow, numberCell, styleEven);
+            HSSFCell costCell = nextRow.createCell(1);
+            costCell.setCellValue(cost.getType());
+            setColoredCell(numberRow, costCell, styleEven);
+            HSSFCell countCell = nextRow.createCell(2);
+            countCell.setCellValue(cost.getCount().intValue());
+            setColoredCell(numberRow, countCell, styleEven);
+            HSSFCell sumCell = nextRow.createCell(3);
+            sumCell.setCellValue(cost.getSum().intValue());
+            setColoredCell(numberRow, sumCell, styleEven);
+            numberRow++;
+        }
+        HSSFRow footerRow = sheet.createRow(numberRow);
+        HSSFCell numberCell = footerRow.createCell(2);
+        numberCell.setCellValue("Итого: ");
+        setColoredCell(numberRow, numberCell, styleEven);
+        HSSFCell resultCell = footerRow.createCell(3);
+        resultCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        resultCell.setCellFormula("SUM(D2:D" + numberRow + ")");
+        setColoredCell(numberRow, resultCell, styleEven);
+        return workBook;
+    }
+
+    /**
+     * Отчет по расходам
+     *
+     * @return документ word
+     */
+    public HSSFWorkbook reportCost(Calendar start, Calendar end) {
+        HSSFWorkbook workBook = new HSSFWorkbook();
+        HSSFSheet sheet = workBook.createSheet("Отчет по расходам");
+        HSSFRow row = sheet.createRow(0);
+        String[] hatCells = new String[]{"№", "Тип расхода", "Дата", "Сумма", "Описание"};
+        Integer[] widthCells = new Integer[]{5, 50, 10, 15, 100};
+        CellStyle headerStyle = createStyle(workBook);
+        CellStyle styleEven = createStyleEven(workBook);
+        for (int i = 0; i < hatCells.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(hatCells[i]);
+            cell.setCellStyle(headerStyle);
+            sheet.setColumnWidth(i, (short) (widthCells[i] * 256));
+        }
+        int numberRow = 1;
+        List<Cost> costList = costDAO.findByDateBetween(start, end);
+        for (Cost cost : costList) {
+            HSSFRow nextRow = sheet.createRow(numberRow);
+            HSSFCell numberCell = nextRow.createCell(0);
+            numberCell.setCellValue(numberRow);
+            setColoredCell(numberRow, numberCell, styleEven);
+
+            HSSFCell costCell = nextRow.createCell(1);
+            costCell.setCellValue(cost.getType().getName());
+            setColoredCell(numberRow, costCell, styleEven);
+
+            HSSFCell dateCell = nextRow.createCell(2);
+            dateCell.setCellValue(formatDate(cost.getDate()));
+            setColoredCell(numberRow, dateCell, styleEven);
+
+            HSSFCell sumCell = nextRow.createCell(3);
+            sumCell.setCellValue(cost.getMoney());
+            setColoredCell(numberRow, sumCell, styleEven);
+
+            HSSFCell descCell = nextRow.createCell(4);
+            descCell.setCellValue(cost.getDescription());
+            setColoredCell(numberRow, descCell, styleEven);
+
+            numberRow++;
+        }
+        HSSFRow footerRow = sheet.createRow(numberRow);
+        HSSFCell numberCell = footerRow.createCell(2);
+        numberCell.setCellValue("Итого: ");
+        setColoredCell(numberRow, numberCell, styleEven);
+        HSSFCell resultCell = footerRow.createCell(3);
+        resultCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        resultCell.setCellFormula("SUM(D2:D" + numberRow + ")");
+        setColoredCell(numberRow, resultCell, styleEven);
         return workBook;
     }
 
@@ -123,33 +228,14 @@ public class ReportService {
         sheet.setActive(true);
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "ФИО", "Гараж", "Лготы", "Площадь"};
-        CellStyle headerStyle = workBook.createCellStyle();
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
-        Font font = workBook.createFont();
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-        headerStyle.setFont(font);
+        Integer[] widthCells = new Integer[]{5, 40, 40, 60, 20};
+        CellStyle headerStyle = createStyle(workBook);
         CellStyle styleEven = createStyleEven(workBook);
         for (int i = 0; i < hatCells.length; i++) {
             HSSFCell cell = row.createCell(i);
             cell.setCellValue(hatCells[i]);
             cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (5 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (40 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (60 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (20 * 256));
-            }
+            sheet.setColumnWidth(i, (short) (widthCells[i] * 256));
         }
         int numberRow = 1;
         List<Garag> garagList = garagDAO.getGaragForPersonBenefits();
@@ -158,20 +244,20 @@ public class ReportService {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
-            setColoredCell(numberRow,countCell,styleEven);
+            setColoredCell(numberRow, countCell, styleEven);
             HSSFCell fioCell = nextRow.createCell(1);
             fioCell.setCellValue(garag.getPerson().getFIO());
-            setColoredCell(numberRow,fioCell,styleEven);
+            setColoredCell(numberRow, fioCell, styleEven);
             HSSFCell garagCell = nextRow.createCell(2);
             garagCell.setCellValue("Членская книжка ГК №23 " + garag.getSeries() + " ряд-" + garag.getNumber() + " место");
-            setColoredCell(numberRow,garagCell,styleEven);
+            setColoredCell(numberRow, garagCell, styleEven);
             HSSFCell benefitsCell = nextRow.createCell(3);
             benefitsCell.setCellValue(garag.getPerson().getBenefits());
-            setColoredCell(numberRow,benefitsCell,styleEven);
+            setColoredCell(numberRow, benefitsCell, styleEven);
             HSSFCell squedCell = nextRow.createCell(4);
             Long count = garagDAO.count();
             squedCell.setCellValue((51004 / count) + " кв. м.");
-            setColoredCell(numberRow,squedCell,styleEven);
+            setColoredCell(numberRow, squedCell, styleEven);
             numberRow++;
         }
         return workBook;
@@ -325,6 +411,7 @@ public class ReportService {
         HSSFRow row = sheet.createRow(0);
         String[] hatCells = new String[]{"№", "Счет", "Дата", "Гараж", "ФИО", "Сумма", "Членский взнос",
                 "Аренда земли", "Целевой взнос", "Пени", "Доп. взнос", "Долги прошлых лет", "Остаток"};
+        float[] widthCells = {3, 6, 10, 7, 33, 7, 10, 8.3f, 9.6f, 6, 6.4f, 9.5f, 8.5f};
         CellStyle headerStyle = workBook.createCellStyle();
         headerStyle.setWrapText(true);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -337,46 +424,7 @@ public class ReportService {
             HSSFCell cell = row.createCell(i);
             cell.setCellValue(hatCells[i]);
             cell.setCellStyle(headerStyle);
-            if (i == 0) {
-                sheet.setColumnWidth(i, (short) (3 * 256));
-            }
-            if (i == 1) {
-                sheet.setColumnWidth(i, (short) (6 * 256));
-            }
-            if (i == 2) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 3) {
-                sheet.setColumnWidth(i, (short) (7 * 256));
-            }
-            if (i == 4) {
-                sheet.setColumnWidth(i, (short) (33 * 256));
-            }
-            if (i == 5) {
-                sheet.setColumnWidth(i, (short) (7 * 256));
-            }
-            if (i == 6) {
-                sheet.setColumnWidth(i, (short) (10 * 256));
-            }
-            if (i == 7) {
-                sheet.setColumnWidth(i, (short) (8.3 * 256));
-            }
-            if (i == 8) {
-                sheet.setColumnWidth(i, (short) (9.6 * 256));
-            }
-            if (i == 9) {
-                sheet.setColumnWidth(i, (short) (6 * 256));
-            }
-            if (i == 10) {
-                sheet.setColumnWidth(i, (short) (6.4 * 256));
-            }
-            if (i == 11) {
-                sheet.setColumnWidth(i, (short) (9.5 * 256));
-            }
-            if (i == 12) {
-                sheet.setColumnWidth(i, (short) (8.5 * 256));
-            }
-
+            sheet.setColumnWidth(i, (short) (widthCells[i] * 256));
         }
         int numberRow = 1;
         //При выборе например 18 числа будет выборка всех платеже по 19.01.01 00:00:00
@@ -385,48 +433,48 @@ public class ReportService {
             HSSFRow nextRow = sheet.createRow(numberRow);
             HSSFCell countCell = nextRow.createCell(0);
             countCell.setCellValue(numberRow);
-            setColoredCell(numberRow,countCell,styleEven);
+            setColoredCell(numberRow, countCell, styleEven);
             HSSFCell numberCell = nextRow.createCell(1);
             numberCell.setCellValue(p.getNumber());
-            setColoredCell(numberRow,numberCell,styleEven);
+            setColoredCell(numberRow, numberCell, styleEven);
             Date dt = p.getDatePayment().getTime();
             DateFormat ndf = new SimpleDateFormat("dd/MM/yyyy");
             String dateFull = ndf.format(dt);
             HSSFCell datePay = nextRow.createCell(2);
             datePay.setCellValue(dateFull);
-            setColoredCell(numberRow,datePay,styleEven);
+            setColoredCell(numberRow, datePay, styleEven);
             HSSFCell garagCell = nextRow.createCell(3);
             garagCell.setCellValue(p.getGarag().getName());
-            setColoredCell(numberRow,garagCell,styleEven);
+            setColoredCell(numberRow, garagCell, styleEven);
             HSSFCell fioCell = nextRow.createCell(4);
             fioCell.setCellValue(p.getFio());
-            setColoredCell(numberRow,fioCell,styleEven);
+            setColoredCell(numberRow, fioCell, styleEven);
             Float sum = p.getContributePay() + p.getContLandPay() + p.getContTargetPay() + p.getFinesPay() +
                     p.getPay() + p.getAdditionallyPay() + p.getOldContributePay();
             HSSFCell sumPayColumn = nextRow.createCell(5);
             sumPayColumn.setCellValue(sum);
-            setColoredCell(numberRow,sumPayColumn,styleEven);
+            setColoredCell(numberRow, sumPayColumn, styleEven);
             HSSFCell contributeColumn = nextRow.createCell(6);
             contributeColumn.setCellValue(p.getContributePay());
-            setColoredCell(numberRow,contributeColumn,styleEven);
+            setColoredCell(numberRow, contributeColumn, styleEven);
             HSSFCell landColumn = nextRow.createCell(7);
             landColumn.setCellValue(p.getContLandPay());
-            setColoredCell(numberRow,landColumn,styleEven);
+            setColoredCell(numberRow, landColumn, styleEven);
             HSSFCell tagetColumn = nextRow.createCell(8);
             tagetColumn.setCellValue(p.getContTargetPay());
-            setColoredCell(numberRow,tagetColumn,styleEven);
+            setColoredCell(numberRow, tagetColumn, styleEven);
             HSSFCell finesColumn = nextRow.createCell(9);
             finesColumn.setCellValue(p.getFinesPay());
-            setColoredCell(numberRow,finesColumn,styleEven);
+            setColoredCell(numberRow, finesColumn, styleEven);
             HSSFCell addingColumn = nextRow.createCell(10);
             addingColumn.setCellValue(p.getAdditionallyPay());
-            setColoredCell(numberRow,addingColumn,styleEven);
+            setColoredCell(numberRow, addingColumn, styleEven);
             HSSFCell oldContributeColumn = nextRow.createCell(11);
             oldContributeColumn.setCellValue(p.getOldContributePay());
-            setColoredCell(numberRow,oldContributeColumn,styleEven);
+            setColoredCell(numberRow, oldContributeColumn, styleEven);
             HSSFCell reminderColumn = nextRow.createCell(12);
             reminderColumn.setCellValue(p.getPay());
-            setColoredCell(numberRow,reminderColumn,styleEven);
+            setColoredCell(numberRow, reminderColumn, styleEven);
             numberRow++;
         }
 
@@ -748,7 +796,7 @@ public class ReportService {
         oldCHCell.setCellValue("долги прошлых лет");
         oldCHCell.setCellStyle(style);
         HSSFCell allRHCell = rowZero.createCell(9);
-        allRHCell.setCellValue("Начисленно");
+        allRHCell.setCellValue("Начислено");
         allRHCell.setCellStyle(style);
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 9, 12));
         HSSFCell allSumRHCell = rowOne.createCell(9);
@@ -814,7 +862,7 @@ public class ReportService {
         balancePHCell.setCellValue("остаток");
         balancePHCell.setCellStyle(style);
         HSSFCell allCNHCell = rowZero.createCell(24);
-        allCNHCell.setCellValue("Задолжность");
+        allCNHCell.setCellValue("Задолженность");
         allCNHCell.setCellStyle(style);
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 24, 29));
         HSSFCell allSumCNHCell = rowOne.createCell(24);
@@ -1218,6 +1266,17 @@ public class ReportService {
 
         ResultProfit resultProfit = new ResultProfit("ИТОГИ");
         createFooter(sheet, style, rowNumber, resultProfit);
+    }
+
+    private CellStyle createStyle(HSSFWorkbook workBook) {
+        CellStyle headerStyle = workBook.createCellStyle();
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+        Font font = workBook.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setFont(font);
+        return headerStyle;
     }
 
 }

@@ -66,7 +66,7 @@
                     <form:input path="telephone" id="telephone" cssClass="required form-control"/>
                 </div>
                 <div class=" form-group input-group">
-                    <label for="benefits" class="input-group-addon">Пенсионно удостоверение</label>
+                    <label for="benefits" class="input-group-addon">Пенсионное удостоверение или другие льготы</label>
                     <form:input path="benefits" id="benefits" cssClass="form-control"/>
                 </div>
                 <div class="form-group input-group">
@@ -114,7 +114,7 @@
                                 <td>
                                     <button class="btn btn-danger deleteAssign"
                                             onclick="deleteAssign(this,${garag.id})">
-                                        <span class="glyphicon glyphicon-remove"></span></button>
+                                        Удалить назначение</button>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -33,9 +33,13 @@
         });
 
         searchPerson();
-        messBuilder()
+        messBuilder();
 
     });
+
+    function resetForm() {
+        $("#personForm input:not(#personId)").val('');
+    }
 
 </script>
 <div class="panel panel-success">
@@ -178,6 +182,8 @@
                 </button>
                 <button type="reset" onclick="closeForm();" class="btn btn-danger buttonForm">
                     <span class="glyphicon glyphicon-remove"></span> Закрыть
+                </button>
+                <button type="button" onclick="resetForm();" class="btn btn-default buttonForm">Очистить
                 </button>
             </div>
         </form:form>
