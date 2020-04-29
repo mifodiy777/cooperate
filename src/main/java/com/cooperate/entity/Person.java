@@ -1,7 +1,5 @@
 package com.cooperate.entity;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -11,39 +9,32 @@ import java.util.List;
 public class Person implements Serializable {
 
     @Id
-    @Expose
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_person", nullable = false)
     private Integer id;
 
-    @Expose
     @Column(name = "name_person")
     private String name;
 
-    @Expose
     @Column(name = "lastname_person")
     private String lastName;
 
-    @Expose
     @Column(name = "fathername_person")
     private String fatherName;
 
-    @Expose
     @Column(name = "telephone")
     private String telephone;
 
-    @Expose
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @Expose
+    @Column(name = "benefits")
     private String benefits;
 
     @OneToMany(mappedBy = "person")
     private List<Garag> garagList;
 
-    @Expose
     @Column(name = "member_board")
     private Boolean memberBoard;
 

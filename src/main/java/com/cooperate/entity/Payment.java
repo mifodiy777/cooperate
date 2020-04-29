@@ -1,7 +1,5 @@
 package com.cooperate.entity;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -13,12 +11,10 @@ public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Expose
     @Column(name = "id_payment", nullable = false)
     private Integer id;
 
     //Номер платежа
-    @Expose
     @Column(name = "number_payment", nullable = false, unique = true)
     private Integer number;
 
@@ -27,59 +23,48 @@ public class Payment implements Serializable {
 
 
     /*Дата платежа*/
-    @Expose
     @Column(name = "date_payment", nullable = false)
     private Calendar datePayment;
 
     //К какому гаражу прикреплен платеж
-    @Expose
     @ManyToOne
     @JoinColumn(nullable = false)
     private Garag garag;
 
     //ФИО платильщика
-    @Expose
     @Column(name = "person_fio", nullable = false)
     private String fio;
 
 
     //Сумма платежа
-    @Expose
     @Column(name = "payment")
     private float pay;
 
     //Платеж в членский взнос
-    @Expose
     @Column(name = "contribute_pay")
     private float contributePay;
 
     //Платеж в аренду земли
-    @Expose
     @Column(name = "cont_land_pay")
     private float contLandPay;
 
     //Платеж в целевой взнос
-    @Expose
     @Column(name = "cont_target_pay")
     private float contTargetPay;
 
     //Платеж в пени
-    @Expose
     @Column(name = "fines_pay")
     private int finesPay;
 
     //Платеж в дополнительные взносы
-    @Expose
     @Column(name = "additionally_pay")
     private float additionallyPay;
 
      //Платеж в долги прошлых лет
-    @Expose
     @Column(name = "old_contribute_pay")
     private float oldContributePay;
 
     //Долг после оплаты(Для повторного печати чека)
-    @Expose
     @Column(name = "debt_past_pay")
     private float debtPastPay;
 

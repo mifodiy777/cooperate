@@ -1,7 +1,5 @@
 package com.cooperate.entity;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -12,28 +10,23 @@ public class Garag implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Expose
     @Column(name = "id_garag", nullable = false)
     private Integer id;
 
     //Ряд
-    @Expose
     @Column(name = "series", nullable = false)
     private String series;
 
     //Номер
-    @Expose
     @Column(name = "number", nullable = false)
     @OrderBy("number")
     private String number;
 
     //Владелец
-    @Expose
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_person")
     private Person person;
 
-    @Expose
     @Column(name = "additionalInformation")
     private String additionalInformation;
 
@@ -44,7 +37,6 @@ public class Garag implements Serializable {
     private List<Contribution> contributions;
 
     //Долги прошлых лет не облагаемые пенями
-    @Expose
     @Column(name = "old_contribute", nullable = false)
     private float oldContribute;
 

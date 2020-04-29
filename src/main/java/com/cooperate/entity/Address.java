@@ -1,7 +1,5 @@
 package com.cooperate.entity;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,28 +8,23 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @Id
-    @Expose
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_address", nullable = false)
     private Integer id;
 
     //Город
-    @Expose
     @Column(name = "city")
     private String city;
 
     //Улица
-    @Expose
     @Column(name = "street")
     private String street;
 
     //Дом
-    @Expose
     @Column(name = "home")
     private String home;
 
     //Квартира - необязательный параметр
-    @Expose
     @Column(name = "apartment")
     private String apartment;
 
