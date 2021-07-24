@@ -144,7 +144,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group input-group">
-                            <label for="benefits" class="input-group-addon">Пенсионно удостоверение</label>
+                            <label for="benefits" class="input-group-addon">Пенсионное удостоверение или другие льготы</label>
                             <form:input path="person.benefits" id="benefits"
                                         cssClass="form-control person"/>
                         </div>

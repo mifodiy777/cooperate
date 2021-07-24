@@ -15,7 +15,16 @@ function validPlaceError(error, element) {
 function validPlaceSuccess(label, element) {
     $(element).parent().removeClass("has-error").addClass("has-success");
     $(element).tooltipster('hide');
+}
 
+function validError(error, element) {
+    $(element).parents(".form-group").addClass("has-error").removeClass("has-success");
+    $(element).parents(".form-group").find('.help-block').text($(error).text());
+}
+
+function validSuccess(label, element) {
+    $(element).parents(".form-group").removeClass("has-error").addClass("has-success");
+    $(element).parents(".form-group").find('.help-block').empty();
 }
 
 function searchPerson() {
@@ -212,8 +221,6 @@ function rangeDate(elementFrom, elementTo) {
     var FromEndDate = new Date();
     var ToEndDate = new Date();
 
-    ToEndDate.setDate(ToEndDate.getDate());
-
     elementFrom.datepicker({
         format: "dd.mm.yyyy",
         weekStart: 1,
@@ -320,8 +327,8 @@ function setTextTip(selectOne, selectTwo, selectThee) {
     var message = "Описание: ";
     var changeField = " Измените значения полей или найдите владельца в базе! ";
     var changePerson = " Новый владелец будет взят из базы! ";
-    var pastPersonDelete = " Прошлый владелец удалиться! ";
-    var pastPersonNotDelete = " Прошлый владелец не удалиться! ";
+    var pastPersonDelete = " Прошлый владелец удалится! ";
+    var pastPersonNotDelete = " Прошлый владелец не удалится! ";
     var changeOneGarag = " Владелец заменится только у текущего гаража! ";
     var changeAllGarag = " Владелец заменится у всех гаражей! ";
     if (selectOne) {

@@ -26,8 +26,6 @@ public class HistoryGaragController {
 
     private final Logger logger = Logger.getLogger(HistoryGaragController.class);
 
-    //
-
     /**
      * Информационно модальное окно с историей изменений владельцев гаража
      * @param id Гаража

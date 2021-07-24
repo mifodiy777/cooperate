@@ -81,12 +81,26 @@
 
     });
 
+    function emptyPerson() {
+        var table = $('.cooperateTable').DataTable();
+        var btn = $('#emptyPerson');
+        if (btn.text() === 'Показать без гаражей') {
+            btn.html('Показать всех');
+            table.ajax.url("emptyPersons").load();
+        } else {
+            btn.html('Показать без гаражей');
+            table.ajax.url("allPerson").load();
+        }
+    }
+
 
 </script>
 <div class="container-fluid">
-    <button class="btn btn-success addBtn" onclick="saveEntity('person')">
+    <button class="btn btn-success addBtn pull-left" onclick="saveEntity('person')">
         <span class="glyphicon glyphicon-plus"></span> Добавить владельца
     </button>
+    <button id="emptyPerson" class="btn btn-warning pull-right" onclick="emptyPerson()">Показать без гаражей</button>
+    <div class="clearfix"></div>
     <div id="formPanel"></div>
     <div class="panel panel-primary">
         <div class="panel-heading">

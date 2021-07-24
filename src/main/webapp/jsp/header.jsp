@@ -96,6 +96,10 @@
                         </li>
                     </ul>
                 </li>
+                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/costs.jsp'}">active</c:if>">
+                    <a href="<c:url value="/costsPage"/>"><span class="glyphicon glyphicon-usd"></span>
+                        Расходы</a>
+                </li>
                 <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/members.jsp'}">active</c:if>">
                     <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
                         Члены правления</a>

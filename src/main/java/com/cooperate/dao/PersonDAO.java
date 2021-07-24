@@ -25,6 +25,12 @@ public interface PersonDAO extends JpaRepository<Person, Integer> {
     List<Person> findByPersonfio(@Param("fio") String fio);
 
     /**
+     * Список членов без гаража
+     * @return список владельцев
+     */
+    List<Person> findByGaragListIsNull();
+
+    /**
      * Список членов правления
      * @param memberBoard член  правления - true
      * @return список владельцев

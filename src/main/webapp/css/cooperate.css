@@ -15,6 +15,15 @@ input.file {
     text-align: center;
 }
 
+.panel-heading h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    width: 75%;
+    padding-top: 8px;
+}
+
 .img_help {
     max-width: 80%;
 
@@ -80,7 +89,23 @@ td.btnPayments {
     text-align: center;
 }
 
-td.btnPayments>a {
+td.btnCost {
+    text-align: center;
+    width: 110px;
+}
+
+#emptyPerson {
+    color: #fff;
+    background-color: #9542bf;
+    border-color: #9542bf;
+}
+
+.status {
+    margin-top: 10px;
+    margin-left: -25px;
+}
+
+td.btnPayments > a {
     margin: 4px;
 }
 
@@ -88,13 +113,13 @@ td.btnPayments>a {
     cursor: pointer;
 }
 
-.openPage>img {
+.openPage > img {
     transition: all .1s ease-in-out;
     text-align: center;
     margin-top: 15px;
 }
 
-.openPage:hover>img {
+.openPage:hover > img {
     transform: scale(1.2);
     text-align: center;
 
@@ -190,7 +215,7 @@ footer {
     text-align: center;
     display: block;
     position: fixed;
-    filter: alpha(opacity = 75);
+    filter: alpha(opacity=75);
     z-index: 1100;
 }
 
@@ -200,7 +225,7 @@ footer {
     right: 30;
 }
 
-#search-field{
+#search-field {
     width: 300px;
 }
 
@@ -296,39 +321,35 @@ footer {
     border-bottom-color: #ffffff;
 }
 
-@media
+@media (
+max-width: 767
+) {
+    .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+        color: #ffffff;
+    }
 
-(
-max-width:
+    .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #1f2542;
+        background-color: transparent;
+    }
 
-767
-)
-{
-.navbar-custom .navbar-nav .open .dropdown-menu > li > a {
-    color: #ffffff;
-}
+    .navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #1f2542;
+        background-color: #4aa94a;
+    }
 
-.navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
-.navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #1f2542;
-    background-color: transparent;
-}
-
-.navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
-.navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
-.navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #1f2542;
-    background-color: #4aa94a;
-}
-
-.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
-.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
-.navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
-    color: #cccccc;
-    background-color: transparent;
-}
+    .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
+    .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+    .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+        color: #cccccc;
+        background-color: transparent;
+    }
 
 }
+
 .navbar-custom .navbar-link {
     color: #ffffff;
 }

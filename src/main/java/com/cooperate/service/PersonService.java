@@ -75,6 +75,8 @@ public class PersonService {
     }
 
 
-
+    public List<Person> getEmptyPersons() {
+        return personDAO.findByGaragListIsNull();
+    }
 }
 

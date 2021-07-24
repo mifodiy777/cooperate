@@ -58,6 +58,18 @@ public class PersonController {
     }
 
     /**
+     * Получение владельцев без гаража
+     *
+     * @return JSON список владельцев
+     */
+    @RequestMapping(value = "emptyPersons", method = RequestMethod.GET)
+    public ResponseEntity<String> getEmptyPersons() {
+        GsonBuilder gson = new GsonBuilder();
+        gson.registerTypeAdapter(Person.class, new PersonPageAdapter());
+        return Utils.convertListToJson(gson, personService.getEmptyPersons());
+    }
+
+    /**
      * Страница членов правления
      *
      * @return members.jsp
