@@ -58,6 +58,10 @@ public class Garag implements Serializable {
     @OrderBy("dateRecord DESC")
     private List<HistoryGarag> historyGarags;
 
+    @Expose
+    @Column(name = "electric_meter", columnDefinition = "boolean default false")
+    private Boolean electricMeter;
+
     public Integer getId() {
         return id;
     }
@@ -101,6 +105,7 @@ public class Garag implements Serializable {
 
     /**
      * Долги предыдущих лет
+     *
      * @return
      */
     public float getOldContribute() {
@@ -141,6 +146,14 @@ public class Garag implements Serializable {
 
     public String getFullName() {
         return " Ряд: " + this.series + " Номер: " + this.number;
+    }
+
+    public Boolean getElectricMeter() {
+        return electricMeter;
+    }
+
+    public void setElectricMeter(Boolean electricMeter) {
+        this.electricMeter = electricMeter;
     }
 
     @Override

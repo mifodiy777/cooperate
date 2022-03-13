@@ -36,7 +36,7 @@
                 pay: {
                     required: true,
                     number: true,
-                    min: 100
+                    min: 10
                 }
             }
         });

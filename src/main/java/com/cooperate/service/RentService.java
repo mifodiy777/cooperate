@@ -10,7 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RentService {
@@ -24,8 +25,12 @@ public class RentService {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private DictionaryService dictionaryService;
+
     /**
      * Сохранение периода начислений
+     *
      * @param rent период начислений
      */
     @Transactional
@@ -37,6 +42,7 @@ public class RentService {
 
     /**
      * Проверка существования периода определенного года
+     *
      * @param year год
      * @return true если не существует
      */
@@ -46,6 +52,7 @@ public class RentService {
 
     /**
      * Получение всех периодов начисления
+     *
      * @return список периодов
      */
     public List<Rent> getRents() {
@@ -54,17 +61,21 @@ public class RentService {
 
     /**
      * Создание нового периода
+     *
      * @param rent период
      */
     @Transactional
     public void createNewPeriod(Rent rent) {
+        int countIsElectricMeter = Integer.parseInt(dictionaryService.findByName("electricMeter"));
         for (Garag garag : garagService.getGarags()) {
             if (garag.getPerson() != null) {
                 //Создаем новый период для каждого гаража
                 Contribution contribution = new Contribution();
                 contribution.setYear(rent.getYearRent());
-                if (garag.getPerson().getMemberBoard()  != null && garag.getPerson().getMemberBoard()  ) {
+                if (garag.getPerson().getMemberBoard() != null && garag.getPerson().getMemberBoard()) {
                     contribution.setMemberBoardOn(true);
+                } else if (garag.getElectricMeter()) {
+                    contribution.setContribute(rent.getContributeMax() - countIsElectricMeter);
                 } else {
                     contribution.setContribute(rent.getContributeMax());
                 }
@@ -83,8 +94,8 @@ public class RentService {
                     garag.setContributions(list);
                 }
                 garagService.save(garag);
-                for(Payment payment : paymentService.getPaymentOnGarag(garag)){
-                    paymentService.pay(payment,true,"default");
+                for (Payment payment : paymentService.getPaymentOnGarag(garag)) {
+                    paymentService.pay(payment, true, "default");
                 }
             }
         }
@@ -92,6 +103,7 @@ public class RentService {
 
     /**
      * Получение периода определенного года
+     *
      * @param year год
      * @return период
      */
@@ -101,6 +113,7 @@ public class RentService {
 
     /**
      * Получение всех периодов в отсортированном порядке
+     *
      * @return список периодов
      */
     public List<Rent> findAll() {

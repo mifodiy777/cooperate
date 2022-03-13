@@ -81,6 +81,24 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group input-group">
+                        <form:checkbox path="electricMeter" id="electricMeter"
+                                       cssClass="form-control"
+                                       name="fancy-checkbox-success" autocomplete="off"/>
+                        <div class="[ btn-group ]">
+                            <label for="electricMeter" class="[ btn btn-info ]">
+                                <span class="[ glyphicon glyphicon-ok ]"></span>
+                                <span> </span>
+                            </label>
+                            <label for="electricMeter" class="[ btn btn-default ]">
+                                Имеется счетчик электроэнергии
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="addFormPersonDiv">
                 <div class="divider"><h4> Владелец: </h4></div>
                 <div class="row">
@@ -144,7 +162,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group input-group">
-                            <label for="benefits" class="input-group-addon">Пенсионное удостоверение или другие льготы</label>
+                            <label for="benefits" class="input-group-addon">Пенсионное удостоверение или другие
+                                льготы</label>
                             <form:input path="person.benefits" id="benefits"
                                         cssClass="form-control person"/>
                         </div>

@@ -4,7 +4,7 @@
 
     <groupId>cooperate_web</groupId>
     <artifactId>cooperate_web</artifactId>
-    <version>1.1.4</version>
+    <version>1.2.0</version>
     <name>cooperate_web</name>
     <packaging>war</packaging>
 

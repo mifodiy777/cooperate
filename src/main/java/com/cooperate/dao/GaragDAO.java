@@ -44,6 +44,12 @@ public interface GaragDAO extends JpaRepository<Garag, Integer> {
     List<Garag> findBySeries(String series);
 
     /**
+     * Нахождение гаражей имеющих счетчик
+     * @return список гаражей
+     */
+    List<Garag> findByElectricMeterTrue();
+
+    /**
      * Нахождение гаражей выбранного ряда c назначенными владельцами
      * @param series ряд
      * @return список гаражей

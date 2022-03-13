@@ -5,10 +5,12 @@ import com.cooperate.entity.Garag;
 import com.cooperate.entity.Person;
 import com.cooperate.exception.ExistGaragException;
 import com.cooperate.gson.PersonAdapter;
-import com.cooperate.service.*;
+import com.cooperate.service.ContributionService;
+import com.cooperate.service.GaragService;
+import com.cooperate.service.PersonService;
+import com.cooperate.service.RentService;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
-import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,9 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -295,5 +297,28 @@ public class GaragController {
             response.setStatus(409);
             return "error";
         }
+    }
+
+    /**
+     * Страница гаражей со счетчиками
+     *
+     * @return electricMeterGarag.jsp
+     */
+    @RequestMapping(value = "electricMeterGarag", method = RequestMethod.GET)
+    public ModelAndView getElectricMeterPage() {
+        return new ModelAndView("electricMeterGarag");
+    }
+
+    /**
+     * Получение списка гаражей  со счетчиками
+     *
+     * @return JSON список гаражей
+     */
+    @RequestMapping(value = "electricMeters", method = RequestMethod.GET)
+    public ResponseEntity<String> getElectricMeterGarags() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        gsonBuilder.registerTypeAdapter(Person.class, new PersonAdapter());
+        return Utils.convertListToJson(gsonBuilder, garagService.findByElectricMeter());
     }
 }

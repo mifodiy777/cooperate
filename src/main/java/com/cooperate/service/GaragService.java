@@ -2,13 +2,14 @@ package com.cooperate.service;
 
 import com.cooperate.dao.CustomDAO;
 import com.cooperate.dao.GaragDAO;
-import com.cooperate.entity.*;
+import com.cooperate.entity.Garag;
+import com.cooperate.entity.Person;
 import com.cooperate.exception.ExistGaragException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Сервис по работе с гаражами
@@ -106,6 +107,16 @@ public class GaragService {
      */
     public List<Garag> findBySeries(String series) {
         return garagDAO.findBySeries(series);
+    }
+
+    /**
+     * Получение всех гаражей со счетчиками
+     *
+     * @param
+     * @return Коллекция гаражей
+     */
+    public List<Garag> findByElectricMeter() {
+        return garagDAO.findByElectricMeterTrue();
     }
 
     /**

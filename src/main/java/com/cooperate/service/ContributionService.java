@@ -30,7 +30,7 @@ public class ContributionService {
     @Autowired
     private RentDAO rentDAO;
 
-    private final Logger logger = Logger.getLogger(ContributionService.class);
+    private final static Logger LOGGER = Logger.getLogger(ContributionService.class);
 
     /**
      * Метод сохранения долгов определенного года
@@ -104,7 +104,7 @@ public class ContributionService {
                         }
                     }
                 } catch (ArithmeticException e) {
-                    logger.error("Арифметическая ошибка для contribution_id=" + c.getId());
+                    LOGGER.error("Арифметическая ошибка для contribution_id=" + c.getId());
                 }
             } else {
                 c.setFinesOn(false); // если сумма долга равна 0, то режим начисления пеней выключается.

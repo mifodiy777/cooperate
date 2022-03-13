@@ -12,7 +12,7 @@
 
     <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/cooperate2"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/cooperate2?UseUnicode=true&amp;characterEncoding=utf8"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
@@ -36,6 +36,9 @@
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
                 <prop key="hibernate.max_fetch_depth">3</prop>
                 <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.CharSet">utf8</prop>
+                <prop key="hibernate.connection.characterEncoding">utf8</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
             </props>
         </property>
     </bean>

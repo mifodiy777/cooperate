@@ -104,6 +104,14 @@
                     <a href="<c:url value="/membersPage"/>"><span class="glyphicon glyphicon-tower"></span>
                         Члены правления</a>
                 </li>
+                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/electricMeterGarag.jsp'}">active</c:if>">
+                    <a href="<c:url value="/electricMeterGarag"/>"><span class="glyphicon glyphicon-dashboard"></span>
+                        Имеют счетчики</a>
+                </li>
+                <li class="<c:if test="${pageContext.request.servletPath eq '/jsp/dictionary.jsp'}">active</c:if>">
+                    <a href="<c:url value="/dictionaryPage"/>"><span class="glyphicon glyphicon-list-alt"></span>
+                        Справочники</a>
+                </li>
                 <li>
                     <a href="#" onclick="openNewRent()"><span class="glyphicon glyphicon-plus-sign"></span>
                         Новый период</a>
