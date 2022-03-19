@@ -2,6 +2,7 @@ package com.cooperate.controller;
 
 import com.cooperate.Utils;
 import com.cooperate.entity.Garag;
+import com.cooperate.entity.Payment;
 import com.cooperate.entity.Person;
 import com.cooperate.exception.ExistGaragException;
 import com.cooperate.gson.PersonAdapter;
@@ -176,7 +177,7 @@ public class GaragController {
                                @RequestParam("oldPerson") Integer oldPersonId,
                                @RequestParam("countGarag") Boolean oneGarag,
                                @RequestParam("reason") String reason, ModelMap map) {
-        garagService.changePerson(garagService.getGarag(garagId),person,searchPerson,deletePerson,oldPersonId,oneGarag,reason);
+        garagService.changePerson(garagService.getGarag(garagId), person, searchPerson, deletePerson, oldPersonId, oneGarag, reason);
         logger.info("Владелец заменен!(" + person.getFIO() + ")");
         map.put("message", "Владелец заменен!");
         return "success";
@@ -195,7 +196,7 @@ public class GaragController {
     @RequestMapping(value = "garagInf", method = RequestMethod.GET)
     public String payModal(@RequestParam("idGarag") Integer id, ModelMap map, HttpServletResponse response) {
         Garag garag = garagService.getGarag(id);
-        if(garag.getContributions().isEmpty()){
+        if (garag.getContributions().isEmpty()) {
             map.put("message", "У гаража отсутствуют периоды начислений.\n Добавте их в меню редактирования гаража!");
             response.setStatus(409);
             return "error";
@@ -218,17 +219,30 @@ public class GaragController {
         Garag garag = garagService.getGarag(id);
         map.addAttribute("contributionAll", garagService.sumContribution(garag));
         map.addAttribute("garag", garag);
+        map.addAttribute("isOldPay", calculateOldPay(garag));
         map.addAttribute("fio", garag.getPerson().getFIO());
         map.addAttribute("now", Calendar.getInstance().getTime());
         return "infPrint";
     }
 
+    private Boolean calculateOldPay(Garag garag) {
+        boolean oldPay = false;
+        for (Payment p : garag.getPayments()) {
+            if (p.getOldContributePay() > 0) {
+                oldPay = true;
+                break;
+            }
+        }
+        return oldPay;
+    }
+
     /**
      * Сохранения гаража
-     * @param garag Гараж
-     * @param map ModelMap
+     *
+     * @param garag    Гараж
+     * @param map      ModelMap
      * @param response ответ
-     * @return  сообщение о результате
+     * @return сообщение о результате
      */
     @RequestMapping(value = "saveGarag", method = RequestMethod.POST)
     public String saveGarag(Garag garag, ModelMap map, HttpServletResponse response) {
@@ -255,7 +269,7 @@ public class GaragController {
      * Поиск имеющихся владельцев
      *
      * @param pattern Часть ФИО для поиска
-     * @param map ModelMap
+     * @param map     ModelMap
      * @return страница personRes.jsp со список подходящих владельцев по имеющейся части ФИО
      */
     @RequestMapping(value = "searchPerson", method = RequestMethod.POST)
@@ -267,6 +281,7 @@ public class GaragController {
 
     /**
      * Определенный владелец в формате JSON
+     *
      * @param id ID Владельца
      * @return json - ответ, найденный владелец.
      */
@@ -279,8 +294,9 @@ public class GaragController {
 
     /**
      * Удаление гаража
-     * @param id ID Гаража
-     * @param map ModelMap
+     *
+     * @param id       ID Гаража
+     * @param map      ModelMap
      * @param response ответ
      * @return Сообщение о результате удаления гаража
      */

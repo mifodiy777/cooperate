@@ -60,7 +60,7 @@ public class Garag implements Serializable {
 
     @Expose
     @Column(name = "electric_meter", columnDefinition = "boolean default false")
-    private Boolean electricMeter;
+    private boolean electricMeter;
 
     public Integer getId() {
         return id;

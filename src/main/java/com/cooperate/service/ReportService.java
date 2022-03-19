@@ -654,7 +654,11 @@ public class ReportService {
                     float rentContLand = 0f;
                     float rentContTarget = 0f;
                     if (contribution != null) {
-                        rentContribute = (!contribution.isMemberBoardOn()) ? rent.getContributeMax() : 0;
+                        if (contribution.getContributeMax() != 0) {
+                            rentContribute = contribution.getContributeMax();
+                        } else {
+                            rentContribute = (!contribution.isMemberBoardOn()) ? rent.getContributeMax() : 0;
+                        }
                         rentContLand = (contribution.isBenefitsOn()) ? rent.getContLandMax() / 2 : rent.getContLandMax();
                         rentContTarget = rent.getContTargetMax();
                         rentSum = rentContribute + rentContLand + rentContTarget;

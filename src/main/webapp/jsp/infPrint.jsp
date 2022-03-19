@@ -29,9 +29,11 @@
     <tr>
         <th colspan="10">Долги</th>
     </tr>
-    <tr>       
-        <th colspan="10">Долги прошлых лет: ${garag.oldContribute} руб.</th>
-    </tr>
+    <c:if test="${garag.oldContribute != 0}">
+        <tr>
+            <th colspan="10">Долги прошлых лет: ${garag.oldContribute} руб.</th>
+        </tr>
+    </c:if>
     <tr>
         <th>Год</th>
         <th colspan="2">Членский взнос</th>
@@ -53,7 +55,7 @@
             </tr>
         </c:if>
     </c:forEach>
-    <tr>        
+    <tr>
         <th colspan="10"> Итого: ${contributionAll} руб.</th>
     </tr>
     <tr>
@@ -68,7 +70,9 @@
         <th>Целевой взнос</th>
         <th>Дополнительный взнос</th>
         <th>Пени</th>
-        <th>Долги прошлых лет</th>
+        <c:if test="${isOldPay}">
+            <th>Долги прошлых лет</th>
+        </c:if>
         <th>Оставшиеся средства</th>
     </tr>
     <c:forEach items="${garag.payments}" var="p" varStatus="loop">
@@ -86,7 +90,9 @@
             <td>${p.contTargetPay} руб.</td>
             <td>${p.additionallyPay} руб.</td>
             <td>${p.finesPay} руб.</td>
-            <td>${p.oldContributePay} руб.</td>
+            <c:if test="${isOldPay}">
+                <td>${p.oldContributePay} руб.</td>
+            </c:if>
             <td>${p.pay} руб.</td>
         </tr>
     </c:forEach>

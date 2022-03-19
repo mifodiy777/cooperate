@@ -146,8 +146,12 @@ public class ContributionService {
 
     private Integer getRentMax(Rent rent, Contribution c) {
         Integer rentMax = 0;
-        if (!c.isMemberBoardOn()) {
-            rentMax += Math.round(rent.getContributeMax());
+        if (c.getContributeMax() != 0) {
+            rentMax += Math.round(c.getContributeMax());
+        } else {
+            if (!c.isMemberBoardOn()) {
+                rentMax += Math.round(rent.getContributeMax());
+            }
         }
         if (c.isBenefitsOn()) {
             rentMax += Math.round(rent.getContLandMax()) / 2;

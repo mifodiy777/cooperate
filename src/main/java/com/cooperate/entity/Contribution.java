@@ -24,6 +24,10 @@ public class Contribution implements Serializable {
     @Column(name = "contribute")
     private float contribute;
 
+    //Сумм членского взноса - изначально
+    @Column(name = "contribute_max", columnDefinition = "float default 0.0")
+    private float contributeMax = 0f;
+
     //Аренда земли - долг
     /* При появлении нового начисления и периода данное значения
            становиться равным значением арендой земли класса Rent */
@@ -59,7 +63,7 @@ public class Contribution implements Serializable {
     @Column(name = "benefitsOn")
     private boolean benefitsOn;
 
-   //Член правления в этом периоде
+    //Член правления в этом периоде
     @Column(name = "member_board_on")
     private boolean memberBoardOn;
 
@@ -141,6 +145,14 @@ public class Contribution implements Serializable {
 
     public void setMemberBoardOn(boolean memberBoardOn) {
         this.memberBoardOn = memberBoardOn;
+    }
+
+    public float getContributeMax() {
+        return contributeMax;
+    }
+
+    public void setContributeMax(float contributeMax) {
+        this.contributeMax = contributeMax;
     }
 
     public Float getSumFixed() {

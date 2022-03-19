@@ -35,7 +35,9 @@
         <th>Целевой взнос</th>
         <th colspan="2">Дополнительный взнос</th>
         <th>Пени</th>
+        <c:if test="${pay.oldContributePay != 0}">
         <th>Долги прошлых лет</th>
+        </c:if>
         <th>Оставшиеся средства</th>
 
     <tr>
@@ -44,7 +46,9 @@
         <td>${pay.contTargetPay} руб.</td>
         <td colspan="2">${pay.additionallyPay} руб.</td>
         <td>${pay.finesPay} руб.</td>
-        <td>${pay.oldContributePay} руб.</td>
+        <c:if test="${pay.oldContributePay != 0}">
+            <td>${pay.oldContributePay} руб.</td>
+        </c:if>
         <td>${pay.pay} руб.</td>
     </tr>
     <tr>
@@ -87,7 +91,9 @@
         <th>Целевой взнос</th>
         <th colspan="2">Дополнительный взнос</th>
         <th>Пени</th>
+        <c:if test="${pay.oldContributePay != 0}">
         <th>Долги прошлых лет</th>
+        </c:if>
         <th>Оставшиеся средства</th>
 
     <tr>
@@ -96,7 +102,9 @@
         <td>${pay.contTargetPay} руб.</td>
         <td colspan="2">${pay.additionallyPay} руб.</td>
         <td>${pay.finesPay} руб.</td>
-        <td>${pay.oldContributePay} руб.</td>
+        <c:if test="${pay.oldContributePay != 0}">
+            <td>${pay.oldContributePay} руб.</td>
+        </c:if>
         <td>${pay.pay} руб.</td>
     </tr>
     <tr>

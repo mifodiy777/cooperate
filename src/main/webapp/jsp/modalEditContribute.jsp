@@ -165,6 +165,29 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group input-group">
+                            <label for="contribute" class="input-group-addon">Изначальный членский взнос</label>
+                            <form:input path="contributeMax" id="contributeMax"
+                                        cssClass="number form-control maxContributeVal"/>
+                            <span class="input-group-addon">руб.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="maxValueCont maxContribute">
+                            <c:choose>
+                                <c:when test="${garag.person.memberBoard}">MAX 0 руб.</c:when>
+                                <c:otherwise>MAX ${max.contributeMax} руб.</c:otherwise>
+                            </c:choose>
+                          </span>
+                    </div>
+                    <input type="hidden" id="memberBoardOnHide" value="
+                    <c:choose>
+                                <c:when test="${garag.person.memberBoard}">0</c:when>
+                                <c:otherwise>${max.contributeMax}</c:otherwise>
+                            </c:choose>">
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group input-group">
                             <label for="contLand" class="input-group-addon">Аренда земли</label>
                             <form:input path="contLand" id="contLand"
                                         cssClass="number form-control maxLandVal"/>

@@ -76,8 +76,10 @@ public class RentService {
                     contribution.setMemberBoardOn(true);
                 } else if (garag.getElectricMeter()) {
                     contribution.setContribute(rent.getContributeMax() - countIsElectricMeter);
+                    contribution.setContributeMax(rent.getContributeMax() - countIsElectricMeter);
                 } else {
                     contribution.setContribute(rent.getContributeMax());
+                    contribution.setContributeMax(rent.getContributeMax());
                 }
                 if (garag.getPerson().getBenefits().equals("")) {
                     contribution.setContLand(rent.getContLandMax());
