@@ -2,7 +2,6 @@ package com.cooperate.service;
 
 import com.cooperate.dao.PersonDAO;
 import com.cooperate.entity.Person;
-import com.cooperate.service.PersonService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeClass;

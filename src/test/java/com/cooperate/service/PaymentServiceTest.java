@@ -5,10 +5,6 @@ import com.cooperate.dao.PaymentDAO;
 import com.cooperate.entity.Contribution;
 import com.cooperate.entity.Garag;
 import com.cooperate.entity.Payment;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-
 import com.cooperate.entity.Person;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 /**
  * Created by Кирилл on 20.03.2017.
